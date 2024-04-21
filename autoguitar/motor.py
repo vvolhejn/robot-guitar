@@ -1,8 +1,8 @@
-from abc import ABC
-from queue import Queue
+import logging
 import threading
 import time
-import logging
+from abc import ABC
+from queue import Queue
 
 logger = logging.getLogger(__name__)
 
