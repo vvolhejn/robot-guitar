@@ -41,9 +41,11 @@ def test_motor_controller_step_tracking():
         mc.move(3)  # we cap at 5
         mc.move(-7)
         time.sleep(0.1)
+        assert mc.get_target_steps() == -2
         assert mc.cur_steps == -2
         mc.move(-100)
         time.sleep(0.1)
+        assert mc.get_target_steps() == -5
         assert mc.cur_steps == -5
 
 
