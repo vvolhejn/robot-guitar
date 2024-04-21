@@ -48,6 +48,9 @@ class MotorController:
         if self._target_steps < -self.max_steps:
             self._target_steps = -self.max_steps
 
+    def get_target_steps(self):
+        return self._target_steps
+
     def move(self, steps: int):
         self.set_target_steps(self._target_steps + steps)
 
