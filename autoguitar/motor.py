@@ -3,6 +3,7 @@ import threading
 import time
 from abc import ABC
 from types import TracebackType
+from typing import Optional
 
 from autoguitar.virtual_string import VirtualString
 
@@ -15,7 +16,9 @@ class Motor(ABC):
 
 class VirtualMotor(Motor):
     def __init__(
-        self, step_time_sec: float = 0.01, virtual_string: VirtualString | None = None
+        self,
+        step_time_sec: float = 0.01,
+        virtual_string: Optional[VirtualString] = None,
     ):
         self.step_time_sec = step_time_sec
         self.total_steps_taken = 0
