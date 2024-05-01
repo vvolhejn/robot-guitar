@@ -62,7 +62,10 @@ class VirtualString:
         self.sample_rate = 44100
         self.last_phase: float = 0.0
         self.stream = sd.OutputStream(
-            samplerate=self.sample_rate, channels=1, callback=self._audio_callback
+            samplerate=self.sample_rate,
+            channels=1,
+            callback=self._audio_callback,
+            blocksize=4096,
         )
         self.envelope = Envelope(attack_sec=0.03, decay_halftime_sec=0.5)
 
