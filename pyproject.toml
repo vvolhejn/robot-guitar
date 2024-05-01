@@ -19,6 +19,12 @@ pytest = "^8.1.1"
 ruff = "^0.4.1"
 ipykernel = "^6.29.4"
 
+[tool.poetry.group.pi]
+optional = true
+
+[tool.poetry.group.pi.dependencies]
+"RPi.GPIO" = "^0.7.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
