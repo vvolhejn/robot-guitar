@@ -12,6 +12,7 @@ duration = 30  # seconds
 
 with VirtualString() as vs:
     last_freq = 0
+    sample_rate = 48000.0  # Default, will be overwritten below
 
     def input_callback(
         indata: np.ndarray,
@@ -24,21 +25,28 @@ with VirtualString() as vs:
             # float() is just to make Pyright happy
             fmin=float(librosa.note_to_hz("C2")),
             fmax=float(librosa.note_to_hz("C7")),
-            sr=48000.0,
+            sr=sample_rate,
         )
-        # print(indata[:10, 0])
-        freq = f0[1]
-        if not np.isnan(f0[1]) and 100 < freq < 10000:
-            vs.set_frequency(f0[1])
-            print(" " * int((freq - 100) // 2), "*")
+
+        freq: float = np.nan
+        if not np.isnan(f0).all():
+            # If some of the frames came out as non-nan, take the mean of those
+            freq = float(np.nanmean(f0))
+
+        if not np.isnan(freq) and 100 < freq < 10000:
+            vs.set_frequency(freq)
+            # print(" " * int((freq - 100) // 2), "*")
         else:
-            print()
+            pass
+            # print()
 
-        with open("indata.npy", "wb") as f:
-            np.save(f, indata)
+        print("freq", freq)
 
-    with sd.InputStream(callback=input_callback, blocksize=1024) as in_stream:
-        print("Sample rate:", in_stream.samplerate)
+        # with open("indata.npy", "wb") as f:
+        #     np.save(f, indata)
+
+    with sd.InputStream(callback=input_callback, blocksize=4096) as in_stream:
+        sample_rate = in_stream.samplerate
 
         t1 = time.time()
         vs.set_frequency(1000)
