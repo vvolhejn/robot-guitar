@@ -1,3 +1,4 @@
+import logging
 import time
 from collections import deque
 from types import TracebackType
@@ -8,6 +9,8 @@ import numpy as np
 import sounddevice as sd  # pyright: ignore[reportMissingTypeStubs]
 
 Timestamp = float  # A result of time.time()
+
+logger = logging.getLogger(__name__)
 
 
 class PitchDetector:
@@ -26,11 +29,15 @@ class PitchDetector:
     def _input_callback(
         self, indata: np.ndarray, frames: int, time: Any, status: sd.CallbackFlags
     ):
+        # float() is just to make Pyright happy
+        min_freq = float(librosa.note_to_hz("E1"))  # bass E
+        # C4 is 261.63 Hz, more than we can currently wind the string to
+        max_freq = float(librosa.note_to_hz("C4"))
+
         f0, _voiced_flag, _voiced_prob = librosa.pyin(
             indata[:, 0],
-            # float() is just to make Pyright happy
-            fmin=float(librosa.note_to_hz("C2")),
-            fmax=float(librosa.note_to_hz("C7")),
+            fmin=min_freq,
+            fmax=max_freq,
             sr=self.stream.samplerate,
         )
 
@@ -39,6 +46,12 @@ class PitchDetector:
             # If some of the frames came out as non-nan, take the mean of those
             freq = float(np.nanmean(f0))
 
+        if freq >= 0.9 * max_freq:
+            # Sometimes we get incorrect readings close to the max frequency,
+            # probably it's just because nothing is playing at the time and there's
+            # noise
+            freq = np.nan
+
         self._add_reading(freq)
 
     def _add_reading(self, freq: float):
@@ -46,8 +59,10 @@ class PitchDetector:
         if len(self.frequency_readings) > self.max_readings:
             self.frequency_readings.popleft()
 
+        if not np.isnan(freq):
+            logger.debug(f"Frequency: {freq:.2f} Hz")
+
     def get_frequency(self) -> tuple[float, Timestamp]:
-        print(list(self.frequency_readings))
         if not self.frequency_readings:
             return (np.nan, 0)
         else:
