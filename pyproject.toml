@@ -13,6 +13,10 @@ python-rtmidi = "^1.5.8"
 numpy = "^1.26.4"
 sounddevice = "^0.4.6"
 librosa = "^0.10.1"
+readchar = "^4.0.6"
+
+[tool.poetry.group.dev]
+optional = true
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
