@@ -15,7 +15,9 @@ class Motor(ABC):
 
 
 class PhysicalMotor(Motor):
-    def __init__(self):
+    def __init__(self, flip_direction: bool):
+        self.flip_direction = flip_direction
+
         import RPi.GPIO as GPIO
 
         GPIO.setmode(GPIO.BOARD)
@@ -33,11 +35,11 @@ class PhysicalMotor(Motor):
         logger.debug(f"Stepping {'forward' if forward else 'backward'}")
         import RPi.GPIO as GPIO
 
-        GPIO.output(self.direction_pin, forward)
+        GPIO.output(self.direction_pin, forward != self.flip_direction)
         GPIO.output(self.step_pin, 1)
-        time.sleep(0.01)
+        time.sleep(0.001)
         GPIO.output(self.step_pin, 0)
-        time.sleep(0.01)
+        time.sleep(0.001)
 
 
 class VirtualMotor(Motor):
@@ -120,7 +122,7 @@ def is_raspberry_pi():
 def get_motor():
     if is_raspberry_pi():
         logger.info("Using physical motor.")
-        return PhysicalMotor()
+        return PhysicalMotor(flip_direction=True)
     else:
         logger.info("Using virtual motor.")
         return VirtualMotor(step_time_sec=0.1)

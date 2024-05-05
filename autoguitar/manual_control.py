@@ -9,7 +9,7 @@ def manual_control():
     print("Press arrow keys or q to exit")
 
     motor = get_motor()
-    with MotorController(motor=motor, max_steps=10) as mc:
+    with MotorController(motor=motor, max_steps=1000) as mc:
         while True:
             print("Current rotation: ", mc.cur_steps)
 
@@ -21,12 +21,12 @@ def manual_control():
 
             if key.lower() == "d":
                 print("You pressed Wind less!")
-                mc.move(-10)
-                time.sleep(0.5)
+                mc.move(-100)
+                time.sleep(0.001)
             elif key.lower() == "f":
                 print("You pressed Wind more!")
-                mc.move(10)
-                time.sleep(0.5)
+                mc.move(100)
+                time.sleep(0.001)
             elif key == "q":
                 print("Exiting...")
                 break
