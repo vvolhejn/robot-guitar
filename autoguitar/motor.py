@@ -14,6 +14,32 @@ class Motor(ABC):
     def step(self, forward: bool): ...
 
 
+class PhysicalMotor(Motor):
+    def __init__(self):
+        import RPi.GPIO as GPIO
+
+        GPIO.setmode(GPIO.BOARD)
+        self.step_pin = 11
+        self.direction_pin = 15
+        self.disable_pin = 19  # a "0" signal enables the motor
+
+        GPIO.setup(self.step_pin, GPIO.OUT)
+        GPIO.setup(self.direction_pin, GPIO.OUT)
+        GPIO.setup(self.disable_pin, GPIO.OUT)
+        GPIO.output(self.disable_pin, 0)
+        GPIO.output(self.direction_pin, 1)
+
+    def step(self, forward: bool):
+        logger.debug(f"Stepping {'forward' if forward else 'backward'}")
+        import RPi.GPIO as GPIO
+
+        GPIO.output(self.direction_pin, forward)
+        GPIO.output(self.step_pin, 1)
+        time.sleep(0.01)
+        GPIO.output(self.step_pin, 0)
+        time.sleep(0.01)
+
+
 class VirtualMotor(Motor):
     def __init__(
         self,
@@ -51,11 +77,14 @@ class MotorController:
         if self._target_steps < -self.max_steps:
             self._target_steps = -self.max_steps
 
-    def get_target_steps(self):
+    def get_target_steps(self) -> int:
         return self._target_steps
 
     def move(self, steps: int):
         self.set_target_steps(self._target_steps + steps)
+
+    def is_moving(self) -> bool:
+        return self.cur_steps != self._target_steps
 
     def __enter__(self):
         self.command_thread = threading.Thread(target=self._process_commands)
@@ -78,3 +107,20 @@ class MotorController:
             else:
                 self.motor.step(forward=False)
                 self.cur_steps -= 1
+
+
+def is_raspberry_pi():
+    try:
+        with open("/proc/cpuinfo", "r") as f:
+            return "Raspberry" in f.read()
+    except FileNotFoundError:
+        return False
+
+
+def get_motor():
+    if is_raspberry_pi():
+        logger.info("Using physical motor.")
+        return PhysicalMotor()
+    else:
+        logger.info("Using virtual motor.")
+        return VirtualMotor(step_time_sec=0.1)
