@@ -1,3 +1,4 @@
+import weakref
 from typing import Callable, Generic, TypeVar
 
 T = TypeVar("T")
@@ -5,11 +6,12 @@ T = TypeVar("T")
 
 class Signal(Generic[T]):
     def __init__(self):
-        self._observers = []
+        # a WeakSet allows the observer to be garbage collected if it's not used
+        self._observers = weakref.WeakSet()
 
     def subscribe(self, callback: Callable[[T], None]):
         """Registers a callback to the event."""
-        self._observers.append(callback)
+        self._observers.add(callback)
 
     def unsubscribe(self, callback: Callable[[T], None]):
         """Unregisters a callback from the event."""
