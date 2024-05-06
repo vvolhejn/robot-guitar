@@ -27,30 +27,30 @@ class PitchDetector:
         self.stream.__exit__()
 
     def _input_callback(
-        self, indata: np.ndarray, frames: int, time: Any, status: sd.CallbackFlags
+        self, indata: np.ndarray, frames: int, _time: Any, status: sd.CallbackFlags
     ):
         # float() is just to make Pyright happy
         min_freq = float(librosa.note_to_hz("E1"))  # bass E
         # C4 is 261.63 Hz, more than we can currently wind the string to
         max_freq = float(librosa.note_to_hz("C4"))
 
-        f0, _voiced_flag, _voiced_prob = librosa.pyin(
+        f0 = librosa.yin(
             indata[:, 0],
             fmin=min_freq,
             fmax=max_freq,
             sr=self.stream.samplerate,
         )
 
+        # Sometimes we get incorrect readings close to the max frequency,
+        # probably it's just because nothing is playing at the time and there's
+        # noise
+        f0[f0 >= 0.9 * max_freq] = np.nan
+
         freq: float = np.nan
         if not np.isnan(f0).all():
             # If some of the frames came out as non-nan, take the mean of those
-            freq = float(np.nanmean(f0))
-
-        if freq >= 0.9 * max_freq:
-            # Sometimes we get incorrect readings close to the max frequency,
-            # probably it's just because nothing is playing at the time and there's
-            # noise
-            freq = np.nan
+            # freq = float(np.nanmean(f0))
+            freq = float(np.nanmedian(f0))
 
         self._add_reading(freq)
 
@@ -62,8 +62,8 @@ class PitchDetector:
         if not np.isnan(freq):
             logger.debug(f"Frequency: {freq:.2f} Hz")
 
-    def get_frequency(self) -> tuple[float, Timestamp]:
+    def get_frequency(self) -> tuple[float, Timestamp | None]:
         if not self.frequency_readings:
-            return (np.nan, 0)
+            return (np.nan, None)
         else:
             return self.frequency_readings[-1]

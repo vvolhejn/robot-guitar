@@ -7,7 +7,7 @@ from autoguitar.pitch_detector import PitchDetector
 
 
 def manual_control():
-    print("Press arrow keys or q to exit")
+    print("d: wind less, f: wind more, q: exit")
 
     n_steps = 25
 
@@ -27,11 +27,11 @@ def manual_control():
                     continue
 
                 if key.lower() == "d":
-                    print("You pressed Wind less!")
+                    print("Wind less!")
                     mc.move(-n_steps)
                     time.sleep(0.1)
                 elif key.lower() == "f":
-                    print("You pressed Wind more!")
+                    print("Wind more!")
                     mc.move(n_steps)
                     time.sleep(0.1)
                 elif key == "q":
