@@ -8,6 +8,8 @@ import librosa
 import numpy as np
 import sounddevice as sd  # pyright: ignore[reportMissingTypeStubs]
 
+from autoguitar.signal import Signal
+
 Timestamp = float  # A result of time.time()
 
 logger = logging.getLogger(__name__)
@@ -18,6 +20,7 @@ class PitchDetector:
         self.stream = sd.InputStream(callback=self._input_callback, blocksize=4096)
         self.frequency_readings: Deque[tuple[float, Timestamp]] = deque()
         self.max_readings = 10
+        self.on_reading: Signal[tuple[float, Timestamp]] = Signal()
 
     def __enter__(self):
         self.stream.__enter__()
@@ -34,12 +37,8 @@ class PitchDetector:
         # C4 is 261.63 Hz, more than we can currently wind the string to
         max_freq = float(librosa.note_to_hz("C4"))
 
-        f0 = librosa.yin(
-            indata[:, 0],
-            fmin=min_freq,
-            fmax=max_freq,
-            sr=self.stream.samplerate,
-        )
+        x = indata[:, 0]
+        f0 = librosa.yin(x, fmin=min_freq, fmax=max_freq, sr=self.stream.samplerate)
 
         # Sometimes we get incorrect readings close to the max frequency,
         # probably it's just because nothing is playing at the time and there's
@@ -55,12 +54,15 @@ class PitchDetector:
         self._add_reading(freq)
 
     def _add_reading(self, freq: float):
-        self.frequency_readings.append((freq, time.time()))
+        timestamp = time.time()
+        self.frequency_readings.append((freq, timestamp))
         if len(self.frequency_readings) > self.max_readings:
             self.frequency_readings.popleft()
 
         if not np.isnan(freq):
             logger.debug(f"Frequency: {freq:.2f} Hz")
+
+        self.on_reading.notify((freq, timestamp))
 
     def get_frequency(self) -> tuple[float, Timestamp | None]:
         if not self.frequency_readings:

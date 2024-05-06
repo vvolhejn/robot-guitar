@@ -1,3 +1,4 @@
+import logging
 import time
 
 import numpy as np
@@ -5,7 +6,9 @@ import numpy as np
 from autoguitar.pitch_detector import PitchDetector
 from autoguitar.virtual_string import VirtualString
 
-duration = 30  # seconds
+duration = 300  # seconds
+
+logging.basicConfig(level=logging.INFO)
 
 
 with VirtualString() as virtual_string:
