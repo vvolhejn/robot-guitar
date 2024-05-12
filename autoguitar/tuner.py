@@ -50,9 +50,9 @@ def get_n_steps(frequency: float, target_frequency: float) -> int:
     sign = -int(np.sign(delta))
     delta = np.abs(delta)
 
-    speed = 0.5
+    speed = 1.0
     abs_n_steps = np.round(delta * speed)
-    max_n_steps = 5
+    max_n_steps = 50
     abs_n_steps = int(np.clip(abs_n_steps, 1, max_n_steps))
 
     return sign * abs_n_steps
