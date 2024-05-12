@@ -5,8 +5,8 @@ set -eo pipefail
 # cd to script dir
 cd "$(dirname "$0")"
 
-SOURCE="./autoguitar/"
-DESTINATION="vv-raspberrypi.local:/home/vvolhejn/autoguitar/autoguitar/"
+SOURCE="./"
+DESTINATION="vv-raspberrypi.local:/home/vvolhejn/autoguitar/"
 
 echo "Watching $SOURCE and syncing to $DESTINATION"
-fswatch -o $SOURCE | xargs -n1 -I{} rsync -a $SOURCE $DESTINATION
+fswatch -o $SOURCE | xargs -n1 -I{} rsync --exclude='/.git' --filter="dir-merge,- .gitignore" -a $SOURCE $DESTINATION
