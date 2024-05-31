@@ -1,10 +1,14 @@
 # receiver.py
+import logging
+
 import librosa
 import mido
 
 from autoguitar.motor import MotorController, get_motor
 from autoguitar.pitch_detector import PitchDetector
 from autoguitar.tuner import Tuner
+
+logging.basicConfig(level=logging.INFO)
 
 
 def find_midi_input() -> str:

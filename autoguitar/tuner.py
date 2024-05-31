@@ -1,9 +1,8 @@
-import json
 import sys
 import time
 
-import librosa
 import numpy as np
+import requests
 
 from autoguitar.motor import MotorController
 from autoguitar.pitch_detector import PitchDetector, Timestamp
@@ -36,26 +35,26 @@ class Tuner:
             return
 
         n_steps = get_n_steps(frequency, self.target_frequency)
-        print(
-            f"Target: {self.target_frequency:.2f} Hz, "
-            f"Frequency: {frequency:.2f} Hz "
-            f"({librosa.hz_to_note(frequency, cents=True)}) "
-            f"Steps: {n_steps}",
-            file=sys.stderr,
-        )
-        print(
-            json.dumps(
-                {
-                    "timestamp": time.time(),
-                    "frequency": frequency,
-                    "target_frequency": self.target_frequency,
-                    "steps_to_move": n_steps,
-                    "cur_steps": self.motor_controller.cur_steps,
-                }
-            )
-        )
+        self.post_update(frequency=frequency, n_steps=n_steps)
 
         self.motor_controller.move(n_steps)
+
+    def post_update(self, frequency: float, n_steps: int):
+        try:
+            requests.post(
+                "http://localhost:8050/api/event",
+                json={
+                    "kind": "tuner",
+                    "value": {
+                        "frequency": frequency,
+                        "target_frequency": self.target_frequency,
+                        "steps_to_move": n_steps,
+                        "cur_steps": self.motor_controller.cur_steps,
+                    },
+                },
+            )
+        except requests.ConnectionError as e:
+            print(e, file=sys.stderr)
 
 
 def get_n_steps(frequency: float, target_frequency: float) -> int:
