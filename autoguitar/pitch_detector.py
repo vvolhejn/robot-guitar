@@ -41,7 +41,11 @@ class PitchDetector:
 
         y = indata[:, 0]
         freq, _ = self.detect_pitch(y, sr=self.stream.samplerate)
-        self._add_reading(freq)
+
+        timestamp = time.time()
+
+        if self.is_reading_plausible(freq, timestamp):
+            self._add_reading(freq, timestamp)
 
     def detect_pitch(self, y: np.ndarray, *, sr: int) -> tuple[float, float]:
         """Estimate the fundamental frequency of the audio signal.
@@ -79,8 +83,41 @@ class PitchDetector:
             else:
                 return freq, confidence
 
-    def _add_reading(self, freq: float):
-        timestamp = time.time()
+    def is_reading_plausible(self, freq: float, timestamp: float) -> bool:
+        """Check if a reading is plausible given past readings.
+
+        The pitch detector commonly gives incorrect readings, especially ones
+        that are off by an octave.
+        """
+        MAX_DELTA_HZ = 50
+        MAX_DELTA_SEC_FOR_CHECK = 1.0
+
+        if np.isnan(freq):
+            return True
+
+        last_valid_reading = None
+        for reading in reversed(self.frequency_readings):
+            if not np.isnan(reading[0]):
+                last_valid_reading = reading
+                break
+
+        if last_valid_reading is not None:
+            last_freq, last_timestamp = last_valid_reading
+            delta_time = timestamp - last_timestamp
+            delta_freq = np.abs(freq - last_freq)
+
+            if delta_time < MAX_DELTA_SEC_FOR_CHECK and delta_freq > MAX_DELTA_HZ:
+                logger.info(
+                    "Frequency change too fast: "
+                    f"from {last_freq:.2f} to {freq:.2f} Hz in {delta_time:.2f}s"
+                )
+                return False
+
+            return True
+        else:
+            return True
+
+    def _add_reading(self, freq: float, timestamp: float):
         self.frequency_readings.append((freq, timestamp))
         if len(self.frequency_readings) > self.max_readings:
             self.frequency_readings.popleft()
