@@ -18,8 +18,9 @@ LAYOUT = dash.html.Div(
             value=[],
         ),
         dash.dcc.Graph(id="pitch-graph"),
+        dash.dcc.Graph(id="steps-to-pitch-graph"),
         dash.html.Div(id="debug-div", children="This is the Dash app."),
-        dash.dcc.Interval(id="interval-component", interval=1 * 1000, n_intervals=0),
+        dash.dcc.Interval(id="interval-component", interval=1 * 100, n_intervals=0),
     ]
 )
 
@@ -43,6 +44,9 @@ def events_to_df(events: list[AnnotatedEvent]) -> pd.DataFrame:
 
 
 def make_frequency_plot(df: pd.DataFrame, use_note_labels: bool = False):
+    # only take last 30 seconds
+    df = df.loc[df["datetime"] > df["datetime"].max() - pd.Timedelta(seconds=30)]
+
     fig = px.line(
         df,
         x="datetime",
@@ -88,7 +92,6 @@ def make_frequency_plot(df: pd.DataFrame, use_note_labels: bool = False):
 def update_graph(n: int, y_axis_values: list[str]):
     print(y_axis_values)
     events = EVENT_STORAGE.get_events()
-
     df = events_to_df(events)
 
     if df.empty:
@@ -100,3 +103,33 @@ def update_graph(n: int, y_axis_values: list[str]):
     fig.layout.update({"uirevision": "some fixed value"})
 
     return fig, f"Number of events: {len(events)}"
+
+
+@callback(
+    Output("steps-to-pitch-graph", "figure"),
+    Input("interval-component", "n_intervals"),
+)
+def update_steps_to_pitch_graph(n: int):
+    events = EVENT_STORAGE.get_events()
+    df = events_to_df(events)
+
+    if df.empty:
+        return px.scatter(title="Steps to pitch")
+
+    # only take last 30 seconds
+    df = df.loc[df["datetime"] > df["datetime"].max() - pd.Timedelta(seconds=30)]
+
+    df["age_sec"] = (df["datetime"].max() - df["datetime"]).dt.total_seconds()
+    df["opacity"] = (1 - df["age_sec"] / 30).apply(lambda x: max(0, x))
+
+    fig = px.line(
+        df,
+        x="cur_steps",
+        y="frequency",
+        title="Steps to pitch",
+    )
+    fig.update_layout(
+        xaxis=dict(title="Steps"),
+        yaxis=dict(title="Frequency (Hz)"),
+    )
+    return fig
