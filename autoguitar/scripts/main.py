@@ -1,13 +1,10 @@
 # receiver.py
+import librosa
 import mido
 
 from autoguitar.motor import MotorController, get_motor
 from autoguitar.pitch_detector import PitchDetector
 from autoguitar.tuner import Tuner
-
-
-def midi_note_to_frequency(midi_note: int):
-    return 440.0 * (2 ** ((midi_note - 69) / 12.0))
 
 
 def find_midi_input() -> str:
@@ -40,7 +37,7 @@ def main():
             for msg in inport:
                 print(msg)
                 if msg.type == "note_on":
-                    frequency = midi_note_to_frequency(msg.note)
+                    frequency = librosa.midi_to_hz(msg.note)
 
                     while frequency > 140:
                         frequency /= 2

@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from _plotly_utils.importers import relative_import
 from plotly import colors, data, graph_objs, io, offline, tools, utils
+from plotly.graph_objects import Figure
 from plotly.io import templates
 from plotly.version import __version__
 
@@ -40,7 +41,7 @@ Modules:
 if sys.version_info < (3, 7) or TYPE_CHECKING: ...
 else: ...
 
-def plot(data_frame, kind, **kwargs):  # -> Figure:
+def plot(data_frame, kind, **kwargs) -> Figure:
     """
     Pandas plotting backend function, not meant to be called directly.
     To activate, set pandas.options.plotting.backend="plotly"

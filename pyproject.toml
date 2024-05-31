@@ -26,6 +26,10 @@ ipykernel = "^6.29.4"
 plotly = "^5.22.0"
 pandas = "^2.2.2"
 nbformat = "^5.10.4"
+dash = "^2.17.0"
+pyright = "^1.1.365"
+pydantic = "^2.7.2"
+requests = "^2.32.3"
 
 [tool.poetry.group.pi]
 optional = true
