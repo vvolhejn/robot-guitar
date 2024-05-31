@@ -1,5 +1,8 @@
+import json
+import sys
 import time
 
+import librosa
 import numpy as np
 
 from autoguitar.motor import MotorController
@@ -29,15 +32,29 @@ class Tuner:
             return
 
         if self.motor_controller.is_moving():
-            print("Still moving, skipping...")
+            print("Still moving, skipping...", file=sys.stderr)
             return
 
         n_steps = get_n_steps(frequency, self.target_frequency)
         print(
-            f"Frequency: {frequency:.2f} Hz, "
             f"Target: {self.target_frequency:.2f} Hz, "
-            f"Steps: {n_steps}"
+            f"Frequency: {frequency:.2f} Hz "
+            f"({librosa.hz_to_note(frequency, cents=True)}) "
+            f"Steps: {n_steps}",
+            file=sys.stderr,
         )
+        print(
+            json.dumps(
+                {
+                    "timestamp": time.time(),
+                    "frequency": frequency,
+                    "target_frequency": self.target_frequency,
+                    "steps_to_move": n_steps,
+                    "cur_steps": self.motor_controller.cur_steps,
+                }
+            )
+        )
+
         self.motor_controller.move(n_steps)
 
 
@@ -49,6 +66,10 @@ def get_n_steps(frequency: float, target_frequency: float) -> int:
     delta = frequency - target_frequency
     sign = -int(np.sign(delta))
     delta = np.abs(delta)
+
+    relative_error = delta / target_frequency
+    if relative_error < 0.005:
+        return 0
 
     speed = 1.0
     abs_n_steps = np.round(delta * speed)
