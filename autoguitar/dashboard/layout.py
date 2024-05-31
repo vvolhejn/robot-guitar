@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash import Input, Output, callback
 
-from autoguitar.dashboard.event import PitchReadingEvent
+from autoguitar.dashboard.event import TunerEvent
 from autoguitar.dashboard.event_storage import EVENT_STORAGE, AnnotatedEvent
 
 NOTES_ON_Y_AXIS = "Notes on y-axis"
@@ -27,12 +27,15 @@ LAYOUT = dash.html.Div(
 def events_to_df(events: list[AnnotatedEvent]) -> pd.DataFrame:
     rows = []
     for event in events:
-        if isinstance(event.event, PitchReadingEvent):
+        if isinstance(event.event, TunerEvent):
             rows.append(
                 {
                     "datetime": event.datetime,
-                    "kind": "pitch_reading",
-                    "freq": event.event.freq,
+                    "kind": "tuner",
+                    "frequency": event.event.frequency,
+                    "target_frequency": event.event.target_frequency,
+                    "steps_to_move": event.event.steps_to_move,
+                    "cur_steps": event.event.cur_steps,
                 }
             )
 
@@ -40,7 +43,12 @@ def events_to_df(events: list[AnnotatedEvent]) -> pd.DataFrame:
 
 
 def make_frequency_plot(df: pd.DataFrame, use_note_labels: bool = False):
-    fig = px.line(df, x="datetime", y="freq", title="Frequency over time")
+    fig = px.line(
+        df,
+        x="datetime",
+        y=["frequency", "target_frequency"],
+        title="Frequency over time",
+    )
 
     fig.update_layout(
         xaxis=dict(title="Datetime"),

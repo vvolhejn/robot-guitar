@@ -7,9 +7,20 @@ if __name__ == "__main__":
     while True:
         try:
             freq = random.randint(400, 500)
+            t = time.time()
+            target_frequency = 400 + 50 * (t % 2)
+
             response = requests.post(
                 "http://localhost:8050/api/event",
-                json={"kind": "pitch_reading", "value": {"freq": freq}},
+                json={
+                    "kind": "tuner",
+                    "value": {
+                        "frequency": freq,
+                        "target_frequency": target_frequency,
+                        "steps_to_move": round((freq - target_frequency) / 10),
+                        "cur_steps": 0,
+                    },
+                },
             )
             print(response, response.text)
         except requests.ConnectionError as e:

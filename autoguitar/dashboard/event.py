@@ -5,15 +5,18 @@ class MidiEvent(BaseModel):
     pass  # TODO
 
 
-class PitchReadingEvent(BaseModel):
-    freq: float  # may be NaN
+class TunerEvent(BaseModel):
+    frequency: float  # may be NaN
+    target_frequency: float
+    steps_to_move: int
+    cur_steps: int
 
 
-Event = MidiEvent | PitchReadingEvent
+Event = MidiEvent | TunerEvent
 
 kind_to_event = {
     "midi": MidiEvent,
-    "pitch_reading": PitchReadingEvent,
+    "tuner": TunerEvent,
 }
 
 
