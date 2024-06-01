@@ -56,12 +56,19 @@ class ProportionalTunerStrategy(TunerStrategy):
 class ModelBasedTunerStrategy(TunerStrategy):
     def __init__(self):
         self.readings: Deque[tuple[float, int, Timestamp]] = deque()
-        self.max_readings = 100
+        self.max_readings = 10
         self.cooldown_until: float | None = None
 
         # Found using manual tuning on the physical string.
         # TODO: Find this automatically.
         self.coef = 85.0
+
+    def estimate_intecept(self) -> float:
+        estimates = [
+            frequency**2 - self.coef * cur_steps
+            for frequency, cur_steps, _ in self.readings
+        ]
+        return float(np.median(estimates))
 
     def get_steps_to_move(
         self,
@@ -80,13 +87,10 @@ class ModelBasedTunerStrategy(TunerStrategy):
         if len(self.readings) > self.max_readings:
             self.readings.popleft()
 
-        # TODO: A more robust estimate
-        intercept_estimate = frequency**2 - self.coef * cur_steps
+        intercept = self.estimate_intecept()
 
-        estimated_target_steps = (1 / self.coef) * (
-            target_frequency**2 - intercept_estimate
-        )
-        print(intercept_estimate, estimated_target_steps - cur_steps)
+        estimated_target_steps = (1 / self.coef) * (target_frequency**2 - intercept)
+        print(intercept, estimated_target_steps - cur_steps)
 
         # self.cooldown_until = timestamp + 2
 
