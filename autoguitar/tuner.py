@@ -6,7 +6,11 @@ import requests
 
 from autoguitar.motor import MotorController
 from autoguitar.pitch_detector import PitchDetector, Timestamp
-from autoguitar.tuner_strategy import ProportionalTunerStrategy, TunerStrategy
+from autoguitar.tuner_strategy import (
+    ModelBasedTunerStrategy,
+    ProportionalTunerStrategy,
+    TunerStrategy,
+)
 
 
 class Tuner:
@@ -19,7 +23,8 @@ class Tuner:
         self.pitch_detector = pitch_detector
         self.motor_controller = motor_controller
         self.target_frequency = initial_target_frequency
-        self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy()
+        # self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy()
+        self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy()
 
         pitch_detector.on_reading.subscribe(self.on_pitch_reading)
 
@@ -39,7 +44,7 @@ class Tuner:
         n_steps = self.tuner_strategy.get_steps_to_move(
             frequency,
             self.target_frequency,
-            self.pitch_detector,
+            timestamp,
             self.motor_controller.cur_steps,
         )
 

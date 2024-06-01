@@ -1,8 +1,13 @@
+import logging
 from abc import ABC, abstractmethod
+from collections import deque
+from typing import Deque
 
 import numpy as np
 
-from autoguitar.pitch_detector import PitchDetector
+from autoguitar.pitch_detector import PitchDetector, Timestamp
+
+logger = logging.getLogger(__name__)
 
 
 class TunerStrategy(ABC):
@@ -11,7 +16,7 @@ class TunerStrategy(ABC):
         self,
         frequency: float,
         target_frequency: float,
-        pitch_detector: PitchDetector,
+        timestamp: Timestamp,
         cur_steps: int,
     ) -> int:
         """Calculate the relative number of steps to move the motor."""
@@ -21,12 +26,13 @@ class ProportionalTunerStrategy(TunerStrategy):
     def __init__(self):
         self.max_relative_error = 0.005
         self.max_n_steps = 50
+        self.speed = 1.0
 
     def get_steps_to_move(
         self,
         frequency: float,
         target_frequency: float,
-        pitch_detector: PitchDetector,
+        timestamp: Timestamp,
         cur_steps: int,
     ) -> int:
         if np.isnan(frequency):
@@ -40,9 +46,48 @@ class ProportionalTunerStrategy(TunerStrategy):
         if relative_error < self.max_relative_error:
             return 0
 
-        speed = 1.0
-        abs_n_steps = np.round(delta * speed)
+        abs_n_steps = np.round(delta * self.speed)
         max_n_steps = self.max_n_steps
         abs_n_steps = int(np.clip(abs_n_steps, 1, max_n_steps))
 
         return sign * abs_n_steps
+
+
+class ModelBasedTunerStrategy(TunerStrategy):
+    def __init__(self):
+        self.readings: Deque[tuple[float, int, Timestamp]] = deque()
+        self.max_readings = 100
+        self.cooldown_until: float | None = None
+
+        # Found using manual tuning on the physical string.
+        # TODO: Find this automatically.
+        self.coef = 85.0
+
+    def get_steps_to_move(
+        self,
+        frequency: float,
+        target_frequency: float,
+        timestamp: Timestamp,
+        cur_steps: int,
+    ) -> int:
+        if np.isnan(frequency):
+            raise ValueError("Frequency is NaN")
+
+        if self.cooldown_until is not None and timestamp < self.cooldown_until:
+            return 0
+
+        self.readings.append((frequency, cur_steps, timestamp))
+        if len(self.readings) > self.max_readings:
+            self.readings.popleft()
+
+        # TODO: A more robust estimate
+        intercept_estimate = frequency**2 - self.coef * cur_steps
+
+        estimated_target_steps = (1 / self.coef) * (
+            target_frequency**2 - intercept_estimate
+        )
+        print(intercept_estimate, estimated_target_steps - cur_steps)
+
+        # self.cooldown_until = timestamp + 2
+
+        return int(estimated_target_steps - cur_steps)
