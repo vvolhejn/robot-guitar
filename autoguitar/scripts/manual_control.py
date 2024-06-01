@@ -8,7 +8,7 @@ from autoguitar.pitch_detector import PitchDetector
 
 
 def manual_control(pitch_detector: PitchDetector | None):
-    n_steps = 25
+    n_steps = 200
 
     motor = get_motor()
     with MotorController(motor=motor, max_steps=10000) as mc:

@@ -123,7 +123,7 @@ def is_raspberry_pi():
 def get_motor():
     if is_raspberry_pi():
         logger.info("Using physical motor.")
-        return PhysicalMotor(flip_direction=True)
+        return PhysicalMotor(flip_direction=False)
     else:
         logger.info("Using virtual motor.")
         return VirtualMotor(step_time_sec=0.1)

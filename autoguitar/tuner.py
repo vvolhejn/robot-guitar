@@ -23,8 +23,10 @@ class Tuner:
         self.pitch_detector = pitch_detector
         self.motor_controller = motor_controller
         self.target_frequency = initial_target_frequency
-        # self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy()
-        self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy()
+        self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy(
+            max_n_steps=1000, speed=10.0
+        )
+        # self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy()
 
         pitch_detector.on_reading.subscribe(self.on_pitch_reading)
 

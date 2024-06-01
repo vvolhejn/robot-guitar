@@ -35,7 +35,7 @@ def main():
             tuner = Tuner(
                 pitch_detector=pitch_detector,
                 motor_controller=mc,
-                initial_target_frequency=70,
+                initial_target_frequency=float(librosa.note_to_hz("C3")),
             )
 
             for msg in inport:
@@ -43,9 +43,11 @@ def main():
                 if msg.type == "note_on":
                     frequency = librosa.midi_to_hz(msg.note)
 
-                    while frequency > 140:
+                    frequency_orig = frequency
+
+                    while frequency > librosa.note_to_hz("C4") + 1e-3:
                         frequency /= 2
-                    while frequency < 70:
+                    while frequency < librosa.note_to_hz("C2") - 1e-3:
                         frequency *= 2
 
                     tuner.target_frequency = frequency

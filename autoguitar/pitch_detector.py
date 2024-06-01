@@ -61,8 +61,8 @@ class PitchDetector:
         assert length_sec < 0.5, f"Expected short signal, got {length_sec:.2f}s"
 
         min_freq = float(librosa.note_to_hz("E1"))  # bass E
-        # C4 is 261.63 Hz, more than we can currently wind the string to
-        max_freq = float(librosa.note_to_hz("C4"))
+        # A4 is 440 Hz, more than we can currently wind the string to
+        max_freq = float(librosa.note_to_hz("A4"))
         f0 = librosa.yin(y, fmin=min_freq, fmax=max_freq, sr=sr)
 
         # Sometimes we get incorrect readings close to the max frequency,

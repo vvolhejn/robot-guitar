@@ -23,10 +23,12 @@ class TunerStrategy(ABC):
 
 
 class ProportionalTunerStrategy(TunerStrategy):
-    def __init__(self):
-        self.max_relative_error = 0.005
-        self.max_n_steps = 50
-        self.speed = 1.0
+    def __init__(
+        self, max_n_steps: int, speed: float, max_relative_error: float = 0.005
+    ):
+        self.max_n_steps = max_n_steps
+        self.speed = speed
+        self.max_relative_error = max_relative_error
 
     def get_steps_to_move(
         self,
