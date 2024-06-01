@@ -50,6 +50,10 @@ def main():
 
                     tuner.target_frequency = frequency
 
+                    if pitch_detector.frequency_readings:
+                        # Fake reading to let the tuner know the target frequency has changed
+                        tuner.on_pitch_reading(pitch_detector.frequency_readings[-1])
+
 
 if __name__ == "__main__":
     main()
