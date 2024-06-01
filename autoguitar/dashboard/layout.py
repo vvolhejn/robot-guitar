@@ -90,7 +90,6 @@ def make_frequency_plot(df: pd.DataFrame, use_note_labels: bool = False):
     Input("y-axis-dropdown", "value"),
 )
 def update_graph(n: int, y_axis_values: list[str]):
-    print(y_axis_values)
     events = EVENT_STORAGE.get_events()
     df = events_to_df(events)
 
