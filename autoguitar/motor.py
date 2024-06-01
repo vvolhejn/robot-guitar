@@ -15,8 +15,9 @@ class Motor(ABC):
 
 
 class PhysicalMotor(Motor):
-    def __init__(self, flip_direction: bool):
+    def __init__(self, flip_direction: bool, sleep_time_sec: float = 0.0001):
         self.flip_direction = flip_direction
+        self.sleep_time_sec = sleep_time_sec
 
         import RPi.GPIO as GPIO
 
@@ -37,9 +38,9 @@ class PhysicalMotor(Motor):
 
         GPIO.output(self.direction_pin, forward != self.flip_direction)
         GPIO.output(self.step_pin, 1)
-        time.sleep(0.001)
+        time.sleep(self.sleep_time_sec)
         GPIO.output(self.step_pin, 0)
-        time.sleep(0.001)
+        time.sleep(self.sleep_time_sec)
 
 
 class VirtualMotor(Motor):
@@ -101,7 +102,7 @@ class MotorController:
     def _process_commands(self):
         while not self.stop_thread:
             if self.cur_steps == self._target_steps:
-                time.sleep(0.01)
+                time.sleep(0.001)
                 continue
             if self.cur_steps < self._target_steps:
                 self.motor.step(forward=True)
