@@ -1,0 +1,583 @@
+{"timestamp": 1715530781.699148, "frequency": 98.30620697719998, "target_frequency": 70, "steps_to_move": -28, "cur_steps": 0}
+{"timestamp": 1715530781.8079545, "frequency": 77.80550170385352, "target_frequency": 70, "steps_to_move": -8, "cur_steps": -28}
+{"timestamp": 1715530781.9007514, "frequency": 68.78805058372866, "target_frequency": 70, "steps_to_move": 1, "cur_steps": -36}
+{"timestamp": 1715530781.9938552, "frequency": 68.47267393272061, "target_frequency": 70, "steps_to_move": 2, "cur_steps": -35}
+{"timestamp": 1715530782.1795213, "frequency": 72.1246498194569, "target_frequency": 70, "steps_to_move": -2, "cur_steps": -33}
+{"timestamp": 1715530782.272655, "frequency": 70.62411912940483, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -35}
+{"timestamp": 1715530782.365671, "frequency": 70.29326625645666, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -36}
+{"timestamp": 1715530782.4585166, "frequency": 69.21123197790165, "target_frequency": 70, "steps_to_move": 1, "cur_steps": -36}
+{"timestamp": 1715530782.643328, "frequency": 68.69006673240706, "target_frequency": 70, "steps_to_move": 1, "cur_steps": -35}
+{"timestamp": 1715530782.736351, "frequency": 70.02953654171432, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -34}
+{"timestamp": 1715530782.8293872, "frequency": 70.85176948635986, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -34}
+{"timestamp": 1715530782.9222481, "frequency": 70.21770779567804, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -35}
+{"timestamp": 1715530783.0151467, "frequency": 70.8770661056777, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -35}
+{"timestamp": 1715530783.1081936, "frequency": 71.42059890071182, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -36}
+{"timestamp": 1715530783.2013645, "frequency": 69.94806793603621, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -37}
+{"timestamp": 1715530783.3864057, "frequency": 68.02278214671887, "target_frequency": 70, "steps_to_move": 2, "cur_steps": -37}
+{"timestamp": 1715530783.4793818, "frequency": 71.12909382459563, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -35}
+{"timestamp": 1715530783.5724375, "frequency": 71.10724258916852, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -36}
+{"timestamp": 1715530783.6652904, "frequency": 70.52986078907489, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -37}
+{"timestamp": 1715530783.7583902, "frequency": 68.05696522892576, "target_frequency": 70, "steps_to_move": 2, "cur_steps": -38}
+{"timestamp": 1715530783.8512378, "frequency": 66.21029417155418, "target_frequency": 70, "steps_to_move": 4, "cur_steps": -36}
+{"timestamp": 1715530783.9442513, "frequency": 70.229646072898, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -32}
+{"timestamp": 1715530784.037399, "frequency": 69.65972950856404, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -32}
+{"timestamp": 1715530784.2222605, "frequency": 69.9105799362002, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -32}
+{"timestamp": 1715530784.2356682, "frequency": 68.80379279527803, "target_frequency": 70, "steps_to_move": 1, "cur_steps": -32}
+{"timestamp": 1715530784.3155026, "frequency": 69.65106095100899, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -31}
+{"timestamp": 1715530784.4082832, "frequency": 70.78177753778242, "target_frequency": 70, "steps_to_move": -1, "cur_steps": -31}
+{"timestamp": 1715530784.5014207, "frequency": 71.93357222715292, "target_frequency": 70, "steps_to_move": -2, "cur_steps": -32}
+{"timestamp": 1715530784.594303, "frequency": 69.89496472404059, "target_frequency": 70, "steps_to_move": 0, "cur_steps": -34}
+{"timestamp": 1715530784.6874726, "frequency": 68.77403460473116, "target_frequency": 70, "steps_to_move": 1, "cur_steps": -34}
+{"timestamp": 1715530784.7804842, "frequency": 69.33784489489538, "target_frequency": 70, "steps_to_move": 1, "cur_steps": -33}
+note_on channel=0 note=51 velocity=23 time=0
+{"timestamp": 1715530784.965394, "frequency": 73.44425306668545, "target_frequency": 77.78174593052023, "steps_to_move": 4, "cur_steps": -32}
+note_off channel=0 note=51 velocity=0 time=0
+{"timestamp": 1715530785.058148, "frequency": 78.54283318454551, "target_frequency": 77.78174593052023, "steps_to_move": -1, "cur_steps": -28}
+{"timestamp": 1715530785.1510198, "frequency": 78.1688451762097, "target_frequency": 77.78174593052023, "steps_to_move": 0, "cur_steps": -29}
+{"timestamp": 1715530785.2442968, "frequency": 77.71811223797717, "target_frequency": 77.78174593052023, "steps_to_move": 0, "cur_steps": -29}
+{"timestamp": 1715530785.3375607, "frequency": 76.23377394956506, "target_frequency": 77.78174593052023, "steps_to_move": 2, "cur_steps": -29}
+{"timestamp": 1715530785.4302576, "frequency": 76.03251638006151, "target_frequency": 77.78174593052023, "steps_to_move": 2, "cur_steps": -27}
+{"timestamp": 1715530785.523291, "frequency": 77.49052609108428, "target_frequency": 77.78174593052023, "steps_to_move": 0, "cur_steps": -25}
+{"timestamp": 1715530785.6210654, "frequency": 78.20340339620742, "target_frequency": 77.78174593052023, "steps_to_move": -1, "cur_steps": -25}
+{"timestamp": 1715530785.8082454, "frequency": 78.19607780866095, "target_frequency": 77.78174593052023, "steps_to_move": -1, "cur_steps": -26}
+{"timestamp": 1715530785.8284223, "frequency": 77.11070912295402, "target_frequency": 77.78174593052023, "steps_to_move": 1, "cur_steps": -27}
+{"timestamp": 1715530785.901144, "frequency": 77.49074604526669, "target_frequency": 77.78174593052023, "steps_to_move": 0, "cur_steps": -26}
+{"timestamp": 1715530785.9901989, "frequency": 80.71095717093773, "target_frequency": 77.78174593052023, "steps_to_move": -3, "cur_steps": -26}
+note_on channel=0 note=52 velocity=78 time=0
+{"timestamp": 1715530786.0875218, "frequency": 77.74714049010628, "target_frequency": 82.40688922821748, "steps_to_move": 5, "cur_steps": -29}
+note_off channel=0 note=52 velocity=0 time=0
+{"timestamp": 1715530786.180252, "frequency": 79.98695040111322, "target_frequency": 82.40688922821748, "steps_to_move": 2, "cur_steps": -24}
+{"timestamp": 1715530786.273182, "frequency": 82.6936657869685, "target_frequency": 82.40688922821748, "steps_to_move": 0, "cur_steps": -22}
+{"timestamp": 1715530786.5536878, "frequency": 83.46255903394182, "target_frequency": 82.40688922821748, "steps_to_move": -1, "cur_steps": -22}
+{"timestamp": 1715530786.576336, "frequency": 83.47713017110202, "target_frequency": 82.40688922821748, "steps_to_move": -1, "cur_steps": -23}
+{"timestamp": 1715530786.6403842, "frequency": 81.54003063113456, "target_frequency": 82.40688922821748, "steps_to_move": 1, "cur_steps": -24}
+{"timestamp": 1715530786.7355092, "frequency": 80.69585661536127, "target_frequency": 82.40688922821748, "steps_to_move": 2, "cur_steps": -23}
+{"timestamp": 1715530786.8298483, "frequency": 81.52234869366376, "target_frequency": 82.40688922821748, "steps_to_move": 1, "cur_steps": -21}
+{"timestamp": 1715530786.920992, "frequency": 83.01173815996485, "target_frequency": 82.40688922821748, "steps_to_move": -1, "cur_steps": -20}
+{"timestamp": 1715530787.0139997, "frequency": 84.27779535361616, "target_frequency": 82.40688922821748, "steps_to_move": -2, "cur_steps": -21}
+{"timestamp": 1715530787.1091263, "frequency": 85.07114917572805, "target_frequency": 82.40688922821748, "steps_to_move": -3, "cur_steps": -23}
+{"timestamp": 1715530787.2021945, "frequency": 81.05404141404208, "target_frequency": 82.40688922821748, "steps_to_move": 1, "cur_steps": -26}
+{"timestamp": 1715530787.3900356, "frequency": 81.45148157606195, "target_frequency": 82.40688922821748, "steps_to_move": 1, "cur_steps": -25}
+{"timestamp": 1715530787.4127514, "frequency": 82.20699458834751, "target_frequency": 82.40688922821748, "steps_to_move": 0, "cur_steps": -24}
+{"timestamp": 1715530787.4766352, "frequency": 81.46617911614322, "target_frequency": 82.40688922821748, "steps_to_move": 1, "cur_steps": -24}
+{"timestamp": 1715530787.5732152, "frequency": 81.4439413652567, "target_frequency": 82.40688922821748, "steps_to_move": 1, "cur_steps": -23}
+note_on channel=0 note=55 velocity=75 time=0
+{"timestamp": 1715530787.6655405, "frequency": 82.21841719886628, "target_frequency": 97.99885899543732, "steps_to_move": 16, "cur_steps": -22}
+note_off channel=0 note=55 velocity=0 time=0
+{"timestamp": 1715530787.7579103, "frequency": 86.80317191883199, "target_frequency": 97.99885899543732, "steps_to_move": 11, "cur_steps": -6}
+{"timestamp": 1715530787.8502038, "frequency": 100.62356444829541, "target_frequency": 97.99885899543732, "steps_to_move": -3, "cur_steps": 5}
+{"timestamp": 1715530787.9431531, "frequency": 105.45696126941462, "target_frequency": 97.99885899543732, "steps_to_move": -7, "cur_steps": 2}
+{"timestamp": 1715530788.13278, "frequency": 99.48266301382591, "target_frequency": 97.99885899543732, "steps_to_move": -1, "cur_steps": -5}
+{"timestamp": 1715530788.2193222, "frequency": 97.08058594615731, "target_frequency": 97.99885899543732, "steps_to_move": 1, "cur_steps": -6}
+{"timestamp": 1715530788.3159802, "frequency": 96.65485842957715, "target_frequency": 97.99885899543732, "steps_to_move": 1, "cur_steps": -5}
+{"timestamp": 1715530788.5951045, "frequency": 98.36181149035734, "target_frequency": 97.99885899543732, "steps_to_move": 0, "cur_steps": -4}
+{"timestamp": 1715530788.688106, "frequency": 97.75102431411588, "target_frequency": 97.99885899543732, "steps_to_move": 0, "cur_steps": -4}
+{"timestamp": 1715530788.9656827, "frequency": 97.74451420023938, "target_frequency": 97.99885899543732, "steps_to_move": 0, "cur_steps": -4}
+{"timestamp": 1715530789.0589306, "frequency": 99.23579805993435, "target_frequency": 97.99885899543732, "steps_to_move": -1, "cur_steps": -4}
+{"timestamp": 1715530789.3379052, "frequency": 97.68234888754118, "target_frequency": 97.99885899543732, "steps_to_move": 0, "cur_steps": -5}
+note_on channel=0 note=57 velocity=70 time=0
+{"timestamp": 1715530789.4310894, "frequency": 96.64424482002195, "target_frequency": 110.0, "steps_to_move": 13, "cur_steps": -5}
+note_off channel=0 note=57 velocity=0 time=0
+{"timestamp": 1715530789.5239062, "frequency": 106.14854300783053, "target_frequency": 110.0, "steps_to_move": 4, "cur_steps": 8}
+{"timestamp": 1715530789.731033, "frequency": 112.3869623458719, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 12}
+{"timestamp": 1715530789.8012912, "frequency": 112.39795012886695, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 10}
+{"timestamp": 1715530789.8917024, "frequency": 110.35849556253491, "target_frequency": 110.0, "steps_to_move": 0, "cur_steps": 8}
+{"timestamp": 1715530789.986034, "frequency": 107.48846194680699, "target_frequency": 110.0, "steps_to_move": 3, "cur_steps": 8}
+{"timestamp": 1715530790.0809839, "frequency": 108.9149227426711, "target_frequency": 110.0, "steps_to_move": 1, "cur_steps": 11}
+{"timestamp": 1715530790.1740828, "frequency": 108.88682905569154, "target_frequency": 110.0, "steps_to_move": 1, "cur_steps": 12}
+{"timestamp": 1715530790.2668574, "frequency": 110.95544477681258, "target_frequency": 110.0, "steps_to_move": -1, "cur_steps": 13}
+note_on channel=0 note=58 velocity=43 time=0
+{"timestamp": 1715530790.4764125, "frequency": 110.17111304395208, "target_frequency": 116.54094037952248, "steps_to_move": 6, "cur_steps": 12}
+{"timestamp": 1715530790.5415926, "frequency": 109.9694942845612, "target_frequency": 116.54094037952248, "steps_to_move": 7, "cur_steps": 18}
+note_off channel=0 note=58 velocity=0 time=0
+{"timestamp": 1715530790.6379216, "frequency": 117.89125910480551, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 25}
+{"timestamp": 1715530790.7308147, "frequency": 119.53844150612261, "target_frequency": 116.54094037952248, "steps_to_move": -3, "cur_steps": 24}
+{"timestamp": 1715530790.8236394, "frequency": 117.84173857413052, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 21}
+{"timestamp": 1715530790.9150145, "frequency": 117.79242143387287, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 20}
+{"timestamp": 1715530791.0078778, "frequency": 116.34047260497648, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 19}
+{"timestamp": 1715530791.1027644, "frequency": 116.85796264134059, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 19}
+{"timestamp": 1715530791.310977, "frequency": 115.36443689918826, "target_frequency": 116.54094037952248, "steps_to_move": 1, "cur_steps": 19}
+note_on channel=0 note=53 velocity=51 time=0
+note_on channel=0 note=52 velocity=50 time=0
+{"timestamp": 1715530791.378301, "frequency": 115.37212079296282, "target_frequency": 82.40688922821748, "steps_to_move": -33, "cur_steps": 20}
+note_off channel=0 note=52 velocity=0 time=0
+{"timestamp": 1715530791.474556, "frequency": 103.03523380823432, "target_frequency": 82.40688922821748, "steps_to_move": -21, "cur_steps": -13}
+note_off channel=0 note=53 velocity=0 time=0
+{"timestamp": 1715530791.660122, "frequency": 71.24556133412239, "target_frequency": 82.40688922821748, "steps_to_move": 11, "cur_steps": -34}
+{"timestamp": 1715530791.7530992, "frequency": 78.45128311332314, "target_frequency": 82.40688922821748, "steps_to_move": 4, "cur_steps": -23}
+{"timestamp": 1715530791.846094, "frequency": 84.65264889850421, "target_frequency": 82.40688922821748, "steps_to_move": -2, "cur_steps": -19}
+{"timestamp": 1715530792.031216, "frequency": 82.98845749571954, "target_frequency": 82.40688922821748, "steps_to_move": -1, "cur_steps": -21}
+{"timestamp": 1715530792.0511317, "frequency": 82.58939275667112, "target_frequency": 82.40688922821748, "steps_to_move": 0, "cur_steps": -22}
+{"timestamp": 1715530792.1237705, "frequency": 82.59196310080526, "target_frequency": 82.40688922821748, "steps_to_move": 0, "cur_steps": -22}
+{"timestamp": 1715530792.215152, "frequency": 82.23244202998096, "target_frequency": 82.40688922821748, "steps_to_move": 0, "cur_steps": -22}
+{"timestamp": 1715530792.3102455, "frequency": 83.03283872482554, "target_frequency": 82.40688922821748, "steps_to_move": -1, "cur_steps": -22}
+{"timestamp": 1715530792.402864, "frequency": 85.46805422288767, "target_frequency": 82.40688922821748, "steps_to_move": -3, "cur_steps": -23}
+note_on channel=0 note=59 velocity=49 time=0
+{"timestamp": 1715530792.496377, "frequency": 82.52735418942663, "target_frequency": 123.47082531403103, "steps_to_move": 41, "cur_steps": -26}
+note_off channel=0 note=59 velocity=0 time=0
+{"timestamp": 1715530792.6822774, "frequency": 110.96497240780845, "target_frequency": 123.47082531403103, "steps_to_move": 13, "cur_steps": 15}
+{"timestamp": 1715530792.8853822, "frequency": 122.02765133001324, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 28}
+{"timestamp": 1715530793.0496643, "frequency": 121.17992078315862, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 29}
+{"timestamp": 1715530793.1460638, "frequency": 122.08291537457417, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 31}
+{"timestamp": 1715530793.2392862, "frequency": 125.61051590209065, "target_frequency": 123.47082531403103, "steps_to_move": -2, "cur_steps": 32}
+{"timestamp": 1715530793.3321898, "frequency": 127.44400594701578, "target_frequency": 123.47082531403103, "steps_to_move": -4, "cur_steps": 30}
+{"timestamp": 1715530793.4252992, "frequency": 126.6363999048475, "target_frequency": 123.47082531403103, "steps_to_move": -3, "cur_steps": 26}
+{"timestamp": 1715530793.6135879, "frequency": 118.36035647300595, "target_frequency": 123.47082531403103, "steps_to_move": 5, "cur_steps": 23}
+note_on channel=0 note=58 velocity=29 time=0
+{"timestamp": 1715530793.7933316, "frequency": 119.52783201718817, "target_frequency": 116.54094037952248, "steps_to_move": -3, "cur_steps": 28}
+note_off channel=0 note=58 velocity=0 time=0
+{"timestamp": 1715530793.8872576, "frequency": 117.93834448362531, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 25}
+{"timestamp": 1715530793.9799967, "frequency": 117.92150139412995, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 24}
+{"timestamp": 1715530794.1681898, "frequency": 121.00322795546414, "target_frequency": 116.54094037952248, "steps_to_move": -4, "cur_steps": 23}
+{"timestamp": 1715530794.2609499, "frequency": 119.35835867227495, "target_frequency": 116.54094037952248, "steps_to_move": -3, "cur_steps": 19}
+{"timestamp": 1715530794.4488459, "frequency": 113.94658003724602, "target_frequency": 116.54094037952248, "steps_to_move": 3, "cur_steps": 16}
+{"timestamp": 1715530794.471366, "frequency": 112.99649557098962, "target_frequency": 116.54094037952248, "steps_to_move": 4, "cur_steps": 19}
+{"timestamp": 1715530794.5356321, "frequency": 113.06618799346283, "target_frequency": 116.54094037952248, "steps_to_move": 3, "cur_steps": 23}
+{"timestamp": 1715530794.6321738, "frequency": 119.41383559624896, "target_frequency": 116.54094037952248, "steps_to_move": -3, "cur_steps": 26}
+{"timestamp": 1715530794.7247462, "frequency": 118.42224126814355, "target_frequency": 116.54094037952248, "steps_to_move": -2, "cur_steps": 23}
+{"timestamp": 1715530794.8159308, "frequency": 116.9408078400081, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 21}
+{"timestamp": 1715530794.908924, "frequency": 117.7922178627554, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 21}
+{"timestamp": 1715530795.1920853, "frequency": 121.07724855355457, "target_frequency": 116.54094037952248, "steps_to_move": -5, "cur_steps": 20}
+{"timestamp": 1715530795.278286, "frequency": 112.97019672008327, "target_frequency": 116.54094037952248, "steps_to_move": 4, "cur_steps": 15}
+{"timestamp": 1715530795.3747938, "frequency": 113.8391214376161, "target_frequency": 116.54094037952248, "steps_to_move": 3, "cur_steps": 19}
+{"timestamp": 1715530795.4680896, "frequency": 115.38272036385564, "target_frequency": 116.54094037952248, "steps_to_move": 1, "cur_steps": 22}
+note_on channel=0 note=56 velocity=34 time=0
+{"timestamp": 1715530795.5621624, "frequency": 116.92058748473605, "target_frequency": 103.82617439498628, "steps_to_move": -13, "cur_steps": 23}
+{"timestamp": 1715530795.6532986, "frequency": 115.44366802986718, "target_frequency": 103.82617439498628, "steps_to_move": -12, "cur_steps": 10}
+note_off channel=0 note=56 velocity=0 time=0
+{"timestamp": 1715530795.8379884, "frequency": 97.60130141527053, "target_frequency": 103.82617439498628, "steps_to_move": 6, "cur_steps": -2}
+{"timestamp": 1715530796.027874, "frequency": 102.29125597074129, "target_frequency": 103.82617439498628, "steps_to_move": 2, "cur_steps": 4}
+{"timestamp": 1715530796.0508265, "frequency": 102.93362434916878, "target_frequency": 103.82617439498628, "steps_to_move": 1, "cur_steps": 6}
+{"timestamp": 1715530796.1142821, "frequency": 103.52763047583247, "target_frequency": 103.82617439498628, "steps_to_move": 0, "cur_steps": 7}
+{"timestamp": 1715530796.2111244, "frequency": 105.43397162623516, "target_frequency": 103.82617439498628, "steps_to_move": -2, "cur_steps": 7}
+{"timestamp": 1715530796.3043535, "frequency": 108.76812932600158, "target_frequency": 103.82617439498628, "steps_to_move": -5, "cur_steps": 5}
+{"timestamp": 1715530796.5833666, "frequency": 100.41230157433677, "target_frequency": 103.82617439498628, "steps_to_move": 3, "cur_steps": 0}
+{"timestamp": 1715530796.7683535, "frequency": 101.35757307243955, "target_frequency": 103.82617439498628, "steps_to_move": 2, "cur_steps": 3}
+{"timestamp": 1715530796.7885017, "frequency": 102.74104278917697, "target_frequency": 103.82617439498628, "steps_to_move": 1, "cur_steps": 5}
+note_on channel=0 note=60 velocity=84 time=0
+{"timestamp": 1715530796.9518273, "frequency": 104.67604503328626, "target_frequency": 130.8127826502993, "steps_to_move": 26, "cur_steps": 6}
+note_off channel=0 note=60 velocity=0 time=0
+{"timestamp": 1715530797.0470572, "frequency": 113.84972872628313, "target_frequency": 130.8127826502993, "steps_to_move": 17, "cur_steps": 32}
+{"timestamp": 1715530797.1400003, "frequency": 126.31156825068223, "target_frequency": 130.8127826502993, "steps_to_move": 5, "cur_steps": 49}
+{"timestamp": 1715530797.2331417, "frequency": 135.52774562250897, "target_frequency": 130.8127826502993, "steps_to_move": -5, "cur_steps": 54}
+{"timestamp": 1715530797.3263028, "frequency": 136.42569409856878, "target_frequency": 130.8127826502993, "steps_to_move": -6, "cur_steps": 49}
+{"timestamp": 1715530797.4190698, "frequency": 134.4228438368788, "target_frequency": 130.8127826502993, "steps_to_move": -4, "cur_steps": 43}
+{"timestamp": 1715530797.6071215, "frequency": 129.3205950226681, "target_frequency": 130.8127826502993, "steps_to_move": 1, "cur_steps": 39}
+{"timestamp": 1715530797.6296675, "frequency": 130.31833503589928, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 40}
+{"timestamp": 1715530797.6955714, "frequency": 132.28753063122264, "target_frequency": 130.8127826502993, "steps_to_move": -1, "cur_steps": 40}
+{"timestamp": 1715530797.7833686, "frequency": 129.19898262363947, "target_frequency": 130.8127826502993, "steps_to_move": 2, "cur_steps": 39}
+{"timestamp": 1715530797.8763208, "frequency": 129.22284570802623, "target_frequency": 130.8127826502993, "steps_to_move": 2, "cur_steps": 41}
+note_on channel=0 note=61 velocity=13 time=0
+note_off channel=0 note=61 velocity=0 time=0
+{"timestamp": 1715530798.3404007, "frequency": 130.3271511245113, "target_frequency": 138.59131548843604, "steps_to_move": 8, "cur_steps": 43}
+{"timestamp": 1715530798.4334595, "frequency": 133.18985428945876, "target_frequency": 138.59131548843604, "steps_to_move": 5, "cur_steps": 51}
+{"timestamp": 1715530798.5264678, "frequency": 134.57838734594736, "target_frequency": 138.59131548843604, "steps_to_move": 4, "cur_steps": 56}
+{"timestamp": 1715530798.6194787, "frequency": 138.85357301660386, "target_frequency": 138.59131548843604, "steps_to_move": 0, "cur_steps": 60}
+{"timestamp": 1715530798.7125309, "frequency": 140.0364175760638, "target_frequency": 138.59131548843604, "steps_to_move": -1, "cur_steps": 60}
+{"timestamp": 1715530798.8054185, "frequency": 144.6341024502572, "target_frequency": 138.59131548843604, "steps_to_move": -6, "cur_steps": 59}
+{"timestamp": 1715530798.8984694, "frequency": 138.53654545148447, "target_frequency": 138.59131548843604, "steps_to_move": 0, "cur_steps": 53}
+{"timestamp": 1715530798.9915395, "frequency": 137.75173624434072, "target_frequency": 138.59131548843604, "steps_to_move": 1, "cur_steps": 53}
+note_on channel=0 note=59 velocity=23 time=0
+{"timestamp": 1715530799.176568, "frequency": 142.16611744100777, "target_frequency": 123.47082531403103, "steps_to_move": -19, "cur_steps": 54}
+{"timestamp": 1715530799.2698443, "frequency": 132.41991594893165, "target_frequency": 123.47082531403103, "steps_to_move": -9, "cur_steps": 35}
+note_off channel=0 note=59 velocity=0 time=0
+{"timestamp": 1715530799.3624842, "frequency": 118.54675900930621, "target_frequency": 123.47082531403103, "steps_to_move": 5, "cur_steps": 26}
+{"timestamp": 1715530799.4568992, "frequency": 119.45054249538131, "target_frequency": 123.47082531403103, "steps_to_move": 4, "cur_steps": 31}
+{"timestamp": 1715530799.5488026, "frequency": 122.83160475652303, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 35}
+{"timestamp": 1715530799.6418304, "frequency": 123.7490120678072, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 36}
+{"timestamp": 1715530799.7345147, "frequency": 127.3721096357778, "target_frequency": 123.47082531403103, "steps_to_move": -4, "cur_steps": 36}
+{"timestamp": 1715530799.919807, "frequency": 126.32160435462988, "target_frequency": 123.47082531403103, "steps_to_move": -3, "cur_steps": 32}
+{"timestamp": 1715530800.0130007, "frequency": 122.83007400963034, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 29}
+{"timestamp": 1715530800.1059222, "frequency": 122.80646183105722, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 30}
+{"timestamp": 1715530800.2920623, "frequency": 121.11593815428247, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 31}
+{"timestamp": 1715530800.38471, "frequency": 122.67598020122227, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 33}
+{"timestamp": 1715530800.4778643, "frequency": 122.740522033091, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 34}
+note_on channel=0 note=57 velocity=48 time=0
+{"timestamp": 1715530800.6627133, "frequency": 126.24376708773269, "target_frequency": 110.0, "steps_to_move": -16, "cur_steps": 35}
+note_off channel=0 note=57 velocity=0 time=0
+{"timestamp": 1715530800.7557197, "frequency": 121.13073861686138, "target_frequency": 110.0, "steps_to_move": -11, "cur_steps": 19}
+{"timestamp": 1715530800.8486316, "frequency": 108.04270226488212, "target_frequency": 110.0, "steps_to_move": 2, "cur_steps": 8}
+{"timestamp": 1715530800.9414594, "frequency": 108.05094047969965, "target_frequency": 110.0, "steps_to_move": 2, "cur_steps": 10}
+{"timestamp": 1715530801.1275117, "frequency": 109.39391329056181, "target_frequency": 110.0, "steps_to_move": 1, "cur_steps": 12}
+{"timestamp": 1715530801.220897, "frequency": 109.40457393713444, "target_frequency": 110.0, "steps_to_move": 1, "cur_steps": 13}
+{"timestamp": 1715530801.3136184, "frequency": 110.18082451893416, "target_frequency": 110.0, "steps_to_move": 0, "cur_steps": 14}
+note_on channel=0 note=59 velocity=49 time=0
+{"timestamp": 1715530801.4991453, "frequency": 110.81248459634631, "target_frequency": 123.47082531403103, "steps_to_move": 13, "cur_steps": 14}
+note_off channel=0 note=59 velocity=0 time=0
+{"timestamp": 1715530801.5917234, "frequency": 116.1917818620874, "target_frequency": 123.47082531403103, "steps_to_move": 7, "cur_steps": 27}
+{"timestamp": 1715530801.6849205, "frequency": 122.84170555767356, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 34}
+{"timestamp": 1715530801.7777991, "frequency": 124.66935053535016, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 35}
+{"timestamp": 1715530801.8708243, "frequency": 124.46272344833949, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 34}
+{"timestamp": 1715530801.9637992, "frequency": 124.4816630174824, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 33}
+{"timestamp": 1715530802.0567138, "frequency": 124.49202968400171, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 32}
+{"timestamp": 1715530802.253434, "frequency": 124.45643135763893, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 31}
+{"timestamp": 1715530802.334567, "frequency": 124.47412500760926, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 30}
+{"timestamp": 1715530802.4276004, "frequency": 124.40674298776956, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 29}
+{"timestamp": 1715530802.6136215, "frequency": 121.01082536936862, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 28}
+{"timestamp": 1715530802.713407, "frequency": 121.02104302244204, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 30}
+{"timestamp": 1715530802.8995283, "frequency": 124.42515849978246, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 32}
+note_on channel=0 note=58 velocity=96 time=0
+{"timestamp": 1715530803.0869658, "frequency": 122.73601486111036, "target_frequency": 116.54094037952248, "steps_to_move": -6, "cur_steps": 31}
+note_off channel=0 note=58 velocity=0 time=0
+{"timestamp": 1715530803.1750298, "frequency": 122.6723605253076, "target_frequency": 116.54094037952248, "steps_to_move": -6, "cur_steps": 25}
+{"timestamp": 1715530803.3632576, "frequency": 114.3993021754644, "target_frequency": 116.54094037952248, "steps_to_move": 2, "cur_steps": 19}
+{"timestamp": 1715530803.4561493, "frequency": 113.7315388234501, "target_frequency": 116.54094037952248, "steps_to_move": 3, "cur_steps": 21}
+{"timestamp": 1715530803.5491421, "frequency": 116.8396525801019, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 24}
+{"timestamp": 1715530803.6420143, "frequency": 116.866202794606, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 24}
+{"timestamp": 1715530803.8275855, "frequency": 117.76264000028709, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 24}
+{"timestamp": 1715530803.847459, "frequency": 116.92699046829776, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 23}
+{"timestamp": 1715530803.9206443, "frequency": 115.4597626829258, "target_frequency": 116.54094037952248, "steps_to_move": 1, "cur_steps": 23}
+{"timestamp": 1715530804.0097446, "frequency": 116.9193313325352, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 24}
+{"timestamp": 1715530804.1061888, "frequency": 116.89830032037848, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 24}
+note_on channel=0 note=57 velocity=90 time=0
+{"timestamp": 1715530804.1996078, "frequency": 117.78266599674868, "target_frequency": 110.0, "steps_to_move": -8, "cur_steps": 24}
+note_off channel=0 note=57 velocity=0 time=0
+{"timestamp": 1715530804.3851292, "frequency": 114.40111805932099, "target_frequency": 110.0, "steps_to_move": -4, "cur_steps": 16}
+{"timestamp": 1715530804.4783604, "frequency": 112.12280538547967, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 12}
+{"timestamp": 1715530804.666154, "frequency": 106.68468831177015, "target_frequency": 110.0, "steps_to_move": 3, "cur_steps": 10}
+{"timestamp": 1715530804.6893342, "frequency": 106.05936784809444, "target_frequency": 110.0, "steps_to_move": 4, "cur_steps": 13}
+{"timestamp": 1715530804.7539456, "frequency": 108.00127439469986, "target_frequency": 110.0, "steps_to_move": 2, "cur_steps": 17}
+{"timestamp": 1715530804.8459992, "frequency": 112.25462418337312, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 19}
+{"timestamp": 1715530804.940115, "frequency": 114.46049848772996, "target_frequency": 110.0, "steps_to_move": -4, "cur_steps": 17}
+{"timestamp": 1715530805.0363426, "frequency": 111.53618107383832, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 13}
+{"timestamp": 1715530805.1281924, "frequency": 106.79328006363637, "target_frequency": 110.0, "steps_to_move": 3, "cur_steps": 11}
+{"timestamp": 1715530805.2214205, "frequency": 107.35321254206431, "target_frequency": 110.0, "steps_to_move": 3, "cur_steps": 14}
+note_on channel=0 note=54 velocity=47 time=0
+note_off channel=0 note=54 velocity=0 time=0
+{"timestamp": 1715530805.4954433, "frequency": 115.95445154095245, "target_frequency": 92.4986056779086, "steps_to_move": -23, "cur_steps": 17}
+{"timestamp": 1715530805.5928712, "frequency": 107.0294717747042, "target_frequency": 92.4986056779086, "steps_to_move": -15, "cur_steps": -6}
+{"timestamp": 1715530805.778344, "frequency": 82.87653418877721, "target_frequency": 92.4986056779086, "steps_to_move": 10, "cur_steps": -21}
+{"timestamp": 1715530805.8710408, "frequency": 86.58324287932844, "target_frequency": 92.4986056779086, "steps_to_move": 6, "cur_steps": -11}
+{"timestamp": 1715530805.961806, "frequency": 96.40508724258389, "target_frequency": 92.4986056779086, "steps_to_move": -4, "cur_steps": -5}
+{"timestamp": 1715530806.055199, "frequency": 96.3939404812957, "target_frequency": 92.4986056779086, "steps_to_move": -4, "cur_steps": -9}
+{"timestamp": 1715530806.245691, "frequency": 93.17785327231836, "target_frequency": 92.4986056779086, "steps_to_move": -1, "cur_steps": -13}
+note_on channel=0 note=61 velocity=84 time=0
+{"timestamp": 1715530806.6142082, "frequency": 86.62504789147721, "target_frequency": 138.59131548843604, "steps_to_move": 50, "cur_steps": -14}
+note_off channel=0 note=61 velocity=0 time=0
+{"timestamp": 1715530806.7997725, "frequency": 125.5479847668648, "target_frequency": 138.59131548843604, "steps_to_move": 13, "cur_steps": 36}
+{"timestamp": 1715530806.9852674, "frequency": 128.21944385707957, "target_frequency": 138.59131548843604, "steps_to_move": 10, "cur_steps": 49}
+{"timestamp": 1715530807.075923, "frequency": 135.50816724608916, "target_frequency": 138.59131548843604, "steps_to_move": 3, "cur_steps": 59}
+{"timestamp": 1715530807.1689227, "frequency": 139.06084514075275, "target_frequency": 138.59131548843604, "steps_to_move": 0, "cur_steps": 62}
+{"timestamp": 1715530807.3571575, "frequency": 146.7744351549701, "target_frequency": 138.59131548843604, "steps_to_move": -8, "cur_steps": 62}
+{"timestamp": 1715530807.4501603, "frequency": 144.45425731852538, "target_frequency": 138.59131548843604, "steps_to_move": -6, "cur_steps": 54}
+{"timestamp": 1715530807.5432115, "frequency": 133.30873255380956, "target_frequency": 138.59131548843604, "steps_to_move": 5, "cur_steps": 48}
+{"timestamp": 1715530807.636061, "frequency": 133.2353927520554, "target_frequency": 138.59131548843604, "steps_to_move": 5, "cur_steps": 53}
+{"timestamp": 1715530807.8241386, "frequency": 136.4528093829666, "target_frequency": 138.59131548843604, "steps_to_move": 2, "cur_steps": 58}
+{"timestamp": 1715530807.8471932, "frequency": 142.05555942027007, "target_frequency": 138.59131548843604, "steps_to_move": -3, "cur_steps": 60}
+{"timestamp": 1715530807.9124978, "frequency": 145.94999620441115, "target_frequency": 138.59131548843604, "steps_to_move": -7, "cur_steps": 57}
+note_on channel=0 note=59 velocity=40 time=0
+{"timestamp": 1715530808.000735, "frequency": 138.60391902363253, "target_frequency": 123.47082531403103, "steps_to_move": -15, "cur_steps": 50}
+{"timestamp": 1715530808.0934606, "frequency": 125.58493746446904, "target_frequency": 123.47082531403103, "steps_to_move": -2, "cur_steps": 35}
+note_off channel=0 note=59 velocity=0 time=0
+{"timestamp": 1715530808.1868355, "frequency": 123.14307986801948, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 33}
+{"timestamp": 1715530808.3722198, "frequency": 124.47286200826585, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 33}
+{"timestamp": 1715530808.5576682, "frequency": 126.19201117045326, "target_frequency": 123.47082531403103, "steps_to_move": -3, "cur_steps": 32}
+{"timestamp": 1715530808.7436051, "frequency": 124.42744191082338, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 29}
+{"timestamp": 1715530808.836644, "frequency": 124.44978686274992, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 28}
+{"timestamp": 1715530808.9294083, "frequency": 122.72645064527224, "target_frequency": 123.47082531403103, "steps_to_move": 1, "cur_steps": 27}
+note_on channel=0 note=53 velocity=58 time=0
+{"timestamp": 1715530809.0223439, "frequency": 122.74078542385818, "target_frequency": 87.30705785825097, "steps_to_move": -35, "cur_steps": 28}
+note_off channel=0 note=53 velocity=0 time=0
+{"timestamp": 1715530809.300795, "frequency": 96.40654593471552, "target_frequency": 87.30705785825097, "steps_to_move": -9, "cur_steps": -7}
+{"timestamp": 1715530809.3934376, "frequency": 86.58692281162246, "target_frequency": 87.30705785825097, "steps_to_move": 1, "cur_steps": -16}
+{"timestamp": 1715530809.4863505, "frequency": 85.32561324053401, "target_frequency": 87.30705785825097, "steps_to_move": 2, "cur_steps": -15}
+{"timestamp": 1715530809.579649, "frequency": 88.36617631385013, "target_frequency": 87.30705785825097, "steps_to_move": -1, "cur_steps": -13}
+{"timestamp": 1715530809.7653751, "frequency": 86.6223249272775, "target_frequency": 87.30705785825097, "steps_to_move": 1, "cur_steps": -14}
+{"timestamp": 1715530809.9517384, "frequency": 91.25865027032364, "target_frequency": 87.30705785825097, "steps_to_move": -4, "cur_steps": -13}
+note_on channel=0 note=57 velocity=79 time=0
+note_off channel=0 note=57 velocity=0 time=0
+{"timestamp": 1715530810.2295463, "frequency": 85.2419327778471, "target_frequency": 110.0, "steps_to_move": 25, "cur_steps": -17}
+{"timestamp": 1715530810.322646, "frequency": 94.75859332750055, "target_frequency": 110.0, "steps_to_move": 15, "cur_steps": 8}
+{"timestamp": 1715530810.4173543, "frequency": 112.13794933128602, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 23}
+{"timestamp": 1715530810.6015456, "frequency": 115.01200931816156, "target_frequency": 110.0, "steps_to_move": -5, "cur_steps": 21}
+note_on channel=0 note=59 velocity=8 time=0
+{"timestamp": 1715530810.8795767, "frequency": 112.15098152728739, "target_frequency": 123.47082531403103, "steps_to_move": 11, "cur_steps": 16}
+{"timestamp": 1715530810.9724977, "frequency": 117.57276522721241, "target_frequency": 123.47082531403103, "steps_to_move": 6, "cur_steps": 27}
+note_off channel=0 note=59 velocity=0 time=0
+{"timestamp": 1715530811.0657642, "frequency": 121.07652104197504, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 33}
+{"timestamp": 1715530811.1588757, "frequency": 125.21739569368646, "target_frequency": 123.47082531403103, "steps_to_move": -2, "cur_steps": 35}
+{"timestamp": 1715530811.2515776, "frequency": 123.55189785057578, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 33}
+{"timestamp": 1715530811.34441, "frequency": 123.47694059255663, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 33}
+{"timestamp": 1715530811.437494, "frequency": 124.52856833866815, "target_frequency": 123.47082531403103, "steps_to_move": -1, "cur_steps": 33}
+{"timestamp": 1715530811.5306814, "frequency": 126.21424322034261, "target_frequency": 123.47082531403103, "steps_to_move": -3, "cur_steps": 32}
+note_on channel=0 note=60 velocity=19 time=0
+{"timestamp": 1715530811.727213, "frequency": 121.80030500684659, "target_frequency": 130.8127826502993, "steps_to_move": 9, "cur_steps": 29}
+note_off channel=0 note=60 velocity=0 time=0
+{"timestamp": 1715530811.8087375, "frequency": 124.49771360787749, "target_frequency": 130.8127826502993, "steps_to_move": 6, "cur_steps": 38}
+{"timestamp": 1715530811.9015265, "frequency": 131.13798832205984, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 44}
+{"timestamp": 1715530811.9946873, "frequency": 129.36220951000902, "target_frequency": 130.8127826502993, "steps_to_move": 1, "cur_steps": 44}
+{"timestamp": 1715530812.087695, "frequency": 129.28517006826974, "target_frequency": 130.8127826502993, "steps_to_move": 2, "cur_steps": 45}
+{"timestamp": 1715530812.2732885, "frequency": 133.70268329631796, "target_frequency": 130.8127826502993, "steps_to_move": -3, "cur_steps": 47}
+note_on channel=0 note=56 velocity=38 time=0
+{"timestamp": 1715530812.4586706, "frequency": 133.2328288247528, "target_frequency": 103.82617439498628, "steps_to_move": -29, "cur_steps": 44}
+note_off channel=0 note=56 velocity=0 time=0
+{"timestamp": 1715530812.6445212, "frequency": 110.80078975959412, "target_frequency": 103.82617439498628, "steps_to_move": -7, "cur_steps": 15}
+{"timestamp": 1715530812.7375956, "frequency": 109.29652285317884, "target_frequency": 103.82617439498628, "steps_to_move": -5, "cur_steps": 8}
+{"timestamp": 1715530812.9301474, "frequency": 100.85544064310534, "target_frequency": 103.82617439498628, "steps_to_move": 3, "cur_steps": 3}
+{"timestamp": 1715530813.022051, "frequency": 105.92454898981919, "target_frequency": 103.82617439498628, "steps_to_move": -2, "cur_steps": 6}
+note_on channel=0 note=54 velocity=27 time=0
+{"timestamp": 1715530813.3039138, "frequency": 102.68433434745008, "target_frequency": 92.4986056779086, "steps_to_move": -10, "cur_steps": 4}
+note_off channel=0 note=54 velocity=0 time=0
+{"timestamp": 1715530813.392543, "frequency": 98.61807159744808, "target_frequency": 92.4986056779086, "steps_to_move": -6, "cur_steps": -6}
+{"timestamp": 1715530813.4850757, "frequency": 89.76050405498812, "target_frequency": 92.4986056779086, "steps_to_move": 3, "cur_steps": -12}
+{"timestamp": 1715530813.5805383, "frequency": 88.90491679304535, "target_frequency": 92.4986056779086, "steps_to_move": 4, "cur_steps": -9}
+{"timestamp": 1715530813.673519, "frequency": 91.26412834015302, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -5}
+{"timestamp": 1715530813.8591826, "frequency": 98.60586261699538, "target_frequency": 92.4986056779086, "steps_to_move": -6, "cur_steps": -4}
+{"timestamp": 1715530814.0461318, "frequency": 93.76975473221293, "target_frequency": 92.4986056779086, "steps_to_move": -1, "cur_steps": -10}
+{"timestamp": 1715530814.069653, "frequency": 91.61846901225468, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -11}
+{"timestamp": 1715530814.1375988, "frequency": 92.19780451595226, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -10}
+note_on channel=0 note=53 velocity=57 time=0
+{"timestamp": 1715530814.2239857, "frequency": 91.62210906551121, "target_frequency": 87.30705785825097, "steps_to_move": -4, "cur_steps": -10}
+{"timestamp": 1715530814.3169658, "frequency": 87.7866067822856, "target_frequency": 87.30705785825097, "steps_to_move": -1, "cur_steps": -14}
+note_off channel=0 note=53 velocity=0 time=0
+{"timestamp": 1715530814.4098794, "frequency": 87.44817681706371, "target_frequency": 87.30705785825097, "steps_to_move": 0, "cur_steps": -15}
+{"timestamp": 1715530814.595793, "frequency": 87.86158307533549, "target_frequency": 87.30705785825097, "steps_to_move": -1, "cur_steps": -15}
+{"timestamp": 1715530814.6888072, "frequency": 86.13861605808157, "target_frequency": 87.30705785825097, "steps_to_move": 1, "cur_steps": -16}
+{"timestamp": 1715530814.8738773, "frequency": 85.29123799947364, "target_frequency": 87.30705785825097, "steps_to_move": 2, "cur_steps": -15}
+{"timestamp": 1715530814.887506, "frequency": 86.07143800505217, "target_frequency": 87.30705785825097, "steps_to_move": 1, "cur_steps": -13}
+{"timestamp": 1715530814.9665012, "frequency": 92.5596027868018, "target_frequency": 87.30705785825097, "steps_to_move": -5, "cur_steps": -12}
+{"timestamp": 1715530815.059818, "frequency": 90.65221062310668, "target_frequency": 87.30705785825097, "steps_to_move": -3, "cur_steps": -17}
+note_on channel=0 note=55 velocity=65 time=0
+{"timestamp": 1715530815.1525626, "frequency": 83.2379572391233, "target_frequency": 97.99885899543732, "steps_to_move": 15, "cur_steps": -20}
+note_off channel=0 note=55 velocity=0 time=0
+{"timestamp": 1715530815.2457247, "frequency": 88.39471208106866, "target_frequency": 97.99885899543732, "steps_to_move": 10, "cur_steps": -5}
+{"timestamp": 1715530815.4316485, "frequency": 103.94493584545543, "target_frequency": 97.99885899543732, "steps_to_move": -6, "cur_steps": 5}
+{"timestamp": 1715530815.61679, "frequency": 99.76141161162293, "target_frequency": 97.99885899543732, "steps_to_move": -2, "cur_steps": -1}
+{"timestamp": 1715530815.7097123, "frequency": 99.68066010499192, "target_frequency": 97.99885899543732, "steps_to_move": -2, "cur_steps": -3}
+note_on channel=0 note=57 velocity=50 time=0
+{"timestamp": 1715530815.8027022, "frequency": 98.57917325626806, "target_frequency": 110.0, "steps_to_move": 11, "cur_steps": -5}
+{"timestamp": 1715530815.8959668, "frequency": 104.47050689502507, "target_frequency": 110.0, "steps_to_move": 6, "cur_steps": 6}
+note_off channel=0 note=57 velocity=0 time=0
+{"timestamp": 1715530815.9887547, "frequency": 107.67570703369125, "target_frequency": 110.0, "steps_to_move": 2, "cur_steps": 12}
+{"timestamp": 1715530816.1746507, "frequency": 112.0847726165991, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 14}
+{"timestamp": 1715530816.2678504, "frequency": 112.07364178401518, "target_frequency": 110.0, "steps_to_move": -2, "cur_steps": 12}
+{"timestamp": 1715530816.4529223, "frequency": 110.69209698755513, "target_frequency": 110.0, "steps_to_move": -1, "cur_steps": 10}
+{"timestamp": 1715530816.4664464, "frequency": 108.02759318090101, "target_frequency": 110.0, "steps_to_move": 2, "cur_steps": 9}
+note_on channel=0 note=58 velocity=14 time=0
+{"timestamp": 1715530816.5464032, "frequency": 109.3726204789884, "target_frequency": 116.54094037952248, "steps_to_move": 7, "cur_steps": 11}
+{"timestamp": 1715530816.6386125, "frequency": 110.02727333763744, "target_frequency": 116.54094037952248, "steps_to_move": 7, "cur_steps": 18}
+note_off channel=0 note=58 velocity=0 time=0
+{"timestamp": 1715530816.7316098, "frequency": 116.01155167856894, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 25}
+{"timestamp": 1715530816.9175005, "frequency": 118.46464596470108, "target_frequency": 116.54094037952248, "steps_to_move": -2, "cur_steps": 25}
+{"timestamp": 1715530817.0106552, "frequency": 118.45523450851975, "target_frequency": 116.54094037952248, "steps_to_move": -2, "cur_steps": 23}
+{"timestamp": 1715530817.1956618, "frequency": 117.50723023118222, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 21}
+{"timestamp": 1715530817.209021, "frequency": 115.97342582847986, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 20}
+{"timestamp": 1715530817.2887542, "frequency": 115.986052298281, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 20}
+{"timestamp": 1715530817.38167, "frequency": 114.48658381389805, "target_frequency": 116.54094037952248, "steps_to_move": 2, "cur_steps": 20}
+{"timestamp": 1715530817.4749167, "frequency": 115.14316588334128, "target_frequency": 116.54094037952248, "steps_to_move": 1, "cur_steps": 22}
+{"timestamp": 1715530817.5676427, "frequency": 116.0747813004823, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 23}
+{"timestamp": 1715530817.6605418, "frequency": 117.46250722259849, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 23}
+{"timestamp": 1715530817.9385068, "frequency": 115.98471397776605, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 22}
+{"timestamp": 1715530817.9519765, "frequency": 115.98669222357034, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 22}
+{"timestamp": 1715530818.0316074, "frequency": 116.82978106236666, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 22}
+note_on channel=0 note=59 velocity=78 time=0
+{"timestamp": 1715530818.2175896, "frequency": 115.28877298271051, "target_frequency": 123.47082531403103, "steps_to_move": 8, "cur_steps": 22}
+note_off channel=0 note=59 velocity=0 time=0
+{"timestamp": 1715530818.4036908, "frequency": 121.02746828462533, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 30}
+{"timestamp": 1715530818.589566, "frequency": 120.9091707548537, "target_frequency": 123.47082531403103, "steps_to_move": 3, "cur_steps": 32}
+{"timestamp": 1715530818.7748303, "frequency": 121.84130503225416, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 35}
+{"timestamp": 1715530818.9604268, "frequency": 126.19656261347917, "target_frequency": 123.47082531403103, "steps_to_move": -3, "cur_steps": 37}
+note_on channel=0 note=58 velocity=91 time=0
+{"timestamp": 1715530819.1503925, "frequency": 128.08136052434472, "target_frequency": 116.54094037952248, "steps_to_move": -12, "cur_steps": 34}
+note_off channel=0 note=58 velocity=0 time=0
+{"timestamp": 1715530819.337659, "frequency": 117.46728557354012, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 22}
+{"timestamp": 1715530819.5269783, "frequency": 117.56130189680302, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 21}
+{"timestamp": 1715530819.5494914, "frequency": 116.07144118530817, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 20}
+{"timestamp": 1715530819.6168709, "frequency": 114.43156252629755, "target_frequency": 116.54094037952248, "steps_to_move": 2, "cur_steps": 20}
+note_on channel=0 note=54 velocity=44 time=0
+{"timestamp": 1715530819.7097392, "frequency": 113.74810719988595, "target_frequency": 92.4986056779086, "steps_to_move": -21, "cur_steps": 22}
+{"timestamp": 1715530819.803561, "frequency": 110.673527630375, "target_frequency": 92.4986056779086, "steps_to_move": -18, "cur_steps": 1}
+note_off channel=0 note=54 velocity=0 time=0
+{"timestamp": 1715530819.9891272, "frequency": 84.77746240710061, "target_frequency": 92.4986056779086, "steps_to_move": 8, "cur_steps": -17}
+{"timestamp": 1715530820.0820081, "frequency": 86.09238010042023, "target_frequency": 92.4986056779086, "steps_to_move": 6, "cur_steps": -9}
+{"timestamp": 1715530820.1743674, "frequency": 97.56181221554313, "target_frequency": 92.4986056779086, "steps_to_move": -5, "cur_steps": -3}
+{"timestamp": 1715530820.376971, "frequency": 92.18118877094112, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -8}
+{"timestamp": 1715530820.4515812, "frequency": 92.17355631482356, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -8}
+{"timestamp": 1715530820.63977, "frequency": 91.28111525421215, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -8}
+{"timestamp": 1715530820.8250644, "frequency": 92.26269110683002, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -7}
+note_on channel=0 note=60 velocity=82 time=0
+note_off channel=0 note=60 velocity=0 time=0
+{"timestamp": 1715530821.1058095, "frequency": 92.78143663874101, "target_frequency": 130.8127826502993, "steps_to_move": 38, "cur_steps": -7}
+{"timestamp": 1715530821.285984, "frequency": 120.9047268095889, "target_frequency": 130.8127826502993, "steps_to_move": 10, "cur_steps": 31}
+{"timestamp": 1715530821.3803918, "frequency": 125.46215195515586, "target_frequency": 130.8127826502993, "steps_to_move": 5, "cur_steps": 41}
+{"timestamp": 1715530821.475275, "frequency": 129.2436897240853, "target_frequency": 130.8127826502993, "steps_to_move": 2, "cur_steps": 46}
+{"timestamp": 1715530821.5681458, "frequency": 132.04690753971096, "target_frequency": 130.8127826502993, "steps_to_move": -1, "cur_steps": 48}
+{"timestamp": 1715530821.661297, "frequency": 133.11317069474322, "target_frequency": 130.8127826502993, "steps_to_move": -2, "cur_steps": 47}
+{"timestamp": 1715530821.9624083, "frequency": 133.10666185861538, "target_frequency": 130.8127826502993, "steps_to_move": -2, "cur_steps": 45}
+note_on channel=0 note=55 velocity=30 time=0
+{"timestamp": 1715530822.0312188, "frequency": 131.2616257966381, "target_frequency": 97.99885899543732, "steps_to_move": -33, "cur_steps": 43}
+{"timestamp": 1715530822.1227155, "frequency": 124.46446368563807, "target_frequency": 97.99885899543732, "steps_to_move": -26, "cur_steps": 10}
+note_off channel=0 note=55 velocity=0 time=0
+{"timestamp": 1715530822.2160356, "frequency": 100.93074800365973, "target_frequency": 97.99885899543732, "steps_to_move": -3, "cur_steps": -16}
+{"timestamp": 1715530822.309373, "frequency": 84.78623460610123, "target_frequency": 97.99885899543732, "steps_to_move": 13, "cur_steps": -19}
+{"timestamp": 1715530822.4039283, "frequency": 91.69110208323812, "target_frequency": 97.99885899543732, "steps_to_move": 6, "cur_steps": -6}
+{"timestamp": 1715530822.6855235, "frequency": 100.1797495761219, "target_frequency": 97.99885899543732, "steps_to_move": -2, "cur_steps": 0}
+{"timestamp": 1715530822.9616299, "frequency": 99.09112267326232, "target_frequency": 97.99885899543732, "steps_to_move": -1, "cur_steps": -2}
+{"timestamp": 1715530823.054199, "frequency": 99.09209344277822, "target_frequency": 97.99885899543732, "steps_to_move": -1, "cur_steps": -3}
+{"timestamp": 1715530823.147057, "frequency": 97.95570613373752, "target_frequency": 97.99885899543732, "steps_to_move": 0, "cur_steps": -4}
+{"timestamp": 1715530823.5208373, "frequency": 98.18671183374819, "target_frequency": 97.99885899543732, "steps_to_move": 0, "cur_steps": -4}
+note_on channel=0 note=50 velocity=30 time=0
+note_on channel=0 note=48 velocity=20 time=0
+{"timestamp": 1715530823.5458386, "frequency": 96.40593569945894, "target_frequency": 130.8127826502993, "steps_to_move": 34, "cur_steps": -4}
+note_off channel=0 note=48 velocity=0 time=0
+note_off channel=0 note=50 velocity=0 time=0
+{"timestamp": 1715530823.7052426, "frequency": 117.56152051599821, "target_frequency": 130.8127826502993, "steps_to_move": 13, "cur_steps": 30}
+{"timestamp": 1715530823.7977126, "frequency": 121.7262009398443, "target_frequency": 130.8127826502993, "steps_to_move": 9, "cur_steps": 43}
+{"timestamp": 1715530823.8903563, "frequency": 133.15464544343135, "target_frequency": 130.8127826502993, "steps_to_move": -2, "cur_steps": 52}
+{"timestamp": 1715530823.9831707, "frequency": 134.20274803738414, "target_frequency": 130.8127826502993, "steps_to_move": -3, "cur_steps": 50}
+{"timestamp": 1715530824.0763724, "frequency": 133.1923953538277, "target_frequency": 130.8127826502993, "steps_to_move": -2, "cur_steps": 47}
+{"timestamp": 1715530824.2614255, "frequency": 131.2279728283706, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 45}
+{"timestamp": 1715530824.2803283, "frequency": 133.19056599059095, "target_frequency": 130.8127826502993, "steps_to_move": -2, "cur_steps": 45}
+{"timestamp": 1715530824.4449093, "frequency": 132.33880222060452, "target_frequency": 130.8127826502993, "steps_to_move": -2, "cur_steps": 43}
+{"timestamp": 1715530824.5400796, "frequency": 131.1594148465987, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 41}
+note_on channel=0 note=50 velocity=50 time=0
+{"timestamp": 1715530824.6330302, "frequency": 131.08812251158233, "target_frequency": 73.4161919793519, "steps_to_move": -50, "cur_steps": 41}
+note_off channel=0 note=50 velocity=0 time=0
+{"timestamp": 1715530825.190394, "frequency": 91.92742552176009, "target_frequency": 73.4161919793519, "steps_to_move": -19, "cur_steps": -9}
+{"timestamp": 1715530825.3760488, "frequency": 75.76132426442406, "target_frequency": 73.4161919793519, "steps_to_move": -2, "cur_steps": -28}
+{"timestamp": 1715530825.4694486, "frequency": 72.89599288719062, "target_frequency": 73.4161919793519, "steps_to_move": 1, "cur_steps": -30}
+{"timestamp": 1715530825.562649, "frequency": 73.51131547536146, "target_frequency": 73.4161919793519, "steps_to_move": 0, "cur_steps": -29}
+{"timestamp": 1715530825.6552792, "frequency": 74.72212564210486, "target_frequency": 73.4161919793519, "steps_to_move": -1, "cur_steps": -29}
+{"timestamp": 1715530825.8428388, "frequency": 74.0672387271885, "target_frequency": 73.4161919793519, "steps_to_move": -1, "cur_steps": -30}
+{"timestamp": 1715530825.8659346, "frequency": 73.43887960496018, "target_frequency": 73.4161919793519, "steps_to_move": 0, "cur_steps": -31}
+{"timestamp": 1715530825.931972, "frequency": 74.08251939081981, "target_frequency": 73.4161919793519, "steps_to_move": -1, "cur_steps": -31}
+{"timestamp": 1715530826.0242138, "frequency": 72.51266624735754, "target_frequency": 73.4161919793519, "steps_to_move": 1, "cur_steps": -32}
+{"timestamp": 1715530826.119252, "frequency": 73.45735014598493, "target_frequency": 73.4161919793519, "steps_to_move": 0, "cur_steps": -31}
+{"timestamp": 1715530826.209916, "frequency": 73.11938769927387, "target_frequency": 73.4161919793519, "steps_to_move": 0, "cur_steps": -31}
+{"timestamp": 1715530826.3054953, "frequency": 71.34970700181142, "target_frequency": 73.4161919793519, "steps_to_move": 2, "cur_steps": -31}
+note_on channel=0 note=53 velocity=74 time=0
+{"timestamp": 1715530826.397952, "frequency": 72.87029972054157, "target_frequency": 87.30705785825097, "steps_to_move": 14, "cur_steps": -29}
+{"timestamp": 1715530826.491275, "frequency": 79.32580668585155, "target_frequency": 87.30705785825097, "steps_to_move": 8, "cur_steps": -15}
+note_off channel=0 note=53 velocity=0 time=0
+{"timestamp": 1715530826.6792629, "frequency": 92.63801291597795, "target_frequency": 87.30705785825097, "steps_to_move": -5, "cur_steps": -7}
+{"timestamp": 1715530826.7656693, "frequency": 93.19566545931167, "target_frequency": 87.30705785825097, "steps_to_move": -6, "cur_steps": -12}
+{"timestamp": 1715530826.8621922, "frequency": 84.80057977130748, "target_frequency": 87.30705785825097, "steps_to_move": 3, "cur_steps": -18}
+{"timestamp": 1715530826.9554524, "frequency": 85.88206832023172, "target_frequency": 87.30705785825097, "steps_to_move": 1, "cur_steps": -15}
+{"timestamp": 1715530827.234171, "frequency": 90.09374220886197, "target_frequency": 87.30705785825097, "steps_to_move": -3, "cur_steps": -14}
+{"timestamp": 1715530827.4221044, "frequency": 87.85986473178862, "target_frequency": 87.30705785825097, "steps_to_move": -1, "cur_steps": -17}
+{"timestamp": 1715530827.4467843, "frequency": 90.09710607913968, "target_frequency": 87.30705785825097, "steps_to_move": -3, "cur_steps": -18}
+{"timestamp": 1715530827.5085158, "frequency": 83.46828133432072, "target_frequency": 87.30705785825097, "steps_to_move": 4, "cur_steps": -21}
+note_on channel=0 note=54 velocity=62 time=0
+{"timestamp": 1715530827.604879, "frequency": 84.78071976524362, "target_frequency": 92.4986056779086, "steps_to_move": 8, "cur_steps": -17}
+note_off channel=0 note=54 velocity=0 time=0
+{"timestamp": 1715530827.6993542, "frequency": 90.76160718324577, "target_frequency": 92.4986056779086, "steps_to_move": 2, "cur_steps": -9}
+{"timestamp": 1715530827.8829453, "frequency": 94.75305615750933, "target_frequency": 92.4986056779086, "steps_to_move": -2, "cur_steps": -7}
+{"timestamp": 1715530828.1852708, "frequency": 93.81025291831224, "target_frequency": 92.4986056779086, "steps_to_move": -1, "cur_steps": -9}
+{"timestamp": 1715530828.251584, "frequency": 93.24873285497077, "target_frequency": 92.4986056779086, "steps_to_move": -1, "cur_steps": -10}
+{"timestamp": 1715530828.5336847, "frequency": 92.58615259718282, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -11}
+{"timestamp": 1715530828.6270156, "frequency": 92.59359589164248, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -11}
+{"timestamp": 1715530828.720203, "frequency": 90.71461726712799, "target_frequency": 92.4986056779086, "steps_to_move": 2, "cur_steps": -11}
+note_on channel=0 note=56 velocity=93 time=0
+{"timestamp": 1715530828.9983463, "frequency": 94.1636079438105, "target_frequency": 103.82617439498628, "steps_to_move": 10, "cur_steps": -9}
+note_off channel=0 note=56 velocity=0 time=0
+{"timestamp": 1715530829.0914955, "frequency": 97.34812591164982, "target_frequency": 103.82617439498628, "steps_to_move": 6, "cur_steps": 1}
+{"timestamp": 1715530829.1803458, "frequency": 103.92716239667226, "target_frequency": 103.82617439498628, "steps_to_move": 0, "cur_steps": 7}
+{"timestamp": 1715530829.370318, "frequency": 107.18828070500403, "target_frequency": 103.82617439498628, "steps_to_move": -3, "cur_steps": 7}
+{"timestamp": 1715530829.5558567, "frequency": 103.91638137708958, "target_frequency": 103.82617439498628, "steps_to_move": 0, "cur_steps": 4}
+{"timestamp": 1715530829.7640975, "frequency": 104.38158695757903, "target_frequency": 103.82617439498628, "steps_to_move": -1, "cur_steps": 4}
+{"timestamp": 1715530829.8313854, "frequency": 104.39263701436778, "target_frequency": 103.82617439498628, "steps_to_move": -1, "cur_steps": 3}
+{"timestamp": 1715530829.9246862, "frequency": 103.28801563612159, "target_frequency": 103.82617439498628, "steps_to_move": 1, "cur_steps": 2}
+note_on channel=0 note=57 velocity=45 time=0
+{"timestamp": 1715530830.2060366, "frequency": 102.11199621868045, "target_frequency": 110.0, "steps_to_move": 8, "cur_steps": 3}
+note_off channel=0 note=57 velocity=0 time=0
+{"timestamp": 1715530830.299459, "frequency": 107.22152872886258, "target_frequency": 110.0, "steps_to_move": 3, "cur_steps": 11}
+{"timestamp": 1715530830.3920512, "frequency": 110.691153680105, "target_frequency": 110.0, "steps_to_move": -1, "cur_steps": 14}
+{"timestamp": 1715530830.580183, "frequency": 111.31344854611453, "target_frequency": 110.0, "steps_to_move": -1, "cur_steps": 13}
+{"timestamp": 1715530830.603591, "frequency": 111.33348868574569, "target_frequency": 110.0, "steps_to_move": -1, "cur_steps": 12}
+{"timestamp": 1715530830.6661818, "frequency": 109.97714646506479, "target_frequency": 110.0, "steps_to_move": 0, "cur_steps": 11}
+{"timestamp": 1715530830.8552046, "frequency": 109.37907889404612, "target_frequency": 110.0, "steps_to_move": 1, "cur_steps": 11}
+{"timestamp": 1715530830.947084, "frequency": 109.88026739631005, "target_frequency": 110.0, "steps_to_move": 0, "cur_steps": 12}
+{"timestamp": 1715530831.0402443, "frequency": 108.68474969256906, "target_frequency": 110.0, "steps_to_move": 1, "cur_steps": 12}
+note_on channel=0 note=58 velocity=15 time=0
+note_off channel=0 note=58 velocity=0 time=0
+{"timestamp": 1715530831.3233063, "frequency": 108.60908915715454, "target_frequency": 116.54094037952248, "steps_to_move": 8, "cur_steps": 13}
+{"timestamp": 1715530831.5987706, "frequency": 115.1213883105571, "target_frequency": 116.54094037952248, "steps_to_move": 1, "cur_steps": 21}
+{"timestamp": 1715530831.6919475, "frequency": 116.5629412302219, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 22}
+{"timestamp": 1715530831.7853193, "frequency": 115.94175998083894, "target_frequency": 116.54094037952248, "steps_to_move": 1, "cur_steps": 22}
+{"timestamp": 1715530832.2469893, "frequency": 116.04343278411906, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 23}
+{"timestamp": 1715530832.3423107, "frequency": 118.39423234759639, "target_frequency": 116.54094037952248, "steps_to_move": -2, "cur_steps": 23}
+{"timestamp": 1715530832.4349391, "frequency": 117.5388668827471, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 21}
+{"timestamp": 1715530832.5281239, "frequency": 117.51983478122213, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 20}
+{"timestamp": 1715530832.621168, "frequency": 117.5157475141939, "target_frequency": 116.54094037952248, "steps_to_move": -1, "cur_steps": 19}
+{"timestamp": 1715530832.713866, "frequency": 116.63943208498085, "target_frequency": 116.54094037952248, "steps_to_move": 0, "cur_steps": 18}
+note_on channel=0 note=59 velocity=51 time=0
+{"timestamp": 1715530832.8996289, "frequency": 116.65179479652116, "target_frequency": 123.47082531403103, "steps_to_move": 7, "cur_steps": 18}
+note_off channel=0 note=59 velocity=0 time=0
+{"timestamp": 1715530832.992371, "frequency": 117.55633533684718, "target_frequency": 123.47082531403103, "steps_to_move": 6, "cur_steps": 25}
+{"timestamp": 1715530833.0816174, "frequency": 121.31999939291173, "target_frequency": 123.47082531403103, "steps_to_move": 2, "cur_steps": 31}
+{"timestamp": 1715530833.1776993, "frequency": 123.12269272522715, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 33}
+{"timestamp": 1715530833.2712162, "frequency": 123.39520683779168, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 33}
+{"timestamp": 1715530833.3638854, "frequency": 123.41131393440027, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 33}
+{"timestamp": 1715530833.4569745, "frequency": 125.13245713776791, "target_frequency": 123.47082531403103, "steps_to_move": -2, "cur_steps": 33}
+{"timestamp": 1715530833.5497344, "frequency": 123.43696297677558, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 31}
+{"timestamp": 1715530833.738688, "frequency": 123.38326146767336, "target_frequency": 123.47082531403103, "steps_to_move": 0, "cur_steps": 31}
+note_on channel=0 note=54 velocity=39 time=0
+{"timestamp": 1715530833.7622213, "frequency": 123.38435614818485, "target_frequency": 92.4986056779086, "steps_to_move": -31, "cur_steps": 31}
+note_off channel=0 note=54 velocity=0 time=0
+{"timestamp": 1715530834.013989, "frequency": 100.17549988571604, "target_frequency": 92.4986056779086, "steps_to_move": -8, "cur_steps": 0}
+{"timestamp": 1715530834.1999774, "frequency": 94.16482992268269, "target_frequency": 92.4986056779086, "steps_to_move": -2, "cur_steps": -8}
+{"timestamp": 1715530834.480571, "frequency": 91.63670830358186, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -10}
+{"timestamp": 1715530834.5035584, "frequency": 91.08047531239566, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -9}
+{"timestamp": 1715530834.8500152, "frequency": 94.1323215924831, "target_frequency": 92.4986056779086, "steps_to_move": -2, "cur_steps": -8}
+{"timestamp": 1715530835.034195, "frequency": 93.17269690156358, "target_frequency": 92.4986056779086, "steps_to_move": -1, "cur_steps": -10}
+{"timestamp": 1715530835.1289785, "frequency": 92.61889987916395, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -11}
+{"timestamp": 1715530835.4036522, "frequency": 91.07123126925927, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -11}
+{"timestamp": 1715530835.5934677, "frequency": 94.1324712069119, "target_frequency": 92.4986056779086, "steps_to_move": -2, "cur_steps": -10}
+{"timestamp": 1715530835.6864376, "frequency": 91.33043262026338, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -12}
+{"timestamp": 1715530836.0596387, "frequency": 91.02538162048027, "target_frequency": 92.4986056779086, "steps_to_move": 1, "cur_steps": -11}
+{"timestamp": 1715530836.3359118, "frequency": 92.60876156268561, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -10}
+{"timestamp": 1715530836.428969, "frequency": 92.3496962046813, "target_frequency": 92.4986056779086, "steps_to_move": 0, "cur_steps": -10}
+{"timestamp": 1715530836.5217562, "frequency": 93.15791081744511, "target_frequency": 92.4986056779086, "steps_to_move": -1, "cur_steps": -10}
+note_on channel=0 note=60 velocity=64 time=0
+note_off channel=0 note=60 velocity=0 time=0
+{"timestamp": 1715530836.8001297, "frequency": 92.14655112712023, "target_frequency": 130.8127826502993, "steps_to_move": 39, "cur_steps": -11}
+{"timestamp": 1715530836.9824934, "frequency": 120.05427246526972, "target_frequency": 130.8127826502993, "steps_to_move": 11, "cur_steps": 28}
+{"timestamp": 1715530837.0789955, "frequency": 126.4477946768537, "target_frequency": 130.8127826502993, "steps_to_move": 4, "cur_steps": 39}
+{"timestamp": 1715530837.171894, "frequency": 128.22937605562282, "target_frequency": 130.8127826502993, "steps_to_move": 3, "cur_steps": 43}
+{"timestamp": 1715530837.3582475, "frequency": 133.86620908197145, "target_frequency": 130.8127826502993, "steps_to_move": -3, "cur_steps": 46}
+{"timestamp": 1715530837.451093, "frequency": 131.09029128551884, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 43}
+{"timestamp": 1715530837.639209, "frequency": 130.14241586295958, "target_frequency": 130.8127826502993, "steps_to_move": 1, "cur_steps": 43}
+{"timestamp": 1715530837.6626852, "frequency": 131.09822694915232, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 44}
+{"timestamp": 1715530837.7255187, "frequency": 131.8686814704722, "target_frequency": 130.8127826502993, "steps_to_move": -1, "cur_steps": 44}
+{"timestamp": 1715530837.8218188, "frequency": 131.0611737269076, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 43}
+{"timestamp": 1715530837.9151943, "frequency": 131.07493551002045, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 43}
+{"timestamp": 1715530838.0075364, "frequency": 131.07685521870144, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 43}
+{"timestamp": 1715530838.0990863, "frequency": 133.04503644557607, "target_frequency": 130.8127826502993, "steps_to_move": -2, "cur_steps": 43}
+{"timestamp": 1715530838.1921036, "frequency": 130.12163418921412, "target_frequency": 130.8127826502993, "steps_to_move": 1, "cur_steps": 41}
+{"timestamp": 1715530838.3818376, "frequency": 131.0803896684732, "target_frequency": 130.8127826502993, "steps_to_move": 0, "cur_steps": 42}
+{"timestamp": 1715530838.404909, "frequency": 129.36317180851145, "target_frequency": 130.8127826502993, "steps_to_move": 1, "cur_steps": 42}
+{"timestamp": 1715530838.4684198, "frequency": 129.24349527022048, "target_frequency": 130.8127826502993, "steps_to_move": 2, "cur_steps": 43}
+{"timestamp": 1715530838.5657268, "frequency": 130.0526426046434, "target_frequency": 130.8127826502993, "steps_to_move": 1, "cur_steps": 45}
+note_on channel=0 note=61 velocity=49 time=0
+{"timestamp": 1715530838.65985, "frequency": 131.87245981213476, "target_frequency": 138.59131548843604, "steps_to_move": 7, "cur_steps": 46}
+{"timestamp": 1715530838.7515216, "frequency": 135.208386539649, "target_frequency": 138.59131548843604, "steps_to_move": 3, "cur_steps": 53}
+note_off channel=0 note=61 velocity=0 time=0
+{"timestamp": 1715530838.8443599, "frequency": 138.51508570453296, "target_frequency": 138.59131548843604, "steps_to_move": 0, "cur_steps": 56}
+{"timestamp": 1715530838.9375618, "frequency": 137.2196432884571, "target_frequency": 138.59131548843604, "steps_to_move": 1, "cur_steps": 56}
+{"timestamp": 1715530839.0298655, "frequency": 137.25117409391342, "target_frequency": 138.59131548843604, "steps_to_move": 1, "cur_steps": 57}
+{"timestamp": 1715530839.2154708, "frequency": 138.50277514295988, "target_frequency": 138.59131548843604, "steps_to_move": 0, "cur_steps": 58}
+{"timestamp": 1715530839.2355266, "frequency": 138.5546623129427, "target_frequency": 138.59131548843604, "steps_to_move": 0, "cur_steps": 58}
+{"timestamp": 1715530839.3063176, "frequency": 140.75374694755638, "target_frequency": 138.59131548843604, "steps_to_move": -2, "cur_steps": 58}
+{"timestamp": 1715530839.3994846, "frequency": 143.10965499955475, "target_frequency": 138.59131548843604, "steps_to_move": -5, "cur_steps": 56}
+{"timestamp": 1715530839.4942517, "frequency": 135.9140876275183, "target_frequency": 138.59131548843604, "steps_to_move": 3, "cur_steps": 51}
+{"timestamp": 1715530839.5875938, "frequency": 136.0951703308501, "target_frequency": 138.59131548843604, "steps_to_move": 2, "cur_steps": 54}
+{"timestamp": 1715530839.7734823, "frequency": 137.30117753024373, "target_frequency": 138.59131548843604, "steps_to_move": 1, "cur_steps": 56}
+{"timestamp": 1715530839.9586246, "frequency": 138.48603432341653, "target_frequency": 138.59131548843604, "steps_to_move": 0, "cur_steps": 57}
+{"timestamp": 1715530839.9792492, "frequency": 137.51380885168086, "target_frequency": 138.59131548843604, "steps_to_move": 1, "cur_steps": 57}
+{"timestamp": 1715530840.051967, "frequency": 140.7599731749112, "target_frequency": 138.59131548843604, "steps_to_move": -2, "cur_steps": 58}
+note_on channel=0 note=56 velocity=41 time=0
+{"timestamp": 1715530840.140762, "frequency": 138.6622305557291, "target_frequency": 103.82617439498628, "steps_to_move": -35, "cur_steps": 56}
+{"timestamp": 1715530840.2373545, "frequency": 130.09151712512005, "target_frequency": 103.82617439498628, "steps_to_move": -26, "cur_steps": 21}
+note_off channel=0 note=56 velocity=0 time=0
+{"timestamp": 1715530840.3305163, "frequency": 107.20305294981912, "target_frequency": 103.82617439498628, "steps_to_move": -3, "cur_steps": -5}
+{"timestamp": 1715530840.4252985, "frequency": 96.19644771186232, "target_frequency": 103.82617439498628, "steps_to_move": 8, "cur_steps": -8}
+{"timestamp": 1715530840.516372, "frequency": 96.30136348665876, "target_frequency": 103.82617439498628, "steps_to_move": 8, "cur_steps": 0}
+{"timestamp": 1715530840.6096005, "frequency": 105.17019682859045, "target_frequency": 103.82617439498628, "steps_to_move": -1, "cur_steps": 8}
+{"timestamp": 1715530840.7947352, "frequency": 105.17964963370083, "target_frequency": 103.82617439498628, "steps_to_move": -1, "cur_steps": 7}
+{"timestamp": 1715530840.8151116, "frequency": 106.45752619358451, "target_frequency": 103.82617439498628, "steps_to_move": -3, "cur_steps": 6}
+{"timestamp": 1715530840.8865016, "frequency": 105.19133385784198, "target_frequency": 103.82617439498628, "steps_to_move": -1, "cur_steps": 3}
+{"timestamp": 1715530840.9765782, "frequency": 104.38525979833805, "target_frequency": 103.82617439498628, "steps_to_move": -1, "cur_steps": 2}
+{"timestamp": 1715530841.0737007, "frequency": 103.16310651867089, "target_frequency": 103.82617439498628, "steps_to_move": 1, "cur_steps": 1}
+{"timestamp": 1715530841.1665208, "frequency": 103.19842568951218, "target_frequency": 103.82617439498628, "steps_to_move": 1, "cur_steps": 2}
+{"timestamp": 1715530841.3526616, "frequency": 104.46531839317512, "target_frequency": 103.82617439498628, "steps_to_move": -1, "cur_steps": 3}
+{"timestamp": 1715530841.560731, "frequency": 103.2421530939249, "target_frequency": 103.82617439498628, "steps_to_move": 1, "cur_steps": 2}
