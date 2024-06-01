@@ -6,6 +6,7 @@ import requests
 
 from autoguitar.motor import MotorController
 from autoguitar.pitch_detector import PitchDetector, Timestamp
+from autoguitar.tuner_strategy import ProportionalTunerStrategy, TunerStrategy
 
 
 class Tuner:
@@ -18,6 +19,7 @@ class Tuner:
         self.pitch_detector = pitch_detector
         self.motor_controller = motor_controller
         self.target_frequency = initial_target_frequency
+        self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy()
 
         pitch_detector.on_reading.subscribe(self.on_pitch_reading)
 
@@ -34,12 +36,18 @@ class Tuner:
             print("Still moving, skipping...", file=sys.stderr)
             return
 
-        n_steps = get_n_steps(frequency, self.target_frequency)
-        self.post_update(frequency=frequency, n_steps=n_steps)
+        n_steps = self.tuner_strategy.get_steps_to_move(
+            frequency,
+            self.target_frequency,
+            self.pitch_detector,
+            self.motor_controller.cur_steps,
+        )
+
+        self.send_update_to_server(frequency=frequency, n_steps=n_steps)
 
         self.motor_controller.move(n_steps)
 
-    def post_update(self, frequency: float, n_steps: int):
+    def send_update_to_server(self, frequency: float, n_steps: int):
         try:
             requests.post(
                 "http://localhost:8050/api/event",
@@ -55,24 +63,3 @@ class Tuner:
             )
         except requests.ConnectionError as e:
             print(e, file=sys.stderr)
-
-
-def get_n_steps(frequency: float, target_frequency: float) -> int:
-    """Calculate the number of steps to move the motor."""
-    if np.isnan(frequency):
-        raise ValueError("Frequency is NaN")
-
-    delta = frequency - target_frequency
-    sign = -int(np.sign(delta))
-    delta = np.abs(delta)
-
-    relative_error = delta / target_frequency
-    if relative_error < 0.005:
-        return 0
-
-    speed = 1.0
-    abs_n_steps = np.round(delta * speed)
-    max_n_steps = 50
-    abs_n_steps = int(np.clip(abs_n_steps, 1, max_n_steps))
-
-    return sign * abs_n_steps
