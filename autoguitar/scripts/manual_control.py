@@ -10,34 +10,41 @@ from autoguitar.pitch_detector import PitchDetector
 def manual_control(pitch_detector: PitchDetector | None):
     n_steps = 200
 
-    motor = get_motor()
-    with MotorController(motor=motor, max_steps=10000) as mc:
+    motors = [get_motor(motor_number=0), get_motor(motor_number=1)]
+    with (
+        MotorController(motor=motors[0], max_steps=10000) as mc0,
+        MotorController(motor=motors[1], max_steps=10000) as mc1,
+    ):
         while True:
             if pitch_detector is not None:
                 print(
-                    f"#steps={mc.cur_steps} "
+                    f"#steps={mc0.cur_steps} "
                     f"freq={pitch_detector.get_frequency()[0]:.2f} Hz"
                 )
             else:
-                print(f"#steps={mc.cur_steps}")
+                print(f"#steps={mc0.cur_steps}")
 
             key = readchar.readkey()
 
-            if mc.is_moving():
-                print("Still moving, skipping...")
-                continue
-
-            if key.lower() == "d":
-                print("Wind less!")
-                mc.move(-n_steps)
-                time.sleep(0.1)
-            elif key.lower() == "f":
-                print("Wind more!")
-                mc.move(n_steps)
-                time.sleep(0.1)
-            elif key == "q":
+            if key.lower() == "q":
                 print("Exiting...")
                 break
+
+            controls = [(0, mc0, "d", "f"), (1, mc1, "c", "v")]
+
+            for i, mc, key_less, key_more in controls:
+                if mc.is_moving():
+                    print(f"Motor {i}: still moving, skipping...")
+                    continue
+
+                if key.lower() == key_less:
+                    print(f"Motor {i}: Wind less!")
+                    mc.move(-n_steps)
+                    time.sleep(0.1)
+                elif key.lower() == key_more:
+                    print(f"Motor {i}: Wind more!")
+                    mc.move(n_steps)
+                    time.sleep(0.1)
 
 
 @click.command()

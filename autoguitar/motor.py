@@ -2,6 +2,7 @@ import logging
 import threading
 import time
 from abc import ABC
+from dataclasses import dataclass
 from types import TracebackType
 from typing import Optional
 
@@ -14,17 +15,33 @@ class Motor(ABC):
     def step(self, forward: bool): ...
 
 
+@dataclass  # Use Pydantic?
+class PinConfiguration:
+    step: int
+    direction: int
+    disable: int  # a "0" signal enables the motor
+
+
+PIN_CONFIGURATIONS = [
+    PinConfiguration(step=11, direction=15, disable=19),
+    PinConfiguration(step=18, direction=16, disable=12),
+]
+
+
 class PhysicalMotor(Motor):
-    def __init__(self, flip_direction: bool, sleep_time_sec: float = 0.0001):
+    def __init__(
+        self, motor_number: int, flip_direction: bool, sleep_time_sec: float = 0.00002
+    ):
         self.flip_direction = flip_direction
         self.sleep_time_sec = sleep_time_sec
 
         import RPi.GPIO as GPIO
 
         GPIO.setmode(GPIO.BOARD)
-        self.step_pin = 11
-        self.direction_pin = 15
-        self.disable_pin = 19  # a "0" signal enables the motor
+        pin_configuration = PIN_CONFIGURATIONS[motor_number]
+        self.step_pin = pin_configuration.step
+        self.direction_pin = pin_configuration.direction
+        self.disable_pin = pin_configuration.disable
 
         GPIO.setup(self.step_pin, GPIO.OUT)
         GPIO.setup(self.direction_pin, GPIO.OUT)
@@ -120,10 +137,10 @@ def is_raspberry_pi():
         return False
 
 
-def get_motor():
+def get_motor(motor_number: int = 0):
     if is_raspberry_pi():
-        logger.info("Using physical motor.")
-        return PhysicalMotor(flip_direction=False)
+        logger.info(f"Using physical motor {motor_number=}.")
+        return PhysicalMotor(motor_number=motor_number, flip_direction=False)
     else:
         logger.info("Using virtual motor.")
         return VirtualMotor(step_time_sec=0.1)
