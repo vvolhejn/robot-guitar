@@ -6,7 +6,7 @@ from typing import Deque
 import librosa
 import numpy as np
 
-from autoguitar.dsp.audio_input_stream import AudioInputStream, InputStreamCallbackData
+from autoguitar.dsp.input_stream import InputStream, InputStreamCallbackData
 
 Timestamp = float  # A result of time.time()
 
@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 class LoudnessDetector:
-    def __init__(self, audio_input_stream: AudioInputStream):
-        self.audio_input_stream = audio_input_stream
-        self.audio_input_stream.on_reading.subscribe(self._input_stream_callback)
+    def __init__(self, input_stream: InputStream):
+        self.input_stream = input_stream
+        self.input_stream.on_reading.subscribe(self._input_stream_callback)
         self.readings: Deque[tuple[float, Timestamp]] = deque(maxlen=100)
 
     def _input_stream_callback(self, callback_data: InputStreamCallbackData):

@@ -28,7 +28,7 @@ class InputStreamCallbackData(BaseModel):
     }
 
 
-class AudioInputStream:
+class InputStream:
     def __init__(self, block_size: int = 512, wait_for_initialization: bool = True):
         self.stream = None
         self.block_size = block_size

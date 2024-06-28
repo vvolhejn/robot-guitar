@@ -10,6 +10,8 @@ from autoguitar.virtual_string import VirtualString
 
 logger = logging.getLogger(__name__)
 
+STEPS_PER_TURN = 1600
+
 
 class Motor(ABC):
     def step(self, forward: bool): ...
@@ -43,9 +45,16 @@ class PhysicalMotor(Motor):
         self.direction_pin = pin_configuration.direction
         self.disable_pin = pin_configuration.disable
 
+        # Ignore "This channel is already in use, continuing anyway."
+        # We intentionally don't release the channels when the program is quit
+        # because it leaves the values in floating states, which sometimes
+        # leads to the motors moving even when nothing is running.
+        GPIO.setwarnings(False)
         GPIO.setup(self.step_pin, GPIO.OUT)
         GPIO.setup(self.direction_pin, GPIO.OUT)
         GPIO.setup(self.disable_pin, GPIO.OUT)
+        GPIO.setwarnings(True)
+
         GPIO.output(self.disable_pin, 0)
         GPIO.output(self.direction_pin, 1)
 
