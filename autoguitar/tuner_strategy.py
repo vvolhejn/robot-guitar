@@ -63,7 +63,8 @@ class ModelBasedTunerStrategy(TunerStrategy):
 
         # Found using manual tuning on the physical string.
         # TODO: Find this automatically.
-        self.coef = 85.0
+        # If the coefficient is too low, the tuner will *overshoot*.
+        self.coef = 13.5
 
     def estimate_intecept(self) -> float:
         estimates = [
