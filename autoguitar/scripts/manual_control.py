@@ -3,8 +3,8 @@ import time
 import click
 import readchar
 
+from autoguitar.dsp.pitch_detector import PitchDetector
 from autoguitar.motor import MotorController, get_motor
-from autoguitar.pitch_detector import PitchDetector
 
 
 def manual_control(pitch_detector: PitchDetector | None):

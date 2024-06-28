@@ -1,7 +1,7 @@
 import time
 
+from autoguitar.dsp.pitch_detector import PitchDetector, Timestamp
 from autoguitar.motor import MotorController, get_motor
-from autoguitar.pitch_detector import PitchDetector, Timestamp
 from autoguitar.tuner import Tuner
 
 n_steps = 0

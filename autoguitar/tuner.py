@@ -4,8 +4,8 @@ import time
 import numpy as np
 import requests
 
+from autoguitar.dsp.pitch_detector import PitchDetector, Timestamp
 from autoguitar.motor import MotorController
-from autoguitar.pitch_detector import PitchDetector, Timestamp
 from autoguitar.tuner_strategy import (
     ModelBasedTunerStrategy,
     ProportionalTunerStrategy,

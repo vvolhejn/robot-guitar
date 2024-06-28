@@ -3,7 +3,7 @@ import time
 
 import numpy as np
 
-from autoguitar.pitch_detector import PitchDetector
+from autoguitar.dsp.pitch_detector import PitchDetector
 from autoguitar.virtual_string import VirtualString
 
 duration = 300  # seconds

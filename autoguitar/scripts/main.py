@@ -4,9 +4,9 @@ import logging
 import librosa
 import mido
 
+from autoguitar.dsp.pitch_detector import PitchDetector
 from autoguitar.midi_utils import find_midi_input
 from autoguitar.motor import MotorController, get_motor
-from autoguitar.pitch_detector import PitchDetector
 from autoguitar.tuner import Tuner
 
 logging.basicConfig(level=logging.INFO)

@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from autoguitar.dsp.input_stream import InputStream
-from autoguitar.loudness_detector import LoudnessDetector
+from autoguitar.dsp.loudness_detector import LoudnessDetector
 from autoguitar.motor import STEPS_PER_TURN, MotorController
 
 

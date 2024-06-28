@@ -5,7 +5,7 @@ from typing import Deque
 
 import numpy as np
 
-from autoguitar.pitch_detector import PitchDetector, Timestamp
+from autoguitar.dsp.pitch_detector import Timestamp
 
 logger = logging.getLogger(__name__)
 
