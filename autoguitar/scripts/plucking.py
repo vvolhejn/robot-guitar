@@ -73,11 +73,12 @@ def main():
             position_up = find_pluck_position(
                 mc, ld, loudness_difference=loudness_difference, steps=5
             )
+            print("Upstroke position:", position_up)
             time.sleep(1)
             position_down = find_pluck_position(
                 mc, ld, loudness_difference=loudness_difference, steps=-5
             )
-            print(f"Down: {position_down}, up: {position_up}")
+            print("Downstroke position:", position_down)
 
             # Try playing a strumming pattern
             time.sleep(1)
