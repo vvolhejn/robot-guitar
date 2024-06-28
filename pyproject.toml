@@ -16,6 +16,7 @@ librosa = "^0.10.1"
 readchar = "^4.0.6"
 click = "^8.1.7"
 nbstripout = "^0.7.1"
+pydantic = "^2.7.2"
 
 [tool.poetry.group.dev]
 optional = true
@@ -29,7 +30,6 @@ pandas = "^2.2.2"
 nbformat = "^5.10.4"
 dash = "^2.17.0"
 pyright = "^1.1.365"
-pydantic = "^2.7.2"
 requests = "^2.32.3"
 
 [tool.poetry.group.pi]
