@@ -2,6 +2,7 @@ import time
 
 import numpy as np
 
+from autoguitar.dsp.audio_input_stream import AudioInputStream
 from autoguitar.loudness_detector import LoudnessDetector
 from autoguitar.motor import MotorController, get_motor
 
@@ -42,16 +43,13 @@ def main():
         # Randomize the motor position for testing purposes
         mc.move(np.random.randint(-steps_per_turn, steps_per_turn))
 
-        with LoudnessDetector() as ld:
-            print("Waiting for loudness detector to initialize", end="", flush=True)
-            while not ld.readings:
-                time.sleep(1)
-                print(".", end="", flush=True)
-            print()
+        with AudioInputStream() as ais:
+            ld = LoudnessDetector(audio_input_stream=ais)
+            ais.wait_for_initialization()
 
             # Before finding the plucking position, measure loudness when nothing
             # is playing vs when the string is plucked.
-            silence_loudness = ld.get_mean_loudness()
+            silence_loudness = ld.measure_loudness()
             ld.readings.clear()
             mc.move(steps_per_turn * 2, wait=True)
             plucking_loudness = ld.get_mean_loudness()
@@ -90,7 +88,7 @@ def main():
                 time.sleep(sleep * 2)
                 mc.set_target_steps(position_down - 10, wait=True)  # strum down
                 time.sleep(sleep)
-                mc.set_target_steps(position_down + 15, wait=True)  # mute
+                mc.set_target_steps(position_down + 20, wait=True)  # mute
                 time.sleep(sleep * 2)
 
 
