@@ -138,8 +138,8 @@ class Strummer:
             raise ValueError("Calibrate the strummer first.")
 
         return {
-            "upstroke": self.calibration.upstroke_steps,
-            "upstroke_mute": self.calibration.downstroke_steps + 10,
-            "downstroke": self.calibration.downstroke_steps,
-            "downstroke_mute": self.calibration.downstroke_steps + 20,
+            "upstroke": self.calibration.upstroke_steps + 10,
+            "upstroke_mute": self.calibration.downstroke_steps + 20,
+            "downstroke": self.calibration.downstroke_steps - 10,
+            "downstroke_mute": self.calibration.downstroke_steps + 25,
         }[state]

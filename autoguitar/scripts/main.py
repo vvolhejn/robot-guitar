@@ -4,23 +4,12 @@ import logging
 import librosa
 import mido
 
+from autoguitar.midi_utils import find_midi_input
 from autoguitar.motor import MotorController, get_motor
 from autoguitar.pitch_detector import PitchDetector
 from autoguitar.tuner import Tuner
 
 logging.basicConfig(level=logging.INFO)
-
-
-def find_midi_input() -> str:
-    substring = "Launchkey Mini:Launchkey Mini LK Mini MIDI"
-    for name in mido.get_input_names():
-        if substring in name:
-            return name
-
-    raise OSError(
-        f"Could not open MIDI input port matching {repr(substring)}. "
-        f"Available ports: {mido.get_input_names()}"
-    )
 
 
 def main():
