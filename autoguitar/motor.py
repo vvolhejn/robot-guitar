@@ -30,10 +30,10 @@ PIN_CONFIGURATIONS = [
 
 class PhysicalMotor(Motor):
     def __init__(
-        self, motor_number: int, flip_direction: bool, sleep_time_sec: float = 0.00002
+        self, motor_number: int, flip_direction: bool, step_time_sec: float = 0.0002
     ):
         self.flip_direction = flip_direction
-        self.sleep_time_sec = sleep_time_sec
+        self.step_time_sec = step_time_sec
 
         import RPi.GPIO as GPIO
 
@@ -55,9 +55,9 @@ class PhysicalMotor(Motor):
 
         GPIO.output(self.direction_pin, forward != self.flip_direction)
         GPIO.output(self.step_pin, 1)
-        time.sleep(self.sleep_time_sec)
+        time.sleep(self.step_time_sec / 2)
         GPIO.output(self.step_pin, 0)
-        time.sleep(self.sleep_time_sec)
+        time.sleep(self.step_time_sec / 2)
 
 
 class VirtualMotor(Motor):
@@ -90,18 +90,21 @@ class MotorController:
         self.command_thread = None
         self.stop_thread = False
 
-    def set_target_steps(self, steps: int):
+    def set_target_steps(self, steps: int, wait: bool = False):
         self._target_steps = steps
         if self._target_steps > self.max_steps:
             self._target_steps = self.max_steps
         if self._target_steps < -self.max_steps:
             self._target_steps = -self.max_steps
 
+        if wait:
+            self.wait_until_stopped()
+
     def get_target_steps(self) -> int:
         return self._target_steps
 
-    def move(self, steps: int):
-        self.set_target_steps(self._target_steps + steps)
+    def move(self, steps: int, wait: bool = False):
+        self.set_target_steps(self._target_steps + steps, wait=wait)
 
     def is_moving(self) -> bool:
         return self.cur_steps != self._target_steps
@@ -127,6 +130,10 @@ class MotorController:
             else:
                 self.motor.step(forward=False)
                 self.cur_steps -= 1
+
+    def wait_until_stopped(self):
+        while self.is_moving():
+            time.sleep(0.01)
 
 
 def is_raspberry_pi():

@@ -50,7 +50,7 @@ def manual_control(pitch_detector: PitchDetector | None):
 @click.command()
 @click.option("--pitch-detection/--no-pitch-detection", default=True)
 def manual_control_cli(pitch_detection: bool = True):
-    print("d: wind less, f: wind more, q: exit")
+    print("d/f: control pitch motor, c/v: control pluck motor, q: exit")
 
     if pitch_detection:
         # Only instantiate if needed. If the audio interface is not available,
