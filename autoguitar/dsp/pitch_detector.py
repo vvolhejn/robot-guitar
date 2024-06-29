@@ -1,13 +1,13 @@
 import logging
 import time
 from collections import deque
-from types import TracebackType
-from typing import Any, Deque
+from typing import Deque
 
 import librosa
 import numpy as np
 import sounddevice as sd  # pyright: ignore[reportMissingTypeStubs]
 
+from autoguitar.dsp.input_stream import InputStream, InputStreamCallbackData
 from autoguitar.signal import Signal
 
 Timestamp = float  # A result of time.time()
@@ -16,31 +16,17 @@ logger = logging.getLogger(__name__)
 
 
 class PitchDetector:
-    def __init__(self):
-        self.stream = None
-        self.block_size = 4096
-        self.frequency_readings: Deque[tuple[float, Timestamp]] = deque()
-        self.max_readings = 10
+    def __init__(self, input_stream: InputStream):
+        self.input_stream = input_stream
+        self.input_stream.on_reading.subscribe(self._input_stream_callback)
+        self.frequency_readings: Deque[tuple[float, Timestamp]] = deque(maxlen=10)
         self.on_reading: Signal[tuple[float, Timestamp]] = Signal()
 
-    def __enter__(self):
-        self.stream = sd.InputStream(
-            callback=self._input_stream_callback, blocksize=self.block_size
+    def _input_stream_callback(self, callback_data: InputStreamCallbackData):
+        assert self.input_stream.stream is not None
+        freq, _ = self.detect_pitch(
+            y=callback_data.indata[:, 0], sr=self.input_stream.stream.samplerate
         )
-        self.stream.__enter__()
-        return self
-
-    def __exit__(self, exc_type: type, exc_val: Exception, exc_tb: TracebackType):
-        assert self.stream is not None, "Stream should be initialized when exiting"
-        self.stream.__exit__()
-
-    def _input_stream_callback(
-        self, indata: np.ndarray, frames: int, _time: Any, status: sd.CallbackFlags
-    ):
-        assert self.stream is not None, "Stream should be initialized"
-
-        y = indata[:, 0]
-        freq, _ = self.detect_pitch(y, sr=self.stream.samplerate)
 
         timestamp = time.time()
 
@@ -118,9 +104,8 @@ class PitchDetector:
             return True
 
     def _add_reading(self, freq: float, timestamp: float):
+        # Old readings get removed by the queue's maxlen
         self.frequency_readings.append((freq, timestamp))
-        if len(self.frequency_readings) > self.max_readings:
-            self.frequency_readings.popleft()
 
         if not np.isnan(freq):
             logger.debug(f"Frequency: {freq:.2f} Hz")

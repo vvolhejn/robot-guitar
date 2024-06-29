@@ -3,6 +3,7 @@ import time
 import click
 import readchar
 
+from autoguitar.dsp.input_stream import InputStream
 from autoguitar.dsp.pitch_detector import PitchDetector
 from autoguitar.motor import MotorController, get_motor
 
@@ -55,7 +56,8 @@ def manual_control_cli(pitch_detection: bool = True):
     if pitch_detection:
         # Only instantiate if needed. If the audio interface is not available,
         # we get an error here.
-        with PitchDetector() as pitch_detector:
+        with InputStream() as input_stream:
+            pitch_detector = PitchDetector(input_stream=input_stream)
             manual_control(pitch_detector)
     else:
         manual_control(None)
