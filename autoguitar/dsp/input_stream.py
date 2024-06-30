@@ -29,11 +29,19 @@ class InputStreamCallbackData(BaseModel):
 
 
 class InputStream:
-    def __init__(self, block_size: int = 512, wait_for_initialization: bool = True):
+    def __init__(self, block_size: int):
         self.stream = None
+
+        # check that block_size is a power of 2
+        if block_size & (block_size - 1) != 0:
+            raise ValueError("block_size should be a power of 2")
+
         self.block_size = block_size
 
-        self.readings: Deque[InputStreamCallbackData] = deque(maxlen=100)
+        self.readings: Deque[InputStreamCallbackData] = deque()
+        # In __enter__, we set a max length on the deque to enforce `history_sec``
+        self.history_sec = 1.0
+
         self.on_reading: Signal[InputStreamCallbackData] = Signal()
 
     def __enter__(self):
@@ -41,6 +49,8 @@ class InputStream:
             callback=self._input_stream_callback, blocksize=self.block_size
         )
         self.stream.__enter__()
+        blocks_per_sec = self.stream.samplerate / self.block_size
+        self.readings = deque(maxlen=int(self.history_sec * blocks_per_sec))
 
         return self
 
@@ -84,3 +94,18 @@ class InputStream:
             time.sleep(0.5)
             print(".", end="", flush=True, file=sys.stderr)
         print()
+
+    def get_latest_audio(self, max_n_samples: int) -> np.ndarray:
+        """Get the latest audio samples.
+
+        Useful if you need a longer sample than the block size.
+
+        Args:
+            max_n_samples: Maximum number of samples to return. There might be
+                fewer samples available.
+
+        Returns:
+            A 1D numpy array with the latest audio samples.
+        """
+        y = np.concatenate([data.indata[:, 0] for data in self.readings])
+        return y[-max_n_samples:]

@@ -24,9 +24,11 @@ class PitchDetector:
 
     def _input_stream_callback(self, callback_data: InputStreamCallbackData):
         assert self.input_stream.stream is not None
-        freq, _ = self.detect_pitch(
-            y=callback_data.indata[:, 0], sr=self.input_stream.stream.samplerate
-        )
+
+        # Pitch detection needs a bit more samples to work well, potentially more
+        # than the block size
+        y = self.input_stream.get_latest_audio(max_n_samples=4096)
+        freq, _ = self.detect_pitch(y=y, sr=self.input_stream.stream.samplerate)
 
         timestamp = time.time()
 
