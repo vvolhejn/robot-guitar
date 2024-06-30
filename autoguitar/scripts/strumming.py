@@ -7,7 +7,7 @@ import numpy as np
 from autoguitar.control.strummer import Strummer
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.midi_utils import find_midi_input
-from autoguitar.motor import STEPS_PER_TURN, MotorController, get_motor
+from autoguitar.motor import MotorController, get_motor
 
 logging.basicConfig(level=logging.INFO)
 
@@ -27,10 +27,10 @@ def main():
 
     with (
         MotorController(motor=motor, max_steps=int(1e9)) as mc,
-        InputStream() as input_stream,
+        InputStream(block_size=512) as input_stream,
     ):
         # Randomize the motor position for testing purposes
-        mc.move(np.random.randint(-STEPS_PER_TURN, STEPS_PER_TURN))
+        mc.move(np.random.randint(-mc.steps_per_turn(), mc.steps_per_turn()))
 
         strummer = Strummer(input_stream=input_stream, motor_controller=mc)
 

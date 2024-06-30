@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.dsp.loudness_detector import LoudnessDetector
-from autoguitar.motor import STEPS_PER_TURN, MotorController
+from autoguitar.motor import MotorController
 
 
 class Calibration(BaseModel):
@@ -83,7 +83,9 @@ class Strummer:
 
         # Do two full rotations to ensure we get enough data where the string is plucked
         self.loudness_detector.readings.clear()
-        self.motor_controller.move(STEPS_PER_TURN * 2, wait=True)
+        self.motor_controller.move(
+            self.motor_controller.steps_per_turn() * 2, wait=True
+        )
 
         # To remove potential outliers, take the 0.9 quantile.
         high_loudness = float(

@@ -9,9 +9,12 @@ from autoguitar.motor import MotorController, get_motor
 
 
 def manual_control(pitch_detector: PitchDetector | None):
-    n_steps = 200
+    n_steps = [200, 25]
 
-    motors = [get_motor(motor_number=0), get_motor(motor_number=1)]
+    motors = [
+        get_motor(motor_number=0, step_time_sec=0.0002),
+        get_motor(motor_number=1, step_time_sec=0.0004),
+    ]
     with (
         MotorController(motor=motors[0], max_steps=10000) as mc0,
         MotorController(motor=motors[1], max_steps=10000) as mc1,
@@ -31,20 +34,20 @@ def manual_control(pitch_detector: PitchDetector | None):
                 print("Exiting...")
                 break
 
-            controls = [(0, mc0, "d", "f"), (1, mc1, "c", "v")]
+            controls = [(0, mc0, "d", "f", n_steps[0]), (1, mc1, "c", "v", n_steps[1])]
 
-            for i, mc, key_less, key_more in controls:
+            for i, mc, key_less, key_more, ns in controls:
                 if mc.is_moving():
                     print(f"Motor {i}: still moving, skipping...")
                     continue
 
                 if key.lower() == key_less:
                     print(f"Motor {i}: Wind less!")
-                    mc.move(-n_steps)
+                    mc.move(-ns)
                     time.sleep(0.1)
                 elif key.lower() == key_more:
                     print(f"Motor {i}: Wind more!")
-                    mc.move(n_steps)
+                    mc.move(ns)
                     time.sleep(0.1)
 
 

@@ -1,7 +1,7 @@
 import logging
 import threading
 import time
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from types import TracebackType
 from typing import Optional
@@ -10,11 +10,21 @@ from autoguitar.virtual_string import VirtualString
 
 logger = logging.getLogger(__name__)
 
-STEPS_PER_TURN = 1600
+STEP_TIME_SEC_PER_MOTOR = [0.0002, 0.0004]
+# Microstepping is a feature of stepper motors that allows them to move in
+# smaller increments than a full step. This can be used to increase the
+# resolution of the motor, but it also reduces the torque. The values below
+# are the number of microsteps per full step.
+MICROSTEPPING_PER_MOTOR = [8, 2]
+STEPS_PER_TURN_WITHOUT_MICROSTEPPING = 200
 
 
 class Motor(ABC):
+    @abstractmethod
     def step(self, forward: bool): ...
+
+    @abstractmethod
+    def steps_per_turn(self) -> int: ...
 
 
 @dataclass  # Use Pydantic?
@@ -31,9 +41,16 @@ PIN_CONFIGURATIONS = [
 
 
 class PhysicalMotor(Motor):
-    def __init__(self, motor_number: int, flip_direction: bool, step_time_sec: float):
+    def __init__(
+        self,
+        motor_number: int,
+        flip_direction: bool,
+        step_time_sec: float,
+        microstepping: int,
+    ):
         self.flip_direction = flip_direction
         self.step_time_sec = step_time_sec
+        self.microstepping = microstepping
 
         import RPi.GPIO as GPIO
 
@@ -66,6 +83,9 @@ class PhysicalMotor(Motor):
         GPIO.output(self.step_pin, 0)
         time.sleep(self.step_time_sec / 2)
 
+    def steps_per_turn(self) -> int:
+        return STEPS_PER_TURN_WITHOUT_MICROSTEPPING * self.microstepping
+
 
 class VirtualMotor(Motor):
     def __init__(
@@ -84,6 +104,9 @@ class VirtualMotor(Motor):
 
         if self.virtual_string:
             self.virtual_string.shift_frequency(10 if forward else -10)
+
+    def steps_per_turn(self) -> int:
+        return STEPS_PER_TURN_WITHOUT_MICROSTEPPING
 
 
 class MotorController:
@@ -142,6 +165,9 @@ class MotorController:
         while self.is_moving():
             time.sleep(0.01)
 
+    def steps_per_turn(self) -> int:
+        return self.motor.steps_per_turn()
+
 
 def is_raspberry_pi():
     try:
@@ -151,11 +177,15 @@ def is_raspberry_pi():
         return False
 
 
-def get_motor(motor_number: int = 0, step_time_sec: float = 0.0002):
+def get_motor(motor_number: int = 0):
+    step_time_sec = STEP_TIME_SEC_PER_MOTOR[motor_number]
     if is_raspberry_pi():
         logger.debug(f"Using physical motor {motor_number=}.")
         return PhysicalMotor(
-            motor_number=motor_number, flip_direction=False, step_time_sec=step_time_sec
+            motor_number=motor_number,
+            flip_direction=False,
+            step_time_sec=step_time_sec,
+            microstepping=MICROSTEPPING_PER_MOTOR[motor_number],
         )
     else:
         logger.debug("Using virtual motor.")
