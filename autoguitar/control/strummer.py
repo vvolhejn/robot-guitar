@@ -2,6 +2,7 @@ import logging
 import time
 from typing import Literal
 
+import numpy as np
 from pydantic import BaseModel
 
 from autoguitar.dsp.input_stream import InputStream
@@ -52,17 +53,18 @@ class Strummer:
             loudness_difference=loudness_difference, steps_at_a_time=-100
         )
         # Go a bit back
-        self.motor_controller.move(-30, wait=True)
+        self.motor_controller.move(-10, wait=True)
         time.sleep(1)
 
         # Now move in small steps until the string is plucked
         position_up = self.find_strum_position(
-            loudness_difference=loudness_difference, steps_at_a_time=5
+            loudness_difference=loudness_difference, steps_at_a_time=10
         )
         print("Upstroke position:", position_up)
+        self.motor_controller.move(-30, wait=True)
         time.sleep(1)
         position_down = self.find_strum_position(
-            loudness_difference=loudness_difference, steps_at_a_time=-5
+            loudness_difference=loudness_difference, steps_at_a_time=-10
         )
         print("Downstroke position:", position_down)
 
@@ -82,8 +84,13 @@ class Strummer:
         # Do two full rotations to ensure we get enough data where the string is plucked
         self.loudness_detector.readings.clear()
         self.motor_controller.move(STEPS_PER_TURN * 2, wait=True)
-        # To remove outliers, take the mean.
-        high_loudness = self.loudness_detector.get_mean_loudness()
+
+        # To remove potential outliers, take the 0.9 quantile.
+        high_loudness = float(
+            np.quantile(
+                [loudness for loudness, _ in self.loudness_detector.readings], q=0.9
+            )
+        )
 
         logger.info(f"Silence loudness: {low_loudness:.4f} units")
         logger.info(f"Plucking loudness: {high_loudness:.4f} units")
@@ -137,9 +144,13 @@ class Strummer:
         if self.calibration is None:
             raise ValueError("Calibrate the strummer first.")
 
+        # What's tricky here is that the angle that you need to rotate depends
+        # on the tension of the string. A loose string (lower frequency) will be
+        # held longer by the pick, meaning you need to turn more for the pluck
+        # to happen.
         return {
-            "upstroke": self.calibration.upstroke_steps + 10,
+            "upstroke": self.calibration.upstroke_steps + 20,
             "upstroke_mute": self.calibration.downstroke_steps + 20,
-            "downstroke": self.calibration.downstroke_steps - 10,
+            "downstroke": self.calibration.downstroke_steps - 30,
             "downstroke_mute": self.calibration.downstroke_steps + 25,
         }[state]

@@ -21,7 +21,11 @@ class LoudnessDetector:
 
     def _input_stream_callback(self, callback_data: InputStreamCallbackData):
         timestamp = callback_data.timestamp
-        loudness = librosa.feature.rms(y=callback_data.indata[:, 0]).mean()
+
+        # Get enough samples for an accurate reading
+        y = self.input_stream.get_latest_audio(max_n_samples=4096)
+        loudness = librosa.feature.rms(y=y).mean()
+
         self._add_reading(loudness, timestamp)
 
     def _add_reading(self, loudness: float, timestamp: float):

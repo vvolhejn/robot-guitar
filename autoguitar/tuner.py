@@ -72,3 +72,6 @@ class Tuner:
             )
         except requests.ConnectionError as e:
             print(e, file=sys.stderr)
+
+    def unsubscribe(self):
+        self.pitch_detector.on_reading.unsubscribe(self.on_pitch_reading)

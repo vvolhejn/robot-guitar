@@ -31,9 +31,7 @@ PIN_CONFIGURATIONS = [
 
 
 class PhysicalMotor(Motor):
-    def __init__(
-        self, motor_number: int, flip_direction: bool, step_time_sec: float = 0.0002
-    ):
+    def __init__(self, motor_number: int, flip_direction: bool, step_time_sec: float):
         self.flip_direction = flip_direction
         self.step_time_sec = step_time_sec
 
@@ -153,10 +151,12 @@ def is_raspberry_pi():
         return False
 
 
-def get_motor(motor_number: int = 0):
+def get_motor(motor_number: int = 0, step_time_sec: float = 0.0002):
     if is_raspberry_pi():
-        logger.info(f"Using physical motor {motor_number=}.")
-        return PhysicalMotor(motor_number=motor_number, flip_direction=False)
+        logger.debug(f"Using physical motor {motor_number=}.")
+        return PhysicalMotor(
+            motor_number=motor_number, flip_direction=False, step_time_sec=step_time_sec
+        )
     else:
-        logger.info("Using virtual motor.")
-        return VirtualMotor(step_time_sec=0.1)
+        logger.debug("Using virtual motor.")
+        return VirtualMotor(step_time_sec=step_time_sec)

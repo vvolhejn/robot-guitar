@@ -56,7 +56,7 @@ def manual_control_cli(pitch_detection: bool = True):
     if pitch_detection:
         # Only instantiate if needed. If the audio interface is not available,
         # we get an error here.
-        with InputStream() as input_stream:
+        with InputStream(block_size=512) as input_stream:
             pitch_detector = PitchDetector(input_stream=input_stream)
             manual_control(pitch_detector)
     else:

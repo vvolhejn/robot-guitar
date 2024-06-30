@@ -19,7 +19,7 @@ class PitchDetector:
     def __init__(self, input_stream: InputStream):
         self.input_stream = input_stream
         self.input_stream.on_reading.subscribe(self._input_stream_callback)
-        self.frequency_readings: Deque[tuple[float, Timestamp]] = deque(maxlen=10)
+        self.frequency_readings: Deque[tuple[float, Timestamp]] = deque(maxlen=100)
         self.on_reading: Signal[tuple[float, Timestamp]] = Signal()
 
     def _input_stream_callback(self, callback_data: InputStreamCallbackData):
