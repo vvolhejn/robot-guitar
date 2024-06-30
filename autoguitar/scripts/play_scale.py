@@ -13,6 +13,10 @@ from autoguitar.tuner_strategy import ModelBasedTunerStrategy
 logging.basicConfig(level=logging.INFO)
 
 
+def get_cents_between_frequencies(f1: float, f2: float) -> int:
+    return int(1200 * np.log2(f2 / f1))
+
+
 def main():
     motors = [
         get_motor(motor_number=0),
@@ -37,7 +41,7 @@ def main():
         tuner = Tuner(
             input_stream=input_stream,
             motor_controller=mc0,
-            initial_target_frequency=float(librosa.note_to_hz("A2")),
+            initial_target_frequency=float(librosa.note_to_hz("C3")),
         )
 
         # Allow some time for the tuner to move to the target note
@@ -45,93 +49,75 @@ def main():
             strummer.strum()
             time.sleep(1)
 
+        # Initialize the tuner strategy with a single reading, using a fixed coefficient
+        tuner.pitch_detector.frequency_readings.clear()
+        strummer.strum()
+        time.sleep(2)
+        frequencies = [f for f, _ in tuner.pitch_detector.frequency_readings]
+        frequency = float(np.nanmean(frequencies))
+        tuner_strategy = ModelBasedTunerStrategy.from_readings(
+            [(mc0.cur_steps, frequency)], coef=13.7
+        )
+        print(tuner_strategy)
+
+        # Stop the tuner from moving the string, we'll be doing that manually now
+        # using the tuner_strategy.
         tuner.unsubscribe()
 
-        def go_to_frequency_and_measure(
-            target_frequency: float, steps_per_move: int
-        ) -> list[tuple[int, float]]:
-            positions_and_frequencies = []
+        # Repeatedly play a few notes and then re-calibrate the strategy.
+        for _ in range(10):
+            strumming_measurements = []
+            # notes = ["B2", "C#3", "D#3", "E3", "F#3", "G#3", "A#3", "B3"]
+            # notes = ["B2", "D#3", "F#3", "A#3", "B3", "G#3", "E3", "C#3"]
+            notes = ["F#3", "G#3", "A#3", "C4", "B3", "A3", "G3", "F3"]
+            for note in notes:
+                target_frequency = float(librosa.note_to_hz(note))
 
-            while True:
-                mc0.move(steps_per_move, wait=True)
+                # Hack: the frequency we reach depends on whether we're going from
+                # above or below because the string has a bit of slack. We correct
+                # for that heuristically
+                movement_correction_cents = 100
+                movement_correction = 2 ** (movement_correction_cents / 1200)
+
+                steps_naive = tuner_strategy.get_target_steps(target_frequency)
+
+                if steps_naive > mc0.cur_steps:
+                    # going up, move a bit more
+                    target_frequency *= movement_correction
+                else:
+                    # going down, move a bit less
+                    target_frequency /= movement_correction
+
+                steps = tuner_strategy.get_target_steps(target_frequency)
+                print(
+                    f"Corrected from {librosa.note_to_hz(note):.2f} to {target_frequency:.2f} "
+                    f"and {steps_naive} to {steps} steps."
+                )
+
+                mc0.set_target_steps(steps, wait=True)
                 strummer.strum()
                 time.sleep(0.5)
                 tuner.pitch_detector.frequency_readings.clear()
-                time.sleep(0.3)
+                time.sleep(0.5)
                 frequencies = [f for f, _ in tuner.pitch_detector.frequency_readings]
                 frequency = float(np.nanmean(frequencies))
-                positions_and_frequencies.append((mc0.cur_steps, frequency))
-                print((mc0.cur_steps, frequency))
 
-                if len(positions_and_frequencies) > 50:
-                    print("This is taking too long, aborting...")
-                    break
-
-                if np.isnan(frequency):
-                    # No reading, we don't know if we've reached the frequency
-                    continue
-                elif steps_per_move > 0 and frequency > target_frequency:
-                    # Going up
-                    break
-                elif steps_per_move < 0 and frequency < target_frequency:
-                    # Going down
-                    break
-
-            return positions_and_frequencies
-
-        measurements = []
-        for target_note, steps_per_move in [
-            ("B3", 400),
-            ("B2", -400),
-            ("B3", 400),
-            ("B2", -400),
-        ]:
-            measurements.append(
-                go_to_frequency_and_measure(
-                    float(librosa.note_to_hz(target_note)),
-                    steps_per_move=steps_per_move,
+                offset_cents = (
+                    get_cents_between_frequencies(target_frequency, frequency)
+                    if not np.isnan(frequency)
+                    else np.nan
                 )
+
+                print((note, steps, target_frequency, frequency, offset_cents))
+                print()
+                if not np.isnan(frequency):
+                    strumming_measurements.append((steps, frequency))
+
+            print(strumming_measurements)
+            tuner_strategy = ModelBasedTunerStrategy.from_readings(
+                strumming_measurements
             )
-        all_measurements = [
-            (steps, freq) for steps, freq in sum(measurements, []) if not np.isnan(freq)
-        ]
-        print(all_measurements)
-
-        time.sleep(3)
-
-        tuner_strategy = ModelBasedTunerStrategy.from_readings(all_measurements)
-        print(f"Model parameters: {tuner_strategy.coef=} {tuner_strategy.intercept=}")
-
-        # notes = ["B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3"]
-        notes = ["B2", "C#3", "D#3", "E3", "F#3", "G#3", "A#3", "B3"]
-        for it in range(2):
-            notes += notes
-
-        strumming_measurements = []
-
-        for note in notes:
-            hz = float(librosa.note_to_hz(note))
-            steps = tuner_strategy.get_target_steps(hz)
-
-            mc0.set_target_steps(steps, wait=True)
-            strummer.strum()
-            time.sleep(0.5)
-            tuner.pitch_detector.frequency_readings.clear()
-            time.sleep(0.3)
-            frequencies = [f for f, _ in tuner.pitch_detector.frequency_readings]
-            frequency = float(np.nanmean(frequencies))
-
-            if not np.isnan(frequency):
-                offset_octaves = librosa.hz_to_octs(frequency) - librosa.hz_to_octs(hz)
-                offset_cents = int(offset_octaves * 1200)
-            else:
-                offset_cents = np.nan
-
-            strumming_measurement = (note, steps, hz, frequency, offset_cents)
-            strumming_measurements.append(strumming_measurement)
-            print(strumming_measurement)
-
-        print(strumming_measurements)
+            print(tuner_strategy)
 
 
 if __name__ == "__main__":

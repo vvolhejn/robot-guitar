@@ -86,14 +86,29 @@ class ModelBasedTunerStrategy(TunerStrategy):
         self.intercept: float | None = intercept
 
     @classmethod
-    def from_readings(cls, readings: list[tuple[int, float]]):
-        """Estimate the model parameters from (steps, frequency) pairs."""
-        model = LinearRegression()
+    def from_readings(
+        cls, readings: list[tuple[int, float]], coef: float | None = None
+    ):
+        """Estimate the model parameters from (steps, frequency) pairs.
 
-        X = np.array([steps for steps, _ in readings])[:, np.newaxis]
-        y = np.array([freq**2 for _, freq in readings])
-        model.fit(X, y)
-        return cls(coef=model.coef_[0], intercept=float(model.intercept_))
+        Args:
+            coef: If given, use this as the coefficient of the model and only fit
+                the intercept. This requires less data but might be less accurate.
+                Otherwise, estimate the coefficient as well.
+        """
+        if coef is None:
+            model = LinearRegression()
+            X = np.array([steps for steps, _ in readings])[:, np.newaxis]
+            # We fit the model to f^2 = coef*x + intercept, see __init__.
+            y = np.array([freq**2 for _, freq in readings])
+            model.fit(X, y)
+            return cls(coef=model.coef_[0], intercept=float(model.intercept_))
+        else:
+            intercepts = [freq**2 - steps * coef for steps, freq in readings]
+            # Taking the mean minimizes the square error, so this is consistent with
+            # the linear regression above.
+            intercept = float(np.mean(intercepts))
+            return cls(coef=coef, intercept=intercept)
 
     def estimate_intecept(self) -> float:
         estimates = [
@@ -132,3 +147,6 @@ class ModelBasedTunerStrategy(TunerStrategy):
         estimated_target_steps = self.get_target_steps(target_frequency)
 
         return int(estimated_target_steps - cur_steps)
+
+    def __repr__(self) -> str:
+        return f"ModelBasedTunerStrategy(coef={self.coef}, intercept={self.intercept})"

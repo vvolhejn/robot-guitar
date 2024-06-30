@@ -40,7 +40,14 @@ class Strummer:
         self.calibration: Calibration | None = None
         self.strum_state: StrumState = "unknown"
 
-    def calibrate(self):
+    def calibrate(self, estimate_downstroke_separately: bool = False):
+        """Measure the motor positions for the upstroke and downstroke.
+
+        Args:
+            estimate_downstroke_separately: If False, do a rough estimate
+                of the downstroke position based on the upstroke position.
+                Faster but potentially less accurate.
+        """
         self.input_stream.wait_for_initialization()
 
         low_loudness, high_loudness = self._calibrate_loudness()
@@ -50,7 +57,7 @@ class Strummer:
         # find where the string is
         time.sleep(0.5)
         self.find_strum_position(
-            loudness_difference=loudness_difference, steps_at_a_time=-100
+            loudness_difference=loudness_difference, steps_at_a_time=-25
         )
         # Go a bit back
         self.motor_controller.move(-10, wait=True)
@@ -58,14 +65,22 @@ class Strummer:
 
         # Now move in small steps until the string is plucked
         position_up = self.find_strum_position(
-            loudness_difference=loudness_difference, steps_at_a_time=10
+            loudness_difference=loudness_difference, steps_at_a_time=3
         )
         print("Upstroke position:", position_up)
-        self.motor_controller.move(-30, wait=True)
-        time.sleep(1)
-        position_down = self.find_strum_position(
-            loudness_difference=loudness_difference, steps_at_a_time=-10
-        )
+
+        if estimate_downstroke_separately:
+            self.motor_controller.move(-10, wait=True)
+            time.sleep(1)
+            position_down = self.find_strum_position(
+                loudness_difference=loudness_difference, steps_at_a_time=-3
+            )
+            self.strum_state = "downstroke"
+        else:
+            # The angle difference should always be more or less the same
+            position_down = position_up - 70
+            self.strum_state = "upstroke"
+
         print("Downstroke position:", position_down)
 
         self.calibration = Calibration(
@@ -74,7 +89,6 @@ class Strummer:
             downstroke_steps=position_down,
             upstroke_steps=position_up,
         )
-        self.strum_state = "downstroke"
 
     def _calibrate_loudness(self, min_readings: int = 2) -> tuple[float, float]:
         """Measure the loudness of the string when it is not plucked vs when it is."""
@@ -151,8 +165,8 @@ class Strummer:
         # held longer by the pick, meaning you need to turn more for the pluck
         # to happen.
         return {
-            "upstroke": self.calibration.upstroke_steps + 20,
-            "upstroke_mute": self.calibration.downstroke_steps + 20,
-            "downstroke": self.calibration.downstroke_steps - 30,
-            "downstroke_mute": self.calibration.downstroke_steps + 25,
+            "upstroke": self.calibration.upstroke_steps + 5,
+            "upstroke_mute": self.calibration.downstroke_steps + 5,
+            "downstroke": self.calibration.downstroke_steps - 6,
+            "downstroke_mute": self.calibration.downstroke_steps + 6,
         }[state]
