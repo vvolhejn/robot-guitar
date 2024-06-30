@@ -4,6 +4,7 @@ from collections import deque
 from typing import Deque
 
 import numpy as np
+from sklearn.linear_model import LinearRegression, RANSACRegressor
 
 from autoguitar.dsp.pitch_detector import Timestamp
 
@@ -56,15 +57,43 @@ class ProportionalTunerStrategy(TunerStrategy):
 
 
 class ModelBasedTunerStrategy(TunerStrategy):
-    def __init__(self):
-        self.readings: Deque[tuple[float, int, Timestamp]] = deque()
-        self.max_readings = 10
+    def __init__(self, coef: float = 13.5, intercept: float | None = None):
+        """Tune the string using a model that estimates the rotation -> Hz function.
+
+        The frequency of the string is proportional to the square root of the tension,
+        and therefore also of the rotation:
+            f^2 = coef*x + intercept
+        where f is the frequency, x is the rotation (#steps relative to some
+        initial angle), and coef and intercept are parameters of the linear
+        model. We estimate these from the data. Once we've fixed the parameters,
+        we can compute the rotation needed to reach a given frequency:
+            x = (1/coef)*(f^2 - intercept)
+
+        Args:
+            coef: The coefficient of the model, see above.
+            intercept: The intercept of the model, see above. If None, will be
+                computed dynamically based on readings from the pitch
+                detector. This is useful because with fixed parameters, the
+                model can become inaccurate after some time.
+        """
+        self.readings: Deque[tuple[float, int, Timestamp]] = deque(maxlen=10)
         self.cooldown_until: float | None = None
 
         # Found using manual tuning on the physical string.
         # TODO: Find this automatically.
         # If the coefficient is too low, the tuner will *overshoot*.
-        self.coef = 13.5
+        self.coef: float = coef
+        self.intercept: float | None = intercept
+
+    @classmethod
+    def from_readings(cls, readings: list[tuple[int, float]]):
+        """Estimate the model parameters from (steps, frequency) pairs."""
+        model = LinearRegression()
+
+        X = np.array([steps for steps, _ in readings])[:, np.newaxis]
+        y = np.array([freq**2 for _, freq in readings])
+        model.fit(X, y)
+        return cls(coef=model.coef_[0], intercept=float(model.intercept_))
 
     def estimate_intecept(self) -> float:
         estimates = [
@@ -72,6 +101,17 @@ class ModelBasedTunerStrategy(TunerStrategy):
             for frequency, cur_steps, _ in self.readings
         ]
         return float(np.median(estimates))
+
+    def get_target_steps(self, target_frequency: float) -> int:
+        if self.intercept is None:
+            intercept = self.estimate_intecept()
+        else:
+            intercept = self.intercept
+
+        estimated_target_steps = (1 / self.coef) * (target_frequency**2 - intercept)
+        # print(intercept, estimated_target_steps)
+
+        return int(estimated_target_steps)
 
     def get_steps_to_move(
         self,
@@ -86,15 +126,9 @@ class ModelBasedTunerStrategy(TunerStrategy):
         if self.cooldown_until is not None and timestamp < self.cooldown_until:
             return 0
 
+        # Old readings get removed by the queue's maxlen
         self.readings.append((frequency, cur_steps, timestamp))
-        if len(self.readings) > self.max_readings:
-            self.readings.popleft()
 
-        intercept = self.estimate_intecept()
-
-        estimated_target_steps = (1 / self.coef) * (target_frequency**2 - intercept)
-        print(intercept, estimated_target_steps - cur_steps)
-
-        # self.cooldown_until = timestamp + 2
+        estimated_target_steps = self.get_target_steps(target_frequency)
 
         return int(estimated_target_steps - cur_steps)
