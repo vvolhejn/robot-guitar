@@ -13,7 +13,7 @@ from autoguitar.tuner_strategy import ModelBasedTunerStrategy
 logging.basicConfig(level=logging.INFO)
 
 
-MOVEMENT_CORRECTION_CENTS = 0
+SLACK_CORRECTION_CENTS = 15
 INITIAL_NOTE = "A2"
 # NOTES = ["B1", "C#1", "D#2", "E2", "F#2", "G#2", "A#2", "B2"]
 # NOTES = ["B1", "D#2", "F#2", "A#2", "B2", "G#2", "E2", "C#2"]
@@ -24,30 +24,6 @@ N_REPETITIONS = 5
 
 def get_cents_between_frequencies(f1: float, f2: float) -> int:
     return int(1200 * np.log2(f2 / f1))
-
-
-def correct_for_backlash(
-    target_frequency: float,
-    movement_correction_cents: int,
-    tuner_strategy: ModelBasedTunerStrategy,
-    motor_controller: MotorController,
-) -> float:
-    # Hack: the frequency we reach depends on whether we're going from
-    # above or below because the string has a bit of backlash. We correct
-    # for that heuristically
-
-    movement_correction = 2 ** (movement_correction_cents / 1200)
-
-    steps_naive = tuner_strategy.get_target_steps(target_frequency)
-
-    if steps_naive > motor_controller.cur_steps:
-        # going up, move a bit more
-        target_frequency *= movement_correction
-    else:
-        # going down, move a bit less
-        target_frequency /= movement_correction
-
-    return target_frequency
 
 
 def main():
@@ -89,7 +65,9 @@ def main():
         frequencies = [f for f, _ in tuner.pitch_detector.frequency_readings]
         frequency = float(np.nanmean(frequencies))
         tuner_strategy = ModelBasedTunerStrategy.from_readings(
-            [(mc0.cur_steps, frequency)], coef=4.35
+            [(mc0.cur_steps, frequency)],
+            coef=4.35,
+            slack_correction_cents=SLACK_CORRECTION_CENTS,
         )
         print(tuner_strategy)
 
@@ -117,15 +95,12 @@ def main():
             for note in NOTES:
                 target_frequency_naive = float(librosa.note_to_hz(note))
 
-                steps_naive = tuner_strategy.get_target_steps(target_frequency_naive)
-                target_frequency = correct_for_backlash(
-                    target_frequency_naive,
-                    movement_correction_cents=MOVEMENT_CORRECTION_CENTS,
-                    tuner_strategy=tuner_strategy,
-                    motor_controller=mc0,
+                steps_naive = tuner_strategy.get_target_steps(
+                    target_frequency_naive, with_slack_correction=False
                 )
-
-                steps = tuner_strategy.get_target_steps(target_frequency)
+                steps = tuner_strategy.get_target_steps(
+                    target_frequency_naive, with_slack_correction=True
+                )
 
                 mc0.set_target_steps(steps, wait=True)
                 strummer.strum()

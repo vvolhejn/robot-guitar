@@ -57,7 +57,12 @@ class ProportionalTunerStrategy(TunerStrategy):
 
 
 class ModelBasedTunerStrategy(TunerStrategy):
-    def __init__(self, coef: float = 13.5, intercept: float | None = None):
+    def __init__(
+        self,
+        coef: float = 13.5,
+        intercept: float | None = None,
+        slack_correction_cents: int = 0,
+    ):
         """Tune the string using a model that estimates the rotation -> Hz function.
 
         The frequency of the string is proportional to the square root of the tension,
@@ -75,19 +80,24 @@ class ModelBasedTunerStrategy(TunerStrategy):
                 computed dynamically based on readings from the pitch
                 detector. This is useful because with fixed parameters, the
                 model can become inaccurate after some time.
+            slack_correction_cents: Correct for the fact that the string has some
+                slack by intentionally over-winding when going up in frequency and
+                under-winding when going down.
         """
         self.readings: Deque[tuple[float, int, Timestamp]] = deque(maxlen=10)
         self.cooldown_until: float | None = None
 
-        # Found using manual tuning on the physical string.
-        # TODO: Find this automatically.
         # If the coefficient is too low, the tuner will *overshoot*.
         self.coef: float = coef
         self.intercept: float | None = intercept
+        self.slack_correction_cents = slack_correction_cents
 
     @classmethod
     def from_readings(
-        cls, readings: list[tuple[int, float]], coef: float | None = None
+        cls,
+        readings: list[tuple[int, float]],
+        coef: float | None = None,
+        slack_correction_cents: int = 0,
     ):
         """Estimate the model parameters from (steps, frequency) pairs.
 
@@ -102,13 +112,21 @@ class ModelBasedTunerStrategy(TunerStrategy):
             # We fit the model to f^2 = coef*x + intercept, see __init__.
             y = np.array([freq**2 for _, freq in readings])
             model.fit(X, y)
-            return cls(coef=model.coef_[0], intercept=float(model.intercept_))
+            return cls(
+                coef=model.coef_[0],
+                intercept=float(model.intercept_),
+                slack_correction_cents=slack_correction_cents,
+            )
         else:
             intercepts = [freq**2 - steps * coef for steps, freq in readings]
             # Taking the mean minimizes the square error, so this is consistent with
             # the linear regression above.
             intercept = float(np.mean(intercepts))
-            return cls(coef=coef, intercept=intercept)
+            return cls(
+                coef=coef,
+                intercept=intercept,
+                slack_correction_cents=slack_correction_cents,
+            )
 
     def estimate_intecept(self) -> float:
         estimates = [
@@ -117,11 +135,18 @@ class ModelBasedTunerStrategy(TunerStrategy):
         ]
         return float(np.median(estimates))
 
-    def get_target_steps(self, target_frequency: float) -> int:
+    def get_target_steps(
+        self, target_frequency: float, *, with_slack_correction: bool
+    ) -> int:
         if self.intercept is None:
             intercept = self.estimate_intecept()
         else:
             intercept = self.intercept
+
+        if with_slack_correction:
+            target_frequency = self._correct_for_slack(
+                target_frequency, target_frequency
+            )
 
         estimated_target_steps = (1 / self.coef) * (target_frequency**2 - intercept)
         # print(intercept, estimated_target_steps)
@@ -144,9 +169,35 @@ class ModelBasedTunerStrategy(TunerStrategy):
         # Old readings get removed by the queue's maxlen
         self.readings.append((frequency, cur_steps, timestamp))
 
-        estimated_target_steps = self.get_target_steps(target_frequency)
+        target_steps = self.get_target_steps(
+            target_frequency, with_slack_correction=True
+        )
 
-        return int(estimated_target_steps - cur_steps)
+        return int(target_steps - cur_steps)
+
+    def _correct_for_slack(
+        self,
+        frequency: float,
+        target_frequency: float,
+    ) -> float:
+        """Correct for the fact that the string has some slack.
+
+        Setting the same target_steps from above and below will result in
+        different frequencies. I think this is because of the mechanical setup:
+        the string is squeezed by the wood and this makes it not reach the
+        frequency it's "supposed to". So if you go from below, the actual
+        frequency is a little higher, and vice versa.
+        """
+        going_up = target_frequency > frequency
+
+        correction_coef = 2 ** (self.slack_correction_cents / 1200)
+
+        if going_up:  # intentionally over-wind
+            target_frequency *= correction_coef
+        else:  # intentionally under-wind
+            target_frequency /= correction_coef
+
+        return target_frequency
 
     def __repr__(self) -> str:
         return f"ModelBasedTunerStrategy(coef={self.coef}, intercept={self.intercept})"
