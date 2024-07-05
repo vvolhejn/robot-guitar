@@ -74,7 +74,6 @@ class PhysicalMotor(Motor):
         GPIO.output(self.direction_pin, 1)
 
     def step(self, forward: bool):
-        logger.debug(f"Stepping {'forward' if forward else 'backward'}")
         import RPi.GPIO as GPIO
 
         GPIO.output(self.direction_pin, forward != self.flip_direction)
@@ -98,7 +97,6 @@ class VirtualMotor(Motor):
         self.virtual_string = virtual_string
 
     def step(self, forward: bool):
-        logger.debug(f"Stepping {'forward' if forward else 'backward'}")
         time.sleep(self.step_time_sec)
         self.total_steps_taken += 1
 

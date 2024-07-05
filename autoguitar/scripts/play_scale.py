@@ -13,8 +13,41 @@ from autoguitar.tuner_strategy import ModelBasedTunerStrategy
 logging.basicConfig(level=logging.INFO)
 
 
+MOVEMENT_CORRECTION_CENTS = 0
+INITIAL_NOTE = "A2"
+# NOTES = ["B1", "C#1", "D#2", "E2", "F#2", "G#2", "A#2", "B2"]
+# NOTES = ["B1", "D#2", "F#2", "A#2", "B2", "G#2", "E2", "C#2"]
+# NOTES = ["F#2", "G#2", "A#2", "C3", "B2", "A2", "G2", "F2"]
+NOTES = ["A#2", "C3", "B2", "A2", "G2", "F2", "F#2", "G#2"]
+N_REPETITIONS = 5
+
+
 def get_cents_between_frequencies(f1: float, f2: float) -> int:
     return int(1200 * np.log2(f2 / f1))
+
+
+def correct_for_backlash(
+    target_frequency: float,
+    movement_correction_cents: int,
+    tuner_strategy: ModelBasedTunerStrategy,
+    motor_controller: MotorController,
+) -> float:
+    # Hack: the frequency we reach depends on whether we're going from
+    # above or below because the string has a bit of backlash. We correct
+    # for that heuristically
+
+    movement_correction = 2 ** (movement_correction_cents / 1200)
+
+    steps_naive = tuner_strategy.get_target_steps(target_frequency)
+
+    if steps_naive > motor_controller.cur_steps:
+        # going up, move a bit more
+        target_frequency *= movement_correction
+    else:
+        # going down, move a bit less
+        target_frequency /= movement_correction
+
+    return target_frequency
 
 
 def main():
@@ -41,7 +74,7 @@ def main():
         tuner = Tuner(
             input_stream=input_stream,
             motor_controller=mc0,
-            initial_target_frequency=float(librosa.note_to_hz("C3")),
+            initial_target_frequency=float(librosa.note_to_hz(INITIAL_NOTE)),
         )
 
         # Allow some time for the tuner to move to the target note
@@ -56,7 +89,7 @@ def main():
         frequencies = [f for f, _ in tuner.pitch_detector.frequency_readings]
         frequency = float(np.nanmean(frequencies))
         tuner_strategy = ModelBasedTunerStrategy.from_readings(
-            [(mc0.cur_steps, frequency)], coef=13.7
+            [(mc0.cur_steps, frequency)], coef=4.35
         )
         print(tuner_strategy)
 
@@ -65,34 +98,34 @@ def main():
         tuner.unsubscribe()
 
         # Repeatedly play a few notes and then re-calibrate the strategy.
-        for _ in range(10):
+        for _ in range(N_REPETITIONS):
             strumming_measurements = []
-            # notes = ["F#2", "G#2", "A#2", "B2", "C#3", "D#3", "F3", "F#3"]
-            # notes = ['F#2', 'A#2', 'C#3', 'F3', 'F#3', 'D#3', 'B2', 'G#2']
-            notes = ["C#3", "D#3", "F3", "G3", "F#3", "E3", "D3", "C3"]
-            for note in notes:
-                target_frequency = float(librosa.note_to_hz(note))
 
-                # Hack: the frequency we reach depends on whether we're going from
-                # above or below because the string has a bit of slack. We correct
-                # for that heuristically
-                movement_correction_cents = 100
-                movement_correction = 2 ** (movement_correction_cents / 1200)
+            print(
+                "".join(
+                    f"{x:>14}"
+                    for x in [
+                        "Note",
+                        "Steps naive",
+                        "Steps",
+                        "Frequency",
+                        "Cents offset",
+                    ]
+                )
+            )
 
-                steps_naive = tuner_strategy.get_target_steps(target_frequency)
+            for note in NOTES:
+                target_frequency_naive = float(librosa.note_to_hz(note))
 
-                if steps_naive > mc0.cur_steps:
-                    # going up, move a bit more
-                    target_frequency *= movement_correction
-                else:
-                    # going down, move a bit less
-                    target_frequency /= movement_correction
+                steps_naive = tuner_strategy.get_target_steps(target_frequency_naive)
+                target_frequency = correct_for_backlash(
+                    target_frequency_naive,
+                    movement_correction_cents=MOVEMENT_CORRECTION_CENTS,
+                    tuner_strategy=tuner_strategy,
+                    motor_controller=mc0,
+                )
 
                 steps = tuner_strategy.get_target_steps(target_frequency)
-                print(
-                    f"Corrected from {librosa.note_to_hz(note):.2f} to {target_frequency:.2f} "
-                    f"and {steps_naive} to {steps} steps."
-                )
 
                 mc0.set_target_steps(steps, wait=True)
                 strummer.strum()
@@ -103,21 +136,31 @@ def main():
                 frequency = float(np.nanmean(frequencies))
 
                 offset_cents = (
-                    get_cents_between_frequencies(target_frequency, frequency)
+                    get_cents_between_frequencies(target_frequency_naive, frequency)
                     if not np.isnan(frequency)
                     else np.nan
                 )
 
-                print((note, steps, target_frequency, frequency, offset_cents))
-                print()
+                print(
+                    "".join(
+                        f"{x:>14}"
+                        for x in [
+                            note,
+                            steps_naive,
+                            steps,
+                            f"{frequency:.2f}",
+                            offset_cents,
+                        ]
+                    )
+                )
+
                 if not np.isnan(frequency):
                     strumming_measurements.append((steps, frequency))
 
-            print(strumming_measurements)
             tuner_strategy = ModelBasedTunerStrategy.from_readings(
                 strumming_measurements
             )
-            print(tuner_strategy)
+            print("New strategy:", tuner_strategy)
 
 
 if __name__ == "__main__":

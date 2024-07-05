@@ -69,6 +69,7 @@ class Tuner:
                         "cur_steps": self.motor_controller.cur_steps,
                     },
                 },
+                timeout=1,
             )
         except requests.ConnectionError as e:
             print(e, file=sys.stderr)

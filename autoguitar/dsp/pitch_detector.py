@@ -21,55 +21,33 @@ class PitchDetector:
         self.input_stream.on_reading.subscribe(self._input_stream_callback)
         self.frequency_readings: Deque[tuple[float, Timestamp]] = deque(maxlen=100)
         self.on_reading: Signal[tuple[float, Timestamp]] = Signal()
+        self.n_samples_per_reading = 8192
+        self.cooldown_until = 0
 
     def _input_stream_callback(self, callback_data: InputStreamCallbackData):
         assert self.input_stream.stream is not None
+        assert callback_data.timestamp >= 0, "Expected non-negative timestamp"
+
+        if callback_data.timestamp < self.cooldown_until:
+            return
 
         # Pitch detection needs a bit more samples to work well, potentially more
         # than the block size
-        y = self.input_stream.get_latest_audio(max_n_samples=4096)
-        freq, _ = self.detect_pitch(y=y, sr=self.input_stream.stream.samplerate)
+        y = self.input_stream.get_latest_audio(max_n_samples=self.n_samples_per_reading)
+        freq, _ = detect_pitch(y=y, sr=self.input_stream.stream.samplerate)
 
-        timestamp = time.time()
+        # If the block size is small, this callback will get called very often.
+        # Since it's cost-intensive, we want to throttle it a bit.
+        timestamp = callback_data.timestamp
+        cooldown_coef = 1.5  # Pause length relative to n_samples_per_reading
+        self.cooldown_until = (
+            timestamp
+            + (self.n_samples_per_reading * cooldown_coef)
+            / self.input_stream.stream.samplerate
+        )
 
         if self.is_reading_plausible(freq, timestamp):
             self._add_reading(freq, timestamp)
-
-    def detect_pitch(self, y: np.ndarray, *, sr: int) -> tuple[float, float]:
-        """Estimate the fundamental frequency of the audio signal.
-
-        We assume that the signal is short, so only a single frequency is returned.
-
-        Returns:
-            A (frequency, confidence) tuple. The confidence is a value between 0 and 1,
-            the estimated fundamental frequency in Hz. NaN if no frequency was found.
-        """
-        assert y.ndim == 1, f"Expected 1D array, got shape {y.shape}"
-        length_sec = len(y) / sr
-        assert length_sec < 0.5, f"Expected short signal, got {length_sec:.2f}s"
-
-        min_freq = float(librosa.note_to_hz("E1"))  # bass E
-        # A4 is 440 Hz, more than we can currently wind the string to
-        max_freq = float(librosa.note_to_hz("A4"))
-        f0 = librosa.yin(y, fmin=min_freq, fmax=max_freq, sr=sr)
-
-        # Sometimes we get incorrect readings close to the max frequency,
-        # probably it's just because nothing is playing at the time and there's
-        # noise
-        f0[f0 >= 0.9 * max_freq] = np.nan
-
-        if np.isnan(f0).all():
-            return np.nan, 0
-        else:
-            freq = float(np.nanmedian(f0))
-            is_outlier = np.isnan(f0) | (np.abs(f0 - freq) > 0.3 * freq)
-            confidence = 1 - is_outlier.mean()
-
-            # Heuristic - if there are multiple outliers, the reading is noisy
-            if is_outlier.sum() > 1:
-                return np.nan, confidence
-            else:
-                return freq, confidence
 
     def is_reading_plausible(self, freq: float, timestamp: float) -> bool:
         """Check if a reading is plausible given past readings.
@@ -119,3 +97,42 @@ class PitchDetector:
             return (np.nan, None)
         else:
             return self.frequency_readings[-1]
+
+
+def detect_pitch(
+    y: np.ndarray, *, sr: int, min_note: str = "E1", max_note: str = "E3"
+) -> tuple[float, float]:
+    """Estimate the fundamental frequency of the audio signal.
+
+    We assume that the signal is short, so only a single frequency is returned.
+
+    Returns:
+        A (frequency, confidence) tuple. The confidence is a value between 0 and 1,
+        the estimated fundamental frequency in Hz. NaN if no frequency was found.
+    """
+    assert y.ndim == 1, f"Expected 1D array, got shape {y.shape}"
+    length_sec = len(y) / sr
+    assert length_sec < 0.5, f"Expected short signal, got {length_sec:.2f}s"
+
+    min_freq = float(librosa.note_to_hz(min_note))  # bass E
+    # max_freq should be higher than we can currently wind the string to
+    max_freq = float(librosa.note_to_hz(max_note))
+    f0 = librosa.yin(y, fmin=min_freq, fmax=max_freq, sr=sr, frame_length=len(y) // 2)
+
+    # Sometimes we get incorrect readings close to the max frequency,
+    # probably it's just because nothing is playing at the time and there's
+    # noise
+    f0[f0 >= 0.9 * max_freq] = np.nan
+
+    if np.isnan(f0).all():
+        return np.nan, 0
+    else:
+        freq = float(np.nanmedian(f0))
+        is_outlier = np.isnan(f0) | (np.abs(f0 - freq) > 0.3 * freq)
+        confidence = 1 - is_outlier.mean()
+
+        # Heuristic - if there are multiple outliers, the reading is noisy
+        if is_outlier.sum() > 1:
+            return np.nan, confidence
+        else:
+            return freq, confidence

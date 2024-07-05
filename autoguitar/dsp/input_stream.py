@@ -73,6 +73,10 @@ class InputStream:
         )
         self.readings.append(data)
 
+        if status:  # An error flag is set
+            # This can happen pretty often if on_reading() is slow
+            logger.debug(f"status: {status}")
+
         self.on_reading.notify(data)
 
     def wait_for_initialization(self):
