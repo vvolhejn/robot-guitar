@@ -45,7 +45,7 @@ def main(use_strummer: bool):
         tuner = Tuner(
             input_stream=input_stream,
             motor_controller=mc0,
-            initial_target_frequency=float(librosa.note_to_hz("C3")),
+            initial_target_frequency=float(librosa.note_to_hz("A2")),
         )
 
         for msg in inport:
@@ -53,9 +53,9 @@ def main(use_strummer: bool):
             if msg.type == "note_on":
                 frequency = librosa.midi_to_hz(msg.note)
 
-                while frequency > librosa.note_to_hz("G3") + 1e-3:
+                while frequency > librosa.note_to_hz("C3") + 1e-3:
                     frequency /= 2
-                while frequency < librosa.note_to_hz("G1") - 1e-3:
+                while frequency < librosa.note_to_hz("C2") - 1e-3:
                     frequency *= 2
 
                 tuner.target_frequency = frequency

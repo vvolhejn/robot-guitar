@@ -95,10 +95,10 @@ def main():
             for note in NOTES:
                 target_frequency_naive = float(librosa.note_to_hz(note))
 
-                steps_naive = tuner_strategy.get_target_steps(
+                steps_naive = tuner_strategy.get_target_steps_raw(
                     target_frequency_naive, with_slack_correction=False
                 )
-                steps = tuner_strategy.get_target_steps(
+                steps = tuner_strategy.get_target_steps_raw(
                     target_frequency_naive, with_slack_correction=True
                 )
 

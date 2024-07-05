@@ -17,7 +17,7 @@ if __name__ == "__main__":
                     "value": {
                         "frequency": freq,
                         "target_frequency": target_frequency,
-                        "steps_to_move": round((freq - target_frequency) / 10),
+                        "target_steps": round((freq + target_frequency) / 10),
                         "cur_steps": 0,
                     },
                 },

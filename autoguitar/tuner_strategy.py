@@ -4,7 +4,7 @@ from collections import deque
 from typing import Deque
 
 import numpy as np
-from sklearn.linear_model import LinearRegression, RANSACRegressor
+from sklearn.linear_model import LinearRegression
 
 from autoguitar.dsp.pitch_detector import Timestamp
 
@@ -13,14 +13,14 @@ logger = logging.getLogger(__name__)
 
 class TunerStrategy(ABC):
     @abstractmethod
-    def get_steps_to_move(
+    def get_target_steps(
         self,
         frequency: float,
         target_frequency: float,
         timestamp: Timestamp,
         cur_steps: int,
     ) -> int:
-        """Calculate the relative number of steps to move the motor."""
+        """Calculate the target number of steps to set for the motor."""
 
 
 class ProportionalTunerStrategy(TunerStrategy):
@@ -31,7 +31,7 @@ class ProportionalTunerStrategy(TunerStrategy):
         self.speed = speed
         self.max_relative_error = max_relative_error
 
-    def get_steps_to_move(
+    def get_target_steps(
         self,
         frequency: float,
         target_frequency: float,
@@ -53,7 +53,7 @@ class ProportionalTunerStrategy(TunerStrategy):
         max_n_steps = self.max_n_steps
         abs_n_steps = int(np.clip(abs_n_steps, 1, max_n_steps))
 
-        return sign * abs_n_steps
+        return cur_steps + sign * abs_n_steps
 
 
 class ModelBasedTunerStrategy(TunerStrategy):
@@ -128,18 +128,25 @@ class ModelBasedTunerStrategy(TunerStrategy):
                 slack_correction_cents=slack_correction_cents,
             )
 
-    def estimate_intecept(self) -> float:
+    def estimate_intecept(self) -> float | None:
+        if len(self.readings) < 5:
+            # Wait until we have a good number of readings for an accurate estimate
+            return
+
         estimates = [
             frequency**2 - self.coef * cur_steps
             for frequency, cur_steps, _ in self.readings
         ]
         return float(np.median(estimates))
 
-    def get_target_steps(
+    def get_target_steps_raw(
         self, target_frequency: float, *, with_slack_correction: bool
     ) -> int:
         if self.intercept is None:
             intercept = self.estimate_intecept()
+            if intercept is None:
+                return 0  # Wait for more readings
+            self.intercept = intercept
         else:
             intercept = self.intercept
 
@@ -153,7 +160,7 @@ class ModelBasedTunerStrategy(TunerStrategy):
 
         return int(estimated_target_steps)
 
-    def get_steps_to_move(
+    def get_target_steps(
         self,
         frequency: float,
         target_frequency: float,
@@ -169,11 +176,11 @@ class ModelBasedTunerStrategy(TunerStrategy):
         # Old readings get removed by the queue's maxlen
         self.readings.append((frequency, cur_steps, timestamp))
 
-        target_steps = self.get_target_steps(
+        target_steps = self.get_target_steps_raw(
             target_frequency, with_slack_correction=True
         )
 
-        return int(target_steps - cur_steps)
+        return int(target_steps)
 
     def _correct_for_slack(
         self,
@@ -188,7 +195,8 @@ class ModelBasedTunerStrategy(TunerStrategy):
         frequency it's "supposed to". So if you go from below, the actual
         frequency is a little higher, and vice versa.
         """
-        going_up = target_frequency > frequency
+        distance_cents = 1200 * np.log2(target_frequency / frequency)
+        going_up = distance_cents > 0
 
         correction_coef = 2 ** (self.slack_correction_cents / 1200)
 

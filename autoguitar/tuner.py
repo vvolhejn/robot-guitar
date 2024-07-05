@@ -28,15 +28,15 @@ class Tuner:
         self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy(
             max_n_steps=1000, speed=10.0
         )
-        # self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy()
+        self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy(
+            coef=4.35,
+            slack_correction_cents=15,
+        )
 
         self.pitch_detector.on_reading.subscribe(self.on_pitch_reading)
 
     def on_pitch_reading(self, data: tuple[float, Timestamp]):
         frequency, timestamp = data
-        reading_age = time.time() - timestamp
-        if reading_age > 0.1:
-            frequency = np.nan
 
         if np.isnan(frequency):
             return
@@ -45,18 +45,18 @@ class Tuner:
             print("Still moving, skipping...", file=sys.stderr)
             return
 
-        n_steps = self.tuner_strategy.get_steps_to_move(
+        target_steps = self.tuner_strategy.get_target_steps(
             frequency,
             self.target_frequency,
             timestamp,
             self.motor_controller.cur_steps,
         )
 
-        self.send_update_to_server(frequency=frequency, n_steps=n_steps)
+        self.send_update_to_server(frequency=frequency, target_steps=target_steps)
 
-        self.motor_controller.move(n_steps)
+        self.motor_controller.set_target_steps(target_steps)
 
-    def send_update_to_server(self, frequency: float, n_steps: int):
+    def send_update_to_server(self, frequency: float, target_steps: int):
         try:
             requests.post(
                 "http://localhost:8050/api/event",
@@ -65,7 +65,7 @@ class Tuner:
                     "value": {
                         "frequency": frequency,
                         "target_frequency": self.target_frequency,
-                        "steps_to_move": n_steps,
+                        "target_steps": target_steps,
                         "cur_steps": self.motor_controller.cur_steps,
                     },
                 },

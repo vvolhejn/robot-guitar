@@ -8,7 +8,7 @@ class MidiEvent(BaseModel):
 class TunerEvent(BaseModel):
     frequency: float  # may be NaN
     target_frequency: float
-    steps_to_move: int
+    target_steps: int
     cur_steps: int
 
 

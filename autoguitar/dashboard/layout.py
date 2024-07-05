@@ -35,7 +35,7 @@ def events_to_df(events: list[AnnotatedEvent]) -> pd.DataFrame:
                     "kind": "tuner",
                     "frequency": event.event.frequency,
                     "target_frequency": event.event.target_frequency,
-                    "steps_to_move": event.event.steps_to_move,
+                    "target_steps": event.event.target_steps,
                     "cur_steps": event.event.cur_steps,
                 }
             )
