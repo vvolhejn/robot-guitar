@@ -1,6 +1,8 @@
 import time
 
 import click
+import librosa
+import numpy as np
 import readchar
 
 from autoguitar.dsp.input_stream import InputStream
@@ -9,22 +11,21 @@ from autoguitar.motor import MotorController, get_motor
 
 
 def manual_control(pitch_detector: PitchDetector | None):
-    n_steps = [200, 25]
+    n_steps = [1000, 25]
 
     motors = [
-        get_motor(motor_number=0, step_time_sec=0.0002),
-        get_motor(motor_number=1, step_time_sec=0.0004),
+        get_motor(motor_number=0),
+        get_motor(motor_number=1),
     ]
     with (
-        MotorController(motor=motors[0], max_steps=10000) as mc0,
-        MotorController(motor=motors[1], max_steps=10000) as mc1,
+        MotorController(motor=motors[0], max_steps=n_steps[0] * 100) as mc0,
+        MotorController(motor=motors[1], max_steps=n_steps[1] * 100) as mc1,
     ):
         while True:
             if pitch_detector is not None:
-                print(
-                    f"#steps={mc0.cur_steps} "
-                    f"freq={pitch_detector.get_frequency()[0]:.2f} Hz"
-                )
+                freq = pitch_detector.get_frequency()[0]
+                note = librosa.hz_to_note(freq) if not np.isnan(freq) else None
+                print(f"#steps={mc0.cur_steps}, freq={freq:.2f} Hz, note={note}")
             else:
                 print(f"#steps={mc0.cur_steps}")
 

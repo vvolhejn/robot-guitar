@@ -53,9 +53,9 @@ def main(use_strummer: bool):
             if msg.type == "note_on":
                 frequency = librosa.midi_to_hz(msg.note)
 
-                while frequency > librosa.note_to_hz("C4") + 1e-3:
+                while frequency > librosa.note_to_hz("G3") + 1e-3:
                     frequency /= 2
-                while frequency < librosa.note_to_hz("C2") - 1e-3:
+                while frequency < librosa.note_to_hz("G1") - 1e-3:
                     frequency *= 2
 
                 tuner.target_frequency = frequency

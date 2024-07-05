@@ -67,9 +67,9 @@ def main():
         # Repeatedly play a few notes and then re-calibrate the strategy.
         for _ in range(10):
             strumming_measurements = []
-            # notes = ["B2", "C#3", "D#3", "E3", "F#3", "G#3", "A#3", "B3"]
-            # notes = ["B2", "D#3", "F#3", "A#3", "B3", "G#3", "E3", "C#3"]
-            notes = ["F#3", "G#3", "A#3", "C4", "B3", "A3", "G3", "F3"]
+            # notes = ["F#2", "G#2", "A#2", "B2", "C#3", "D#3", "F3", "F#3"]
+            # notes = ['F#2', 'A#2', 'C#3', 'F3', 'F#3', 'D#3', 'B2', 'G#2']
+            notes = ["C#3", "D#3", "F3", "G3", "F#3", "E3", "D3", "C3"]
             for note in notes:
                 target_frequency = float(librosa.note_to_hz(note))
 
