@@ -1,11 +1,11 @@
 import logging
-import time
+import threading
 from collections import deque
+from queue import Empty, Full, Queue
 from typing import Deque
 
 import librosa
 import numpy as np
-import sounddevice as sd  # pyright: ignore[reportMissingTypeStubs]
 
 from autoguitar.dsp.input_stream import InputStream, InputStreamCallbackData
 from autoguitar.signal import Signal
@@ -16,20 +16,47 @@ logger = logging.getLogger(__name__)
 
 
 class PitchDetector:
+    """A real-time pitch detector based on audio coming from an InputStream.
+
+    Pitch detection is computationally expensive (for the Raspberry Pi) so we
+    run it on a separate thread to avoid input overflow in the InputStream. That
+    would mean some blocks would get discarded, which is bad mainly if you want
+    to record the incoming audio into a file.
+    """
+
     def __init__(self, input_stream: InputStream):
         self.input_stream = input_stream
         self.input_stream.on_reading.subscribe(self._input_stream_callback)
+
         self.frequency_readings: Deque[tuple[float, Timestamp]] = deque(maxlen=100)
         self.on_reading: Signal[tuple[float, Timestamp]] = Signal()
         self.n_samples_per_reading = 8192
         self.cooldown_until = 0
 
+        # Run the pitch detection itself in a separate thread.
+        # We don't care about processing all readings. If we can't keep up, process
+        # only the latest one. Although note that _task_queue.put_nowait() will not
+        # overwrite the existing reading,
+        self._task_queue = Queue(maxsize=1)
+        self.thread = threading.Thread(target=self._process_readings)
+        self.thread.start()
+
     def _input_stream_callback(self, callback_data: InputStreamCallbackData):
         assert self.input_stream.stream is not None
         assert callback_data.timestamp >= 0, "Expected non-negative timestamp"
+        timestamp = callback_data.timestamp
 
-        if callback_data.timestamp < self.cooldown_until:
+        if timestamp < self.cooldown_until:
             return
+
+        # If the block size is small, this callback will get called very often.
+        # Since it's cost-intensive, we want to throttle it a bit.
+        cooldown_coef = 1.5  # Pause length relative to n_samples_per_reading
+        self.cooldown_until = (
+            timestamp
+            + (self.n_samples_per_reading * cooldown_coef)
+            / self.input_stream.stream.samplerate
+        )
 
         # Pitch detection needs a bit more samples to work well, potentially more
         # than the block size
@@ -39,20 +66,25 @@ class PitchDetector:
             # same parameters
             return
 
-        freq, _ = detect_pitch(y=y, sr=self.input_stream.stream.samplerate)
+        try:
+            self._task_queue.put_nowait((y, timestamp))
+        except Full:
+            logger.warning("Pitch detector queue is full, skipping a reading")
 
-        # If the block size is small, this callback will get called very often.
-        # Since it's cost-intensive, we want to throttle it a bit.
-        timestamp = callback_data.timestamp
-        cooldown_coef = 1.5  # Pause length relative to n_samples_per_reading
-        self.cooldown_until = (
-            timestamp
-            + (self.n_samples_per_reading * cooldown_coef)
-            / self.input_stream.stream.samplerate
-        )
+    def _process_readings(self):
+        while self.input_stream.stream is not None:
+            try:
+                y, timestamp = self._task_queue.get(timeout=0.5)
+            except Empty:
+                # If the input stream has ended, we should stop. We use the
+                # timeout argument to ensure that the condition is re-checked
+                continue
 
-        if self.is_reading_plausible(freq, timestamp):
-            self._add_reading(freq, timestamp)
+            sr = self.input_stream.stream.samplerate
+            freq, _ = detect_pitch(y=y, sr=sr)
+
+            if self.is_reading_plausible(freq, timestamp):
+                self._add_reading(freq, timestamp)
 
     def is_reading_plausible(self, freq: float, timestamp: float) -> bool:
         """Check if a reading is plausible given past readings.

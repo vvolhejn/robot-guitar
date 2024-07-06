@@ -16,7 +16,6 @@ class AudioRecorder:
         self.path = path
 
     def __enter__(self):
-        print(threading.current_thread())
         assert self.input_stream.stream is not None, "Expected initialized stream"
 
         sr = self.input_stream.stream.samplerate

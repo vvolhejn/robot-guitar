@@ -116,7 +116,7 @@ class MotorController:
         self._target_steps = 0
 
         self.command_thread = None
-        self.stop_thread = False
+        self.stop_event = threading.Event()
 
     def set_target_steps(self, steps: int, wait: bool = False):
         self._target_steps = steps
@@ -143,12 +143,12 @@ class MotorController:
         return self
 
     def __exit__(self, exc_type: type, exc_val: Exception, exc_tb: TracebackType):
-        self.stop_thread = True
+        self.stop_event.set()
         assert self.command_thread is not None
         self.command_thread.join()
 
     def _process_commands(self):
-        while not self.stop_thread:
+        while not self.stop_event.is_set():
             if self.cur_steps == self._target_steps:
                 time.sleep(0.001)
                 continue
