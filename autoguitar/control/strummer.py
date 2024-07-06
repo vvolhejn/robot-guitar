@@ -165,8 +165,8 @@ class Strummer:
         # held longer by the pick, meaning you need to turn more for the pluck
         # to happen.
         return {
-            "upstroke": self.calibration.upstroke_steps + 5,
+            "upstroke": self.calibration.upstroke_steps + 4,
             "upstroke_mute": self.calibration.downstroke_steps + 5,
-            "downstroke": self.calibration.downstroke_steps - 6,
+            "downstroke": self.calibration.downstroke_steps - 3,
             "downstroke_mute": self.calibration.downstroke_steps + 6,
         }[state]
