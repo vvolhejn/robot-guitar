@@ -17,6 +17,7 @@ readchar = "^4.0.6"
 click = "^8.1.7"
 nbstripout = "^0.7.1"
 pydantic = "^2.7.2"
+soundfile = "^0.12.1"
 
 [tool.poetry.group.dev]
 optional = true
