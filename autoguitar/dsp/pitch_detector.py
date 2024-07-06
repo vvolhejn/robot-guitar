@@ -34,6 +34,11 @@ class PitchDetector:
         # Pitch detection needs a bit more samples to work well, potentially more
         # than the block size
         y = self.input_stream.get_latest_audio(max_n_samples=self.n_samples_per_reading)
+        if len(y) < self.n_samples_per_reading:
+            # The Yin algorithm might fail if we try to run it on fewer samples with the
+            # same parameters
+            return
+
         freq, _ = detect_pitch(y=y, sr=self.input_stream.stream.samplerate)
 
         # If the block size is small, this callback will get called very often.
