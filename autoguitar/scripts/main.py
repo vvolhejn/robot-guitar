@@ -1,4 +1,6 @@
 import logging
+import time
+from threading import Thread
 
 import click
 import librosa
@@ -12,6 +14,12 @@ from autoguitar.motor import MotorController, get_motor
 from autoguitar.tuner import Tuner
 
 logging.basicConfig(level=logging.INFO)
+
+
+def remap(
+    x: float, in_min: float, in_max: float, out_min: float, out_max: float
+) -> float:
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 
 @click.command()
@@ -48,9 +56,29 @@ def main(use_strummer: bool):
             initial_target_frequency=float(librosa.note_to_hz("A2")),
         )
 
+        tremolo_frequency: float | None = None
+
+        def tremolo_loop():
+            while True:
+                freq = tremolo_frequency
+                if freq is not None:
+                    assert 0.1 < freq <= 100
+
+                    strum_start = time.time()
+                    if strummer is not None:
+                        strummer.strum()
+                    strum_end = time.time()
+
+                    time.sleep(max(0, 1 / freq - (strum_end - strum_start)))
+                else:
+                    time.sleep(0.1)
+
+        tremolo_thread = Thread(target=tremolo_loop)
+        tremolo_thread.start()
+
         for msg in inport:
-            print(msg)
             if msg.type == "note_on":
+                print(msg)
                 frequency = librosa.midi_to_hz(msg.note)
 
                 while frequency > librosa.note_to_hz("C3") + 1e-3:
@@ -60,7 +88,7 @@ def main(use_strummer: bool):
 
                 tuner.target_frequency = frequency
 
-                if strummer is not None:
+                if strummer is not None and tremolo_frequency is None:
                     strummer.strum()
 
                 if readings := tuner.pitch_detector.frequency_readings:
@@ -71,6 +99,20 @@ def main(use_strummer: bool):
                 # TODO: mute. The muting is a bit too unreliable atm.
                 # if strummer is not None:
                 #     strummer.mute()
+            elif msg.type == "control_change":
+                if msg.control == 28:  # knob 8 on the Launchkey Mini
+                    # Tremolo
+                    if msg.value < 64:
+                        tremolo_frequency = None
+                    else:
+                        tremolo_exponent = remap(msg.value, 64, 127, 0, 1)
+                        min_freq = 1
+                        max_freq = 50
+                        tremolo_frequency = (
+                            min_freq * (max_freq / min_freq) ** tremolo_exponent
+                        )
+
+        tremolo_thread.join()
 
 
 if __name__ == "__main__":
