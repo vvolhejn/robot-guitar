@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 from typing import Annotated, Literal
 
@@ -6,10 +7,15 @@ from pydantic import BaseModel, BeforeValidator
 
 from autoguitar.motor import MotorController, get_motor
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    motors = [get_motor(motor_number=0), get_motor(motor_number=1)]
+    motors = [
+        get_motor(motor_number=0, remote=False),
+        get_motor(motor_number=1, remote=False),
+    ]
 
     with (
         MotorController(motor=motors[0], max_steps=3000) as mc0,
@@ -32,12 +38,18 @@ class MotorTurn(BaseModel):
     # automatically when you use `Literal`
     motor_number: Annotated[Literal[0, 1], BeforeValidator(int)]
     target_steps: int
+    relative: bool = False
 
 
 @app.post("/motor_turn")
 def post_motor_turn(request: Request, motor_turn: MotorTurn):
     mc = get_motor_controllers_from_request(request)[motor_turn.motor_number]
-    mc.set_target_steps(motor_turn.target_steps)
+
+    if motor_turn.relative:
+        mc.move(motor_turn.target_steps, wait=True)
+    else:
+        mc.set_target_steps(motor_turn.target_steps, wait=True)
+
     return motor_turn.model_dump()
 
 
@@ -45,3 +57,9 @@ def post_motor_turn(request: Request, motor_turn: MotorTurn):
 def get_motors_status(request: Request):
     mcs = get_motor_controllers_from_request(request)
     return {i: {"cur_steps": mc.cur_steps} for i, mc in enumerate(mcs)}
+
+
+@app.get("/health")
+def health():
+    """Check if the server is running."""
+    return {"status": "ok"}

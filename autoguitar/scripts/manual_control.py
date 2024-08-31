@@ -11,7 +11,7 @@ from autoguitar.motor import MotorController, get_motor
 
 
 def manual_control(pitch_detector: PitchDetector | None):
-    n_steps = [1000, 25]
+    n_steps = [100, 25]
 
     motors = [
         get_motor(motor_number=0),

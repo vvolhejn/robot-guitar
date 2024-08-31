@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from types import TracebackType
 from typing import Optional
 
+import requests
+
 from autoguitar.virtual_string import VirtualString
 
 logger = logging.getLogger(__name__)
@@ -26,6 +28,15 @@ class Motor(ABC):
     @abstractmethod
     def steps_per_turn(self) -> int: ...
 
+    def step_multiple(self, n: int):
+        """Can be overridden for more efficient implementations."""
+        if n == 0:
+            return
+        forward = True if n > 0 else False
+
+        for _ in range(abs(n)):
+            self.step(forward)
+
 
 @dataclass  # Use Pydantic?
 class PinConfiguration:
@@ -35,8 +46,8 @@ class PinConfiguration:
 
 
 PIN_CONFIGURATIONS = [
-    PinConfiguration(step=11, direction=15, disable=19),
-    PinConfiguration(step=18, direction=16, disable=12),
+    PinConfiguration(step=11, direction=16, disable=19),
+    PinConfiguration(step=18, direction=15, disable=12),
 ]
 
 
@@ -107,6 +118,40 @@ class VirtualMotor(Motor):
         return STEPS_PER_TURN_WITHOUT_MICROSTEPPING
 
 
+class RemoteMotor(Motor):
+    def __init__(
+        self,
+        motor_number: int,
+        step_time_sec: float,
+        microstepping: int,
+    ):
+        self.motor_number = motor_number
+        self.step_time_sec = step_time_sec
+        self.microstepping = microstepping
+        self.server_url = "http://localhost:8050"
+
+        response = requests.get(f"{self.server_url}/health")
+        if response.status_code != 200:
+            raise RuntimeError(f"Motor server is not running: {response}")
+
+    def step(self, forward: bool):
+        raise NotImplementedError
+
+    def step_multiple(self, n: int):
+        response = requests.post(
+            f"{self.server_url}/motor_turn",
+            json={
+                "motor_number": self.motor_number,
+                "target_steps": n,
+                "relative": True,
+            },
+        )
+        response.raise_for_status()
+
+    def steps_per_turn(self) -> int:
+        return STEPS_PER_TURN_WITHOUT_MICROSTEPPING * self.microstepping
+
+
 class MotorController:
     def __init__(self, motor: Motor, max_steps: int):
         self.motor = motor
@@ -152,12 +197,10 @@ class MotorController:
             if self.cur_steps == self._target_steps:
                 time.sleep(0.001)
                 continue
-            if self.cur_steps < self._target_steps:
-                self.motor.step(forward=True)
-                self.cur_steps += 1
-            else:
-                self.motor.step(forward=False)
-                self.cur_steps -= 1
+
+            target_steps = self._target_steps
+            self.motor.step_multiple(target_steps - self.cur_steps)
+            self.cur_steps = target_steps
 
     def wait_until_stopped(self):
         while self.is_moving():
@@ -175,7 +218,7 @@ def is_raspberry_pi():
         return False
 
 
-def get_motor(motor_number: int = 0):
+def get_motor(motor_number: int = 0, remote: bool = True) -> Motor:
     step_time_sec = STEP_TIME_SEC_PER_MOTOR[motor_number]
     if is_raspberry_pi():
         logger.debug(f"Using physical motor {motor_number=}.")
@@ -185,6 +228,13 @@ def get_motor(motor_number: int = 0):
             step_time_sec=step_time_sec,
             microstepping=MICROSTEPPING_PER_MOTOR[motor_number],
         )
+    elif remote:
+        logger.debug("Using remote motor.")
+        return RemoteMotor(
+            motor_number=motor_number,
+            step_time_sec=step_time_sec,
+            microstepping=MICROSTEPPING_PER_MOTOR[motor_number],
+        )
     else:
         logger.debug("Using virtual motor.")
-        return VirtualMotor(step_time_sec=step_time_sec)
+        return VirtualMotor(step_time_sec=step_time_sec * 100)
