@@ -45,9 +45,10 @@ class PinConfiguration:
     disable: int  # a "0" signal enables the motor
 
 
+# Note: Pin 15 on my Pi is dead?
 PIN_CONFIGURATIONS = [
     PinConfiguration(step=11, direction=16, disable=19),
-    PinConfiguration(step=18, direction=15, disable=12),
+    PinConfiguration(step=18, direction=3, disable=12),
 ]
 
 
