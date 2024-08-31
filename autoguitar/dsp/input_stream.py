@@ -28,6 +28,20 @@ class InputStreamCallbackData(BaseModel):
     }
 
 
+def input_device_if_available(device_name: str) -> str | None:
+    """Return the device name if it's available, otherwise None.
+
+    We return None because passing None as the `device` argument will use the default
+    input device.
+    """
+    try:
+        sd.query_devices(device_name)
+        return device_name
+    except ValueError:
+        logger.warning(f"Device '{device_name}' not found")
+        return None
+
+
 class InputStream:
     def __init__(self, block_size: int):
         self.stream = None
@@ -46,7 +60,9 @@ class InputStream:
 
     def __enter__(self):
         self.stream = sd.InputStream(
-            callback=self._input_stream_callback, blocksize=self.block_size
+            callback=self._input_stream_callback,
+            blocksize=self.block_size,
+            device=input_device_if_available("AIR 192 6"),
         )
         self.stream.__enter__()
         blocks_per_sec = self.stream.samplerate / self.block_size

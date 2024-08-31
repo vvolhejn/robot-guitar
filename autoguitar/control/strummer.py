@@ -100,6 +100,7 @@ class Strummer:
         self.motor_controller.move(
             self.motor_controller.steps_per_turn() * 2, wait=True
         )
+        time.sleep(1)
 
         # To remove potential outliers, take the 0.9 quantile.
         high_loudness = float(
@@ -120,14 +121,14 @@ class Strummer:
 
         while True:
             self.motor_controller.move(steps_at_a_time, wait=True)
-            loudness2 = self.loudness_detector.measure_loudness(min_readings=5)
+            loudness2 = self.loudness_detector.measure_loudness(min_readings=3)
             loudness1 = last_loudness
 
             normalized_difference = (loudness2 - loudness1) / loudness_difference
             # print(f"{loudness1:.4f} {loudness2:.4f} {normalized_difference:.4f}")
             last_loudness = loudness2
 
-            if normalized_difference > 0.3:
+            if normalized_difference > 0.2:
                 # print("Plucked!")
                 break
 

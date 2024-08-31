@@ -2,7 +2,7 @@ import mido
 
 
 def find_midi_input() -> str:
-    substring = "Launchkey Mini:Launchkey Mini LK Mini MIDI"
+    substring = "Launchkey Mini LK Mini MIDI"
     for name in mido.get_input_names():
         if substring in name:
             return name
