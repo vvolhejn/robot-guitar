@@ -52,7 +52,8 @@ class Tuner:
             self.motor_controller.cur_steps,
         )
 
-        self.send_update_to_server(frequency=frequency, target_steps=target_steps)
+        # Disabled because we now run a server on the RPi side.
+        # self.send_update_to_server(frequency=frequency, target_steps=target_steps)
 
         self.motor_controller.set_target_steps(target_steps)
 
