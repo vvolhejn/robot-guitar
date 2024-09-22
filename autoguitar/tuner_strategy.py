@@ -24,12 +24,13 @@ class TunerStrategy(ABC):
 
 
 class ProportionalTunerStrategy(TunerStrategy):
-    def __init__(
-        self, max_n_steps: int, speed: float, max_relative_error: float = 0.005
-    ):
+    def __init__(self, max_n_steps: int, speed: float, max_error_cents: float = 10):
         self.max_n_steps = max_n_steps
         self.speed = speed
-        self.max_relative_error = max_relative_error
+        self.max_error_cents = max_error_cents
+
+        if max_error_cents < 0:
+            raise ValueError("max_error_cents must be non-negative")
 
     def get_target_steps(
         self,
@@ -45,9 +46,12 @@ class ProportionalTunerStrategy(TunerStrategy):
         sign = -int(np.sign(delta))
         delta = np.abs(delta)
 
-        relative_error = delta / target_frequency
-        if relative_error < self.max_relative_error:
-            return 0
+        if (
+            cents_to_frequency_ratio(-self.max_error_cents)
+            < frequency / target_frequency
+            < cents_to_frequency_ratio(self.max_error_cents)
+        ):
+            return cur_steps
 
         abs_n_steps = np.round(delta * self.speed)
         max_n_steps = self.max_n_steps
@@ -62,6 +66,7 @@ class ModelBasedTunerStrategy(TunerStrategy):
         coef: float = 13.5,
         intercept: float | None = None,
         slack_correction_cents: int = 0,
+        adaptiveness: float = 0.8,
     ):
         """Tune the string using a model that estimates the rotation -> Hz function.
 
@@ -83,6 +88,9 @@ class ModelBasedTunerStrategy(TunerStrategy):
             slack_correction_cents: Correct for the fact that the string has some
                 slack by intentionally over-winding when going up in frequency and
                 under-winding when going down.
+            adaptiveness: How quickly to change the model parameters based on new
+                incoming readings. From 0 to 1, where 0 means never change and 1
+                means always use the last estimate.
         """
         self.readings: Deque[tuple[float, int, Timestamp]] = deque(maxlen=10)
         self.cooldown_until: float | None = None
@@ -91,6 +99,7 @@ class ModelBasedTunerStrategy(TunerStrategy):
         self.coef: float = coef
         self.intercept: float | None = intercept
         self.slack_correction_cents = slack_correction_cents
+        self.adaptiveness = adaptiveness
 
     @classmethod
     def from_readings(
@@ -142,20 +151,33 @@ class ModelBasedTunerStrategy(TunerStrategy):
     def get_target_steps_raw(
         self, target_frequency: float, *, with_slack_correction: bool
     ) -> int:
+        current_intercept = self.estimate_intecept()
+
         if self.intercept is None:
-            intercept = self.estimate_intecept()
-            if intercept is None:
+            if current_intercept is None:
                 return 0  # Wait for more readings
-            self.intercept = intercept
+            self.intercept = current_intercept
         else:
-            intercept = self.intercept
+            if (
+                current_intercept is not None
+                # TODO: more robust filtering of outliers. Generally we get these
+                #   when the string is moving a lot.
+                and abs(self.intercept - current_intercept) < 2000
+            ):
+                self.intercept = (
+                    1 - self.adaptiveness
+                ) * self.intercept + self.adaptiveness * current_intercept
+
+            print(f"{self.intercept=:.2f} vs {current_intercept=:.2f}")
 
         if with_slack_correction:
             target_frequency = self._correct_for_slack(
                 target_frequency, target_frequency
             )
 
-        estimated_target_steps = (1 / self.coef) * (target_frequency**2 - intercept)
+        estimated_target_steps = (1 / self.coef) * (
+            target_frequency**2 - self.intercept
+        )
         # print(intercept, estimated_target_steps)
 
         return int(estimated_target_steps)
@@ -198,7 +220,7 @@ class ModelBasedTunerStrategy(TunerStrategy):
         distance_cents = 1200 * np.log2(target_frequency / frequency)
         going_up = distance_cents > 0
 
-        correction_coef = 2 ** (self.slack_correction_cents / 1200)
+        correction_coef = cents_to_frequency_ratio(self.slack_correction_cents)
 
         if going_up:  # intentionally over-wind
             target_frequency *= correction_coef
@@ -209,3 +231,21 @@ class ModelBasedTunerStrategy(TunerStrategy):
 
     def __repr__(self) -> str:
         return f"ModelBasedTunerStrategy(coef={self.coef}, intercept={self.intercept})"
+
+
+def cents_to_frequency_ratio(cents: float) -> float:
+    """Convert a number of cents to a frequency ratio.
+
+    Answers the question "if I want to change the frequency by X cents, what do I have
+    to multiple my current frequency by?".
+
+    >>> cents_to_frequency_coef(1200)
+    2.0
+    >>> cents_to_frequency_coef(0)
+    1.0
+    >>> cents_to_frequency_coef(-1200)
+    0.5
+    >>> cents_to_frequency_coef(100)  # one semitone
+    1.05946309436
+    """
+    return 2 ** (cents / 1200)

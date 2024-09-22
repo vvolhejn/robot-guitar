@@ -30,7 +30,7 @@ class Tuner:
         )
         self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy(
             coef=4.35,
-            slack_correction_cents=15,
+            adaptiveness=0.5,
         )
 
         self.pitch_detector.on_reading.subscribe(self.on_pitch_reading)
@@ -50,6 +50,14 @@ class Tuner:
             self.target_frequency,
             timestamp,
             self.motor_controller.cur_steps,
+        )
+
+        print(
+            f"Frequency: {frequency:.2f} Hz,\t"
+            f"Target frequency: {self.target_frequency:.2f} Hz,\t"
+            f"Cur steps: {self.motor_controller.cur_steps},\t"
+            f"Target steps: {target_steps},\t",
+            file=sys.stderr,
         )
 
         # Disabled because we now run a server on the RPi side.
