@@ -1,4 +1,5 @@
 import logging
+import time
 from contextlib import asynccontextmanager
 from typing import Annotated, Literal
 
@@ -8,6 +9,7 @@ from pydantic import BaseModel, BeforeValidator
 from autoguitar.motor import MotorController, get_motor
 
 logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -46,9 +48,9 @@ def post_motor_turn(request: Request, motor_turn: MotorTurn):
     mc = get_motor_controllers_from_request(request)[motor_turn.motor_number]
 
     if motor_turn.relative:
-        mc.move(motor_turn.target_steps, wait=True)
+        mc.move(motor_turn.target_steps, wait=False)
     else:
-        mc.set_target_steps(motor_turn.target_steps, wait=True)
+        mc.set_target_steps(motor_turn.target_steps, wait=False)
 
     return motor_turn.model_dump()
 
