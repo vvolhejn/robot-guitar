@@ -28,14 +28,26 @@ class Motor(ABC):
     @abstractmethod
     def steps_per_turn(self) -> int: ...
 
-    def step_multiple(self, n: int):
-        """Can be overridden for more efficient implementations."""
-        if n == 0:
-            return
-        forward = True if n > 0 else False
+    def step_multiple(self, n: int) -> int:
+        """Ask to do multiple steps at once. Returns the number of steps actually taken.
 
-        for _ in range(abs(n)):
-            self.step(forward)
+        Some motors may not be able to do multiple steps at once, so they can just
+        return 1 or -1.
+
+        It makes sense to do multiple steps for remote motors because there might be
+        latency/overhead, but for physical motors, it's better to just do one step
+        because if the target number of steps changes in the meanwhile, we can react to
+        that immediately and don't have to wait for step_multiple() to finish.
+        """
+        # By default, just do one step
+        if n > 0:
+            self.step(True)
+            return 1
+        elif n < 0:
+            self.step(False)
+            return -1
+        else:
+            return 0
 
 
 @dataclass  # Use Pydantic?
@@ -138,7 +150,7 @@ class RemoteMotor(Motor):
     def step(self, forward: bool):
         raise NotImplementedError
 
-    def step_multiple(self, n: int):
+    def step_multiple(self, n: int) -> int:
         response = requests.post(
             f"{self.server_url}/motor_turn",
             json={
@@ -148,6 +160,8 @@ class RemoteMotor(Motor):
             },
         )
         response.raise_for_status()
+
+        return n
 
     def steps_per_turn(self) -> int:
         return STEPS_PER_TURN_WITHOUT_MICROSTEPPING * self.microstepping
@@ -200,8 +214,8 @@ class MotorController:
                 continue
 
             target_steps = self._target_steps
-            self.motor.step_multiple(target_steps - self.cur_steps)
-            self.cur_steps = target_steps
+            steps_taken = self.motor.step_multiple(target_steps - self.cur_steps)
+            self.cur_steps += steps_taken
 
     def wait_until_stopped(self):
         while self.is_moving():
