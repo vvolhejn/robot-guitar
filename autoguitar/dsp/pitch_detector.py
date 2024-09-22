@@ -51,7 +51,7 @@ class PitchDetector:
 
         # If the block size is small, this callback will get called very often.
         # Since it's cost-intensive, we want to throttle it a bit.
-        cooldown_coef = 1.5  # Pause length relative to n_samples_per_reading
+        cooldown_coef = 0.5  # Pause length relative to n_samples_per_reading
         self.cooldown_until = (
             timestamp
             + (self.n_samples_per_reading * cooldown_coef)
@@ -81,7 +81,7 @@ class PitchDetector:
                 continue
 
             sr = self.input_stream.stream.samplerate
-            freq, _ = detect_pitch(y=y, sr=sr)
+            freq, _ = detect_pitch(y=y, sr=sr, use_pyin=True)
 
             if self.is_reading_plausible(freq, timestamp):
                 self._add_reading(freq, timestamp)
@@ -137,7 +137,12 @@ class PitchDetector:
 
 
 def detect_pitch(
-    y: np.ndarray, *, sr: int, min_note: str = "E1", max_note: str = "E3"
+    y: np.ndarray,
+    *,
+    sr: int,
+    use_pyin: bool,
+    min_note: str = "E1",
+    max_note: str = "E3",
 ) -> tuple[float, float]:
     """Estimate the fundamental frequency of the audio signal.
 
@@ -154,22 +159,37 @@ def detect_pitch(
     min_freq = float(librosa.note_to_hz(min_note))  # bass E
     # max_freq should be higher than we can currently wind the string to
     max_freq = float(librosa.note_to_hz(max_note))
-    f0 = librosa.yin(y, fmin=min_freq, fmax=max_freq, sr=sr, frame_length=len(y) // 2)
 
-    # Sometimes we get incorrect readings close to the max frequency,
-    # probably it's just because nothing is playing at the time and there's
-    # noise
-    f0[f0 >= 0.9 * max_freq] = np.nan
-
-    if np.isnan(f0).all():
-        return np.nan, 0
-    else:
-        freq = float(np.nanmedian(f0))
-        is_outlier = np.isnan(f0) | (np.abs(f0 - freq) > 0.3 * freq)
-        confidence = 1 - is_outlier.mean()
-
-        # Heuristic - if there are multiple outliers, the reading is noisy
-        if is_outlier.sum() > 1:
-            return np.nan, confidence
+    if use_pyin:
+        f0, voiced, voiced_prob = librosa.pyin(
+            y, fmin=min_freq, fmax=max_freq, sr=sr, frame_length=len(y) // 2
+        )
+        if voiced[-1]:
+            return f0[-1], voiced_prob[-1]
         else:
-            return freq, confidence
+            return np.nan, 0
+    else:
+        # YIN is faster but less accurate than pYIN. We apply more post-processing
+        # to get a more accurate result.
+
+        f0 = librosa.yin(
+            y, fmin=min_freq, fmax=max_freq, sr=sr, frame_length=len(y) // 2
+        )
+
+        # Sometimes we get incorrect readings close to the max frequency,
+        # probably it's just because nothing is playing at the time and there's
+        # noise
+        f0[f0 >= 0.9 * max_freq] = np.nan
+
+        if np.isnan(f0).all():
+            return np.nan, 0
+        else:
+            freq = float(np.nanmedian(f0))
+            is_outlier = np.isnan(f0) | (np.abs(f0 - freq) > 0.3 * freq)
+            confidence = 1 - is_outlier.mean()
+
+            # Heuristic - if there are multiple outliers, the reading is noisy
+            if is_outlier.sum() > 1:
+                return np.nan, confidence
+            else:
+                return freq, confidence
