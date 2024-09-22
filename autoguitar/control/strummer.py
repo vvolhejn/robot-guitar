@@ -11,6 +11,7 @@ from autoguitar.motor import MotorController
 
 
 class Calibration(BaseModel):
+    # Not sure we actually need the loudness measurements.
     low_loudness: float
     high_loudness: float
     downstroke_steps: int
@@ -50,31 +51,25 @@ class Strummer:
         """
         self.input_stream.wait_for_initialization()
 
-        low_loudness, high_loudness = self._calibrate_loudness()
-        loudness_difference = high_loudness - low_loudness
+        low_loudness = self.loudness_detector.measure_loudness()
 
         # Moving by small steps is slow, so first take big steps to roughly
         # find where the string is
         time.sleep(0.5)
-        self.find_strum_position(
-            loudness_difference=loudness_difference, steps_at_a_time=-25
-        )
+        self.find_strum_position(steps_at_a_time=-25)
+        high_loudness = self.loudness_detector.measure_loudness()
         # Go a bit back
         self.motor_controller.move(-10, wait=True)
         time.sleep(1)
 
         # Now move in small steps until the string is plucked
-        position_up = self.find_strum_position(
-            loudness_difference=loudness_difference, steps_at_a_time=3
-        )
+        position_up = self.find_strum_position(steps_at_a_time=3)
         print("Upstroke position:", position_up)
 
         if estimate_downstroke_separately:
             self.motor_controller.move(-10, wait=True)
             time.sleep(1)
-            position_down = self.find_strum_position(
-                loudness_difference=loudness_difference, steps_at_a_time=-3
-            )
+            position_down = self.find_strum_position(steps_at_a_time=-3)
             self.strum_state = "downstroke"
         else:
             # The angle difference should always be more or less the same
@@ -114,21 +109,19 @@ class Strummer:
 
         return low_loudness, high_loudness
 
-    def find_strum_position(
-        self, loudness_difference: float, steps_at_a_time: int
-    ) -> int:
+    def find_strum_position(self, steps_at_a_time: int) -> int:
         last_loudness = self.loudness_detector.measure_loudness()
+
+        MIN_LOUDNESS_RATIO = 1.1
 
         while True:
             self.motor_controller.move(steps_at_a_time, wait=True)
             loudness2 = self.loudness_detector.measure_loudness(min_readings=3)
             loudness1 = last_loudness
 
-            normalized_difference = (loudness2 - loudness1) / loudness_difference
-            # print(f"{loudness1:.4f} {loudness2:.4f} {normalized_difference:.4f}")
             last_loudness = loudness2
 
-            if normalized_difference > 0.2:
+            if loudness2 / loudness1 > MIN_LOUDNESS_RATIO:
                 # print("Plucked!")
                 break
 
