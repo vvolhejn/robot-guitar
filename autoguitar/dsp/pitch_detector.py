@@ -69,7 +69,8 @@ class PitchDetector:
         try:
             self._task_queue.put_nowait((y, timestamp))
         except Full:
-            logger.warning("Pitch detector queue is full, skipping a reading")
+            # logger.warning("Pitch detector queue is full, skipping a reading")
+            pass
 
     def _process_readings(self):
         while self.input_stream.stream is not None:

@@ -7,7 +7,9 @@ from types import TracebackType
 from typing import Optional
 
 import requests
+from pydantic import BaseModel
 
+from autoguitar.time_sync import UnixTimestamp
 from autoguitar.virtual_string import VirtualString
 
 logger = logging.getLogger(__name__)
@@ -166,6 +168,11 @@ class RemoteMotor(Motor):
     def steps_per_turn(self) -> int:
         return STEPS_PER_TURN_WITHOUT_MICROSTEPPING * self.microstepping
 
+    def get_all_motors_status(self) -> "AllMotorsStatus":
+        response = requests.get(f"{self.server_url}/all_motors_status")
+        response.raise_for_status()
+        return AllMotorsStatus(**response.json())
+
 
 class MotorController:
     def __init__(self, motor: Motor, max_steps: int):
@@ -253,3 +260,14 @@ def get_motor(motor_number: int = 0, remote: bool = True) -> Motor:
     else:
         logger.debug("Using virtual motor.")
         return VirtualMotor(step_time_sec=step_time_sec * 100)
+
+
+class MotorStatus(BaseModel):
+    motor_number: int
+    cur_steps: int
+    target_steps: int
+
+
+class AllMotorsStatus(BaseModel):
+    network_timestamp: UnixTimestamp
+    status: list[MotorStatus]

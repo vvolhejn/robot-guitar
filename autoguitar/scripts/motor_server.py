@@ -1,12 +1,12 @@
 import logging
-import time
 from contextlib import asynccontextmanager
 from typing import Annotated, Literal
 
 from fastapi import FastAPI, Request
 from pydantic import BaseModel, BeforeValidator
 
-from autoguitar.motor import MotorController, get_motor
+from autoguitar.motor import AllMotorsStatus, MotorController, MotorStatus, get_motor
+from autoguitar.time_sync import get_network_datetime
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -55,10 +55,20 @@ def post_motor_turn(request: Request, motor_turn: MotorTurn):
     return motor_turn.model_dump()
 
 
-@app.get("/motors_status")
-def get_motors_status(request: Request):
+@app.get("/all_motors_status")
+def get_all_motors_status(request: Request):
     mcs = get_motor_controllers_from_request(request)
-    return {i: {"cur_steps": mc.cur_steps} for i, mc in enumerate(mcs)}
+    return AllMotorsStatus(
+        network_timestamp=get_network_datetime(),
+        status=[
+            MotorStatus(
+                motor_number=i,
+                cur_steps=mc.cur_steps,
+                target_steps=mc.get_target_steps(),
+            )
+            for i, mc in enumerate(mcs)
+        ],
+    ).model_dump()
 
 
 @app.get("/health")

@@ -19,6 +19,7 @@ nbstripout = "^0.7.1"
 pydantic = "^2.7.2"
 soundfile = "^0.12.1"
 fastapi = {extras = ["standard"], version = "^0.112.2"}
+ntplib = "^0.4.0"
 
 [tool.poetry.group.dev]
 optional = true

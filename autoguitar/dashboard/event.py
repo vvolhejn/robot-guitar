@@ -1,22 +1,28 @@
-from pydantic import BaseModel
+from typing import Annotated
+
+import numpy as np
+from pydantic import BaseModel, PlainValidator
+
+from autoguitar.motor import AllMotorsStatus
+from autoguitar.time_sync import UnixTimestamp
 
 
-class MidiEvent(BaseModel):
-    pass  # TODO
+def none_to_nan(v: float | None) -> float:
+    if v is None:
+        return np.nan
+    return float(v)
 
 
 class TunerEvent(BaseModel):
-    frequency: float  # may be NaN
-    target_frequency: float
-    target_steps: int
-    cur_steps: int
+    frequency: Annotated[float, PlainValidator(none_to_nan)]
+    network_timestamp: UnixTimestamp
 
 
-Event = MidiEvent | TunerEvent
+Event = TunerEvent | AllMotorsStatus
 
 kind_to_event = {
-    "midi": MidiEvent,
     "tuner": TunerEvent,
+    "all_motors_status": AllMotorsStatus,
 }
 
 

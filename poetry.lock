@@ -1270,6 +1270,17 @@ files = [
 ]
 
 [[package]]
+name = "ntplib"
+version = "0.4.0"
+description = "Python NTP library"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ntplib-0.4.0-py2.py3-none-any.whl", hash = "sha256:8d27375329ed7ff38755f7b6d4658b28edc147cadf40338a63a0da8133469d60"},
+    {file = "ntplib-0.4.0.tar.gz", hash = "sha256:899d8fb5f8c2555213aea95efca02934c7343df6ace9d7628a5176b176906267"},
+]
+
+[[package]]
 name = "numba"
 version = "0.60.0"
 description = "compiling Python code using LLVM"
@@ -2993,4 +3004,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "d4df5416fd5070647e0ffe033ec58c5425cc804142fbc2d41684c43acc553aeb"
+content-hash = "b40c4c8c782f24028b30e84c34132de22273e04da32471e36ed30a2cda76d55c"

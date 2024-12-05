@@ -5,6 +5,8 @@ from autoguitar.dashboard.event import parse_event
 from autoguitar.dashboard.event_storage import EVENT_STORAGE
 from autoguitar.dashboard.layout import LAYOUT
 
+PORT = 8111
+
 server = flask.Flask(__name__)
 
 
@@ -30,9 +32,7 @@ def event():
     return "Event received!"
 
 
-app = dash.Dash(server=server, routes_pathname_prefix="/dash/")
-
-app.layout = LAYOUT
-
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app = dash.Dash(server=server, routes_pathname_prefix="/dash/")
+    app.layout = LAYOUT
+    app.run(debug=True, port=PORT)
