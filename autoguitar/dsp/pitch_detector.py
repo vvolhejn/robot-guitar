@@ -165,6 +165,13 @@ def detect_pitch(
         f0, voiced, voiced_prob = librosa.pyin(
             y, fmin=min_freq, fmax=max_freq, sr=sr, frame_length=len(y) // 2
         )
+
+        if f0[-1] >= 0.9 * max_freq:
+            # Sometimes we get incorrect readings close to the max frequency,
+            # probably it's just because nothing is playing at the time and there's
+            # noise
+            return np.nan, 0
+
         if voiced[-1]:
             return f0[-1], voiced_prob[-1]
         else:

@@ -1,5 +1,4 @@
 import sys
-import time
 
 import numpy as np
 import requests
@@ -9,7 +8,6 @@ from autoguitar.dsp.pitch_detector import PitchDetector, Timestamp
 from autoguitar.motor import MotorController
 from autoguitar.tuner_strategy import (
     ModelBasedTunerStrategy,
-    ProportionalTunerStrategy,
     TunerStrategy,
 )
 
@@ -20,18 +18,23 @@ class Tuner:
         input_stream: InputStream,
         motor_controller: MotorController,
         initial_target_frequency: float = 100,
+        tuner_strategy: TunerStrategy | None = None,
     ):
         self.input_stream = input_stream
         self.pitch_detector = PitchDetector(input_stream=input_stream)
         self.motor_controller = motor_controller
         self.target_frequency = initial_target_frequency
-        self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy(
-            max_n_steps=1000, speed=10.0
-        )
-        self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy(
-            coef=4.35,
-            adaptiveness=0.5,
-        )
+
+        if tuner_strategy is None:
+            # self.tuner_strategy: TunerStrategy = ProportionalTunerStrategy(
+            #     max_n_steps=1000, speed=10.0
+            # )
+            self.tuner_strategy: TunerStrategy = ModelBasedTunerStrategy(
+                coef=4.35,
+                adaptiveness=0.5,
+            )
+        else:
+            self.tuner_strategy = tuner_strategy
 
         self.pitch_detector.on_reading.subscribe(self.on_pitch_reading)
 
