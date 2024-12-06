@@ -37,7 +37,7 @@ def _get_derivative(series: pd.Series) -> pd.Series:
     return series.diff() / series.index.to_series().diff().dt.total_seconds()
 
 
-def _get_last_stable_frequency(df: pd.DataFrame) -> pd.Series:
+def _propagate_from_last_stable(df: pd.DataFrame, column: str) -> pd.Series:
     x = df.copy()
     # There are typically multiple stable points after one another.
     # Get the first one of each sequence
@@ -56,7 +56,7 @@ def _get_last_stable_frequency(df: pd.DataFrame) -> pd.Series:
             continue
 
         last_position = previous_stable_points.iloc[-1].name
-        last_stable[i] = x.loc[last_position, "frequency"]
+        last_stable[i] = x.loc[last_position, column]
 
     return last_stable
 
@@ -109,12 +109,12 @@ def get_dataset() -> pd.DataFrame:
 
     df["stable"] = smoothed_derivative.abs() < 100
 
-    df["last_stable_frequency"] = _get_last_stable_frequency(df)
+    df["last_stable_steps"] = _propagate_from_last_stable(df, "steps").bfill()
+    df["last_stable_frequency"] = _propagate_from_last_stable(df, "frequency").bfill()
 
     df["loose_steps"] = _get_loose_steps(df, max_difference=100)
-    df["loose_steps_delta"] = df["loose_steps"] - df["steps"]
 
-    fraction_train = 0.75
+    fraction_train = 0.6
     n_train = int(fraction_train * len(df))
     df["split"] = "train"
     df.loc[df.index[n_train:], "split"] = "test"
@@ -123,15 +123,15 @@ def get_dataset() -> pd.DataFrame:
 
 
 def get_sklearn_datasets(
-    df: pd.DataFrame, x_columns: list[str]
+    df: pd.DataFrame, x_columns: list[str], y_column: str
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     stable_df = df.loc[df["stable"] == True].copy()
     train_data = stable_df[stable_df["split"] == "train"]
     test_data = stable_df[stable_df["split"] == "test"]
 
     X_train = train_data[x_columns].values
-    y_train = train_data["steps"].values
+    y_train = train_data[y_column].values
     X_test = test_data[x_columns].values
-    y_test = test_data["steps"].values
+    y_test = test_data[y_column].values
 
     return X_train, y_train, X_test, y_test
