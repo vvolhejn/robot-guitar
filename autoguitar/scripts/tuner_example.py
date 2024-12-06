@@ -2,7 +2,7 @@ import time
 
 from autoguitar.dsp.pitch_detector import PitchDetector, Timestamp
 from autoguitar.motor import MotorController, get_motor
-from autoguitar.tuner import Tuner
+from autoguitar.tuning.tuner import Tuner
 
 n_steps = 0
 desired_freq = 70

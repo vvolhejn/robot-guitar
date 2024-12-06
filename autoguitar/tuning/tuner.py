@@ -6,7 +6,7 @@ import requests
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.dsp.pitch_detector import PitchDetector, Timestamp
 from autoguitar.motor import MotorController
-from autoguitar.tuner_strategy import (
+from autoguitar.tuning.tuner_strategy import (
     ModelBasedTunerStrategy,
     TunerStrategy,
 )

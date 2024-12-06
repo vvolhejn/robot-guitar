@@ -10,8 +10,8 @@ from autoguitar.dashboard.dash_app import PORT
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.motor import MotorController, RemoteMotor, get_motor
 from autoguitar.time_sync import get_network_timestamp
-from autoguitar.tuner import Tuner
-from autoguitar.tuner_strategy import ProportionalTunerStrategy
+from autoguitar.tuning.tuner import Tuner
+from autoguitar.tuning.tuner_strategy import ProportionalTunerStrategy
 
 logger = logging.getLogger(__name__)
 

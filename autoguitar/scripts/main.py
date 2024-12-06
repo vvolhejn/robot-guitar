@@ -11,7 +11,7 @@ from autoguitar.control.strummer import Strummer
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.midi_utils import find_midi_input
 from autoguitar.motor import MotorController, get_motor
-from autoguitar.tuner import Tuner
+from autoguitar.tuning.tuner import Tuner
 
 logging.basicConfig(level=logging.INFO)
 

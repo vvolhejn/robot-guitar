@@ -7,8 +7,8 @@ import numpy as np
 from autoguitar.control.strummer import Strummer
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.motor import MotorController, get_motor
-from autoguitar.tuner import Tuner
-from autoguitar.tuner_strategy import ModelBasedTunerStrategy
+from autoguitar.tuning.tuner import Tuner
+from autoguitar.tuning.tuner_strategy import ModelBasedTunerStrategy
 
 logging.basicConfig(level=logging.INFO)
 
