@@ -4,9 +4,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import plotly.express as px
 
-path = (
+DEFAULT_PATH = (
     Path(__file__).parents[2]
     / "data"
     / "tuning_data_selected"
@@ -79,7 +78,16 @@ def _get_loose_steps(df: pd.DataFrame, max_difference: int) -> pd.Series:
     return loose_steps
 
 
-def get_dataset() -> pd.DataFrame:
+def get_dataset(
+    path: Path | None = None,
+    # 300 seems to be a good default for LSMD when predicting squared frequency.
+    # It matters less when predicting frequency directly,
+    # the model probably just ignores it
+    loose_steps_max_difference: int = 300,
+) -> pd.DataFrame:
+    if path is None:
+        path = DEFAULT_PATH
+
     with path.open() as f:
         json_lines = [json.loads(d) for d in f.readlines()]
 
@@ -112,7 +120,7 @@ def get_dataset() -> pd.DataFrame:
     df["last_stable_steps"] = _propagate_from_last_stable(df, "steps").bfill()
     df["last_stable_frequency"] = _propagate_from_last_stable(df, "frequency").bfill()
 
-    df["loose_steps"] = _get_loose_steps(df, max_difference=100)
+    df["loose_steps"] = _get_loose_steps(df, max_difference=loose_steps_max_difference)
 
     fraction_train = 0.6
     n_train = int(fraction_train * len(df))

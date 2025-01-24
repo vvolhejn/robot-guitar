@@ -16,6 +16,11 @@ from autoguitar.tuning.tuner import Tuner
 logging.basicConfig(level=logging.INFO)
 
 
+MIN_FREQUENCY = librosa.note_to_hz("E1")
+MAX_FREQUENCY = librosa.note_to_hz("G2")
+INITIAL_TARGET_FREQUENCY = librosa.note_to_hz("E2")
+
+
 def remap(
     x: float, in_min: float, in_max: float, out_min: float, out_max: float
 ) -> float:
@@ -53,7 +58,7 @@ def main(use_strummer: bool):
         tuner = Tuner(
             input_stream=input_stream,
             motor_controller=mc0,
-            initial_target_frequency=float(librosa.note_to_hz("A2")),
+            initial_target_frequency=float(INITIAL_TARGET_FREQUENCY),
         )
 
         tremolo_frequency: float | None = None
@@ -81,9 +86,9 @@ def main(use_strummer: bool):
                 print(msg)
                 frequency = librosa.midi_to_hz(msg.note)
 
-                while frequency > librosa.note_to_hz("C3") + 1e-3:
+                while frequency > MAX_FREQUENCY + 1e-3:
                     frequency /= 2
-                while frequency < librosa.note_to_hz("C2") - 1e-3:
+                while frequency < MIN_FREQUENCY - 1e-3:
                     frequency *= 2
 
                 tuner.target_frequency = frequency
