@@ -1,13 +1,16 @@
+import logging
+
 import dash
 import flask
+import requests
 
-from autoguitar.dashboard.event import parse_event
 from autoguitar.dashboard.event_storage import EVENT_STORAGE
 from autoguitar.dashboard.layout import LAYOUT
 
 PORT = 8111
 
 server = flask.Flask(__name__)
+logger = logging.getLogger(__name__)
 
 
 @server.route("/")
@@ -18,18 +21,30 @@ def home():
 @server.route("/api/event", methods=["POST"])
 def event():
     data = flask.request.get_json()
-    try:
-        event = parse_event(data)
-    except (KeyError, ValueError) as e:
-        return f"Invalid event data. Error: {repr(e)}", 400
 
-    EVENT_STORAGE.add_event(event)
+    kind = data["kind"]
+    value = data["value"]
+
+    EVENT_STORAGE.add_event(kind=kind, value=value)
     print(
         EVENT_STORAGE.get_events()[-1],
         f", total # events = {len(EVENT_STORAGE.get_events())   }",
     )
 
     return "Event received!"
+
+
+def post_event(kind: str, value: dict):
+    try:
+        response = requests.post(
+            f"http://localhost:{PORT}/api/event",
+            json={"kind": kind, "value": value},
+            timeout=2,
+        )
+        if response.status_code != 200:
+            raise RuntimeError(f"Failed to post event: {response.text}")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to post event: {e}")
 
 
 if __name__ == "__main__":

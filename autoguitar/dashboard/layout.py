@@ -6,9 +6,9 @@ import plotly.graph_objects as go
 import plotly.subplots
 from dash import Input, Output, callback
 
-from autoguitar.dashboard.event import TunerEvent
 from autoguitar.dashboard.event_storage import EVENT_STORAGE, AnnotatedEvent
 from autoguitar.motor import AllMotorsStatus
+from autoguitar.time_sync import unix_to_datetime
 
 NOTES_ON_Y_AXIS = "Notes on y-axis"
 
@@ -29,21 +29,21 @@ LAYOUT = dash.html.Div(
 def events_to_df(events: list[AnnotatedEvent]) -> pd.DataFrame:
     rows = []
     for event in events:
-        if isinstance(event.event, TunerEvent):
+        if event.kind == "tuner":
             rows.append(
                 {
-                    "datetime": event.event.network_timestamp,
+                    "datetime": unix_to_datetime(event.value["network_timestamp"]),
                     "kind": "tuner",
-                    "frequency": event.event.frequency,
+                    "frequency": event.value["frequency"],
                 }
             )
-        if isinstance(event.event, AllMotorsStatus):
+        if event.kind == "all_motors_status":
             rows.append(
                 {
-                    "datetime": event.event.network_timestamp,
+                    "datetime": unix_to_datetime(event.value["network_timestamp"]),
                     "kind": "all_motors_status",
-                    "cur_steps": event.event.status[0].cur_steps,
-                    "target_steps": event.event.status[0].target_steps,
+                    "cur_steps": event.value["status"][0]["cur_steps"],
+                    "target_steps": event.value["status"][0]["target_steps"],
                 }
             )
 

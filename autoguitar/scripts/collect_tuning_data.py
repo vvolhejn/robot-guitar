@@ -8,7 +8,7 @@ import librosa
 import numpy as np
 import requests
 
-from autoguitar.dashboard.dash_app import PORT
+from autoguitar.dashboard.dash_app import PORT, post_event
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.motor import MotorController, RemoteMotor, get_motor
 from autoguitar.time_sync import get_network_timestamp
@@ -25,19 +25,6 @@ BEATS_PER_BAR = 8
 TIMEOUT = 60 / BPM * BEATS_PER_BAR
 NOTES = ["D#2", "C2", "F2", "A#1"]
 MEASUREMENT_SUBDIVISION = 16
-
-
-def post_event(kind: str, value: dict):
-    try:
-        response = requests.post(
-            f"http://localhost:{PORT}/api/event",
-            json={"kind": kind, "value": value},
-            timeout=2,
-        )
-        if response.status_code != 200:
-            raise RuntimeError(f"Failed to post event: {response.text}")
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to post event: {e}")
 
 
 def on_pitch_reading(data: tuple[float, float]):
@@ -58,7 +45,7 @@ def main(
 ):
     # tuner_strategy = ProportionalTunerStrategy(max_n_steps=1000, speed=10.0)
     tuner_strategy = ModelBasedTunerStrategy(
-        coef=3.5,  # 4.35
+        coef=4.35,
         adaptiveness=0.5,
     )
     tuner = Tuner(

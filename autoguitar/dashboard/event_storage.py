@@ -1,17 +1,21 @@
 import datetime
 from pathlib import Path
+from typing import Literal
 
 from pydantic import BaseModel
 
-from autoguitar.dashboard.event import Event, UnixTimestamp
-from autoguitar.time_sync import get_network_datetime
+from autoguitar.time_sync import UnixTimestamp, get_network_datetime
 
 LOG_DIR = Path(__file__).parents[2] / "data" / "tuning_data"
 
 
+EventKind = Literal["tuner", "all_motors_status"]
+
+
 class AnnotatedEvent(BaseModel):
     added_at_network_timestamp: UnixTimestamp
-    event: Event
+    kind: EventKind
+    value: dict
 
 
 class EventStorage:
@@ -21,9 +25,9 @@ class EventStorage:
         filename = get_network_datetime().strftime("%Y-%m-%d_%H-%M-%S") + ".jsonl"
         self.log_file_path = LOG_DIR / filename
 
-    def add_event(self, event: Event):
+    def add_event(self, kind: EventKind, value: dict):
         annotated_event = AnnotatedEvent(
-            added_at_network_timestamp=get_network_datetime(), event=event
+            added_at_network_timestamp=get_network_datetime(), kind=kind, value=value
         )
         self.events.append(annotated_event)
         # append to logfile

@@ -137,7 +137,7 @@ class ModelBasedTunerStrategy(TunerStrategy):
                 slack_correction_cents=slack_correction_cents,
             )
 
-    def estimate_intecept(self) -> float | None:
+    def estimate_intercept(self) -> float | None:
         if len(self.readings) < 5:
             # Wait until we have a good number of readings for an accurate estimate
             return
@@ -151,13 +151,15 @@ class ModelBasedTunerStrategy(TunerStrategy):
     def get_target_steps_raw(
         self, target_frequency: float, *, with_slack_correction: bool
     ) -> int:
-        current_intercept = self.estimate_intecept()
+        current_intercept = self.estimate_intercept()
 
         if self.intercept is None:
             if current_intercept is None:
                 return 0  # Wait for more readings
             self.intercept = current_intercept
         else:
+            print(f"{self.intercept=:.2f} vs {current_intercept=:.2f}")
+
             if (
                 current_intercept is not None
                 # TODO: more robust filtering of outliers. Generally we get these
@@ -167,8 +169,11 @@ class ModelBasedTunerStrategy(TunerStrategy):
                 self.intercept = (
                     1 - self.adaptiveness
                 ) * self.intercept + self.adaptiveness * current_intercept
-
-            print(f"{self.intercept=:.2f} vs {current_intercept=:.2f}")
+            else:
+                logger.warning(
+                    "Intercept changed too much, skipping update: "
+                    f"{self.intercept=:.2f} vs {current_intercept=:.2f}"
+                )
 
         if with_slack_correction:
             target_frequency = self._correct_for_slack(
