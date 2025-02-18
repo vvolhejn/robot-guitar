@@ -47,10 +47,14 @@ class MotorTurn(BaseModel):
 def post_motor_turn(request: Request, motor_turn: MotorTurn):
     mc = get_motor_controllers_from_request(request)[motor_turn.motor_number]
 
+    # It's important to wait here because otherwise the motor controller will think that
+    # it has already completed the move when in fact it hasn't. This is especially
+    # important for tuner calculations because they look at the relationship between
+    # motor position and frequency.
     if motor_turn.relative:
-        mc.move(motor_turn.target_steps, wait=False)
+        mc.move(motor_turn.target_steps, wait=True)
     else:
-        mc.set_target_steps(motor_turn.target_steps, wait=False)
+        mc.set_target_steps(motor_turn.target_steps, wait=True)
 
     return motor_turn.model_dump()
 

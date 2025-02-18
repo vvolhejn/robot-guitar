@@ -4,7 +4,7 @@ import dash
 import flask
 import requests
 
-from autoguitar.dashboard.event_storage import EVENT_STORAGE
+from autoguitar.dashboard.event_storage import EVENT_STORAGE, EventKind
 from autoguitar.dashboard.layout import LAYOUT
 
 PORT = 8111
@@ -34,7 +34,7 @@ def event():
     return "Event received!"
 
 
-def post_event(kind: str, value: dict):
+def post_event(kind: EventKind, value: dict):
     try:
         response = requests.post(
             f"http://localhost:{PORT}/api/event",

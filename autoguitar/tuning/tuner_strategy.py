@@ -6,7 +6,9 @@ from typing import Deque
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
+from autoguitar.dashboard.dash_app import post_event
 from autoguitar.dsp.pitch_detector import Timestamp
+from autoguitar.time_sync import get_network_timestamp
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +62,14 @@ class ProportionalTunerStrategy(TunerStrategy):
         return cur_steps + sign * abs_n_steps
 
 
+def _estimate_intercept_from_reading(
+    reading: tuple[float, int, Timestamp] | tuple[int, float], coef: float
+) -> float:
+    frequency = reading[0]
+    cur_steps = reading[1]
+    return frequency**2 - cur_steps * coef
+
+
 class ModelBasedTunerStrategy(TunerStrategy):
     def __init__(
         self,
@@ -92,7 +102,10 @@ class ModelBasedTunerStrategy(TunerStrategy):
                 incoming readings. From 0 to 1, where 0 means never change and 1
                 means always use the last estimate.
         """
-        self.readings: Deque[tuple[float, int, Timestamp]] = deque(maxlen=10)
+        self.median_smoothing_window = 3
+        self.readings: Deque[tuple[float, int, Timestamp]] = deque(
+            maxlen=self.median_smoothing_window
+        )
         self.cooldown_until: float | None = None
 
         # If the coefficient is too low, the tuner will *overshoot*.
@@ -127,7 +140,10 @@ class ModelBasedTunerStrategy(TunerStrategy):
                 slack_correction_cents=slack_correction_cents,
             )
         else:
-            intercepts = [freq**2 - steps * coef for steps, freq in readings]
+            intercepts = [
+                _estimate_intercept_from_reading(reading, coef=coef)
+                for reading in readings
+            ]
             # Taking the mean minimizes the square error, so this is consistent with
             # the linear regression above.
             intercept = float(np.mean(intercepts))
@@ -138,13 +154,13 @@ class ModelBasedTunerStrategy(TunerStrategy):
             )
 
     def estimate_intercept(self) -> float | None:
-        if len(self.readings) < 5:
+        if len(self.readings) < self.median_smoothing_window:
             # Wait until we have a good number of readings for an accurate estimate
             return
 
         estimates = [
-            frequency**2 - self.coef * cur_steps
-            for frequency, cur_steps, _ in self.readings
+            _estimate_intercept_from_reading(reading, coef=self.coef)
+            for reading in list(self.readings)[-self.median_smoothing_window :]
         ]
         return float(np.median(estimates))
 
@@ -183,7 +199,25 @@ class ModelBasedTunerStrategy(TunerStrategy):
         estimated_target_steps = (1 / self.coef) * (
             target_frequency**2 - self.intercept
         )
-        # print(intercept, estimated_target_steps)
+
+        instant_intercept = _estimate_intercept_from_reading(
+            self.readings[-1], coef=self.coef
+        )
+        post_event(
+            kind="model_based_tuner_strategy",
+            value={
+                "estimated_target_steps": estimated_target_steps,
+                "target_frequency": target_frequency,
+                "current_intercept": current_intercept,
+                "intercept": self.intercept,
+                "instant_intercept": instant_intercept,
+                "frequency": self.readings[-1][0],
+                "cur_steps": self.readings[-1][1],
+                "reading_timestamp": self.readings[-1][2],
+                "coef": self.coef,
+                "network_timestamp": get_network_timestamp(),
+            },
+        )
 
         return int(estimated_target_steps)
 

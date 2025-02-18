@@ -1,4 +1,3 @@
-import datetime
 from pathlib import Path
 from typing import Literal
 
@@ -9,7 +8,7 @@ from autoguitar.time_sync import UnixTimestamp, get_network_datetime
 LOG_DIR = Path(__file__).parents[2] / "data" / "tuning_data"
 
 
-EventKind = Literal["tuner", "all_motors_status"]
+EventKind = Literal["tuner", "all_motors_status", "model_based_tuner_strategy"]
 
 
 class AnnotatedEvent(BaseModel):
