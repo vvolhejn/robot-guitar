@@ -1,3 +1,4 @@
+import logging
 import sys
 
 import numpy as np
@@ -10,6 +11,9 @@ from autoguitar.tuning.tuner_strategy import (
     ModelBasedTunerStrategy,
     TunerStrategy,
 )
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Tuner:
@@ -45,7 +49,7 @@ class Tuner:
             return
 
         if self.motor_controller.is_moving():
-            print("Still moving, skipping...", file=sys.stderr)
+            logger.debug("Still moving, skipping...")
             return
 
         target_steps = self.tuner_strategy.get_target_steps(
@@ -55,12 +59,11 @@ class Tuner:
             self.motor_controller.cur_steps,
         )
 
-        print(
+        logger.debug(
             f"Frequency: {frequency:.2f} Hz,\t"
             f"Target frequency: {self.target_frequency:.2f} Hz,\t"
             f"Cur steps: {self.motor_controller.cur_steps},\t"
             f"Target steps: {target_steps},\t",
-            file=sys.stderr,
         )
 
         # Disabled because we now run a server on the RPi side.

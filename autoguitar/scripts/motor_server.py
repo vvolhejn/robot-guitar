@@ -1,8 +1,9 @@
 import logging
+import time
 from contextlib import asynccontextmanager
 from typing import Annotated, Literal
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, BeforeValidator
 
 from autoguitar.motor import AllMotorsStatus, MotorController, MotorStatus, get_motor
@@ -39,7 +40,7 @@ class MotorTurn(BaseModel):
     # BeforeValidator is needed because FastAPI doesn't convert from string to int
     # automatically when you use `Literal`
     motor_number: Annotated[Literal[0, 1], BeforeValidator(int)]
-    target_steps: int
+    steps: int
     relative: bool = False
 
 
@@ -47,14 +48,36 @@ class MotorTurn(BaseModel):
 def post_motor_turn(request: Request, motor_turn: MotorTurn):
     mc = get_motor_controllers_from_request(request)[motor_turn.motor_number]
 
+    # if mc.is_moving():
+    #     if motor_turn.motor_number == 1:
+    #         print("SKIP", motor_turn)
+
+    #     # To avoid race condition
+    #     return motor_turn.model_copy(
+    #         update={"steps": 0 if motor_turn.relative else mc.cur_steps}
+    #     ).model_dump()
+
+    if mc.is_moving():
+        # To avoid race condition
+        raise HTTPException(status_code=400, detail="Motor is currently moving")
+
+    t1 = time.time()
+
+    if motor_turn.motor_number == 1:
+        print("START", motor_turn)
+
     # It's important to wait here because otherwise the motor controller will think that
     # it has already completed the move when in fact it hasn't. This is especially
     # important for tuner calculations because they look at the relationship between
     # motor position and frequency.
     if motor_turn.relative:
-        mc.move(motor_turn.target_steps, wait=True)
+        mc.move(motor_turn.steps, wait=True)
     else:
-        mc.set_target_steps(motor_turn.target_steps, wait=True)
+        mc.set_target_steps(motor_turn.steps, wait=True)
+
+    t2 = time.time()
+    if motor_turn.motor_number == 1:
+        print(f"DONE {(t2 - t1):.3f}", motor_turn)
 
     return motor_turn.model_dump()
 

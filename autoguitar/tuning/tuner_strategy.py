@@ -174,13 +174,13 @@ class ModelBasedTunerStrategy(TunerStrategy):
                 return 0  # Wait for more readings
             self.intercept = current_intercept
         else:
-            print(f"{self.intercept=:.2f} vs {current_intercept=:.2f}")
+            # print(f"{self.intercept=:.2f} vs {current_intercept=:.2f}")
 
             if (
                 current_intercept is not None
                 # TODO: more robust filtering of outliers. Generally we get these
                 #   when the string is moving a lot.
-                and abs(self.intercept - current_intercept) < 2000
+                and abs(self.intercept - current_intercept) < 200000  # 2000
             ):
                 self.intercept = (
                     1 - self.adaptiveness

@@ -14,7 +14,7 @@ from autoguitar.virtual_string import VirtualString
 
 logger = logging.getLogger(__name__)
 
-STEP_TIME_SEC_PER_MOTOR = [0.0002, 0.0004]
+STEP_TIME_SEC_PER_MOTOR = [0.0002, 0.0006]
 # Microstepping is a feature of stepper motors that allows them to move in
 # smaller increments than a full step. This can be used to increase the
 # resolution of the motor, but it also reduces the torque. The values below
@@ -30,7 +30,7 @@ class Motor(ABC):
     @abstractmethod
     def steps_per_turn(self) -> int: ...
 
-    def step_multiple(self, n: int) -> int:
+    def step_multiple(self, n: int, relative: bool = True) -> int:
         """Ask to do multiple steps at once. Returns the number of steps actually taken.
 
         Some motors may not be able to do multiple steps at once, so they can just
@@ -41,6 +41,9 @@ class Motor(ABC):
         because if the target number of steps changes in the meanwhile, we can react to
         that immediately and don't have to wait for step_multiple() to finish.
         """
+        if not relative:
+            raise NotImplementedError("Must be overridden for non-relative steps.")
+
         # By default, just do one step
         if n > 0:
             self.step(True)
@@ -152,18 +155,19 @@ class RemoteMotor(Motor):
     def step(self, forward: bool):
         raise NotImplementedError
 
-    def step_multiple(self, n: int) -> int:
+    def step_multiple(self, n: int, relative: bool = True) -> int:
         response = requests.post(
             f"{self.server_url}/motor_turn",
             json={
                 "motor_number": self.motor_number,
-                "target_steps": n,
-                "relative": True,
+                "steps": n,
+                "relative": relative,
             },
         )
         response.raise_for_status()
 
-        return n
+        # If the motor is still moving, no steps will be executed
+        return response.json()["steps"]
 
     def steps_per_turn(self) -> int:
         return STEPS_PER_TURN_WITHOUT_MICROSTEPPING * self.microstepping
@@ -174,16 +178,58 @@ class RemoteMotor(Motor):
         return AllMotorsStatus(**response.json())
 
 
-class MotorController:
-    def __init__(self, motor: Motor, max_steps: int):
-        self.motor = motor
-        self.max_steps = max_steps
+class AbstractMotorController(ABC):
+    def __init__(self):
+        self.command_thread = None
+        self.stop_event = threading.Event()
 
         self.cur_steps = 0
         self._target_steps = 0
 
-        self.command_thread = None
-        self.stop_event = threading.Event()
+    def get_target_steps(self) -> int:
+        return self._target_steps
+
+    def move(self, steps: int, wait: bool = False):
+        self.set_target_steps(self.get_target_steps() + steps, wait=wait)
+
+    def __enter__(self):
+        self.command_thread = threading.Thread(target=self._command_processing_loop)
+        self.command_thread.start()
+        return self
+
+    def __exit__(self, exc_type: type, exc_val: Exception, exc_tb: TracebackType):
+        self.stop_event.set()
+        assert self.command_thread is not None
+        self.command_thread.join()
+
+    def _command_processing_loop(self):
+        while not self.stop_event.is_set():
+            if self.cur_steps == self._target_steps:
+                time.sleep(0.001)
+                continue
+
+            self._process_command()
+
+    def wait_until_stopped(self):
+        while self.is_moving():
+            time.sleep(0.001)
+
+    def is_moving(self) -> bool:
+        return self.cur_steps != self._target_steps
+
+    @abstractmethod
+    def set_target_steps(self, steps: int, wait: bool = False): ...
+
+    @abstractmethod
+    def _process_command(self): ...
+
+
+class MotorController(AbstractMotorController):
+    def __init__(self, motor: Motor, max_steps: int):
+        super().__init__()
+
+        self.motor = motor
+        self.max_steps = max_steps
 
     def set_target_steps(self, steps: int, wait: bool = False):
         self._target_steps = steps
@@ -201,35 +247,67 @@ class MotorController:
     def move(self, steps: int, wait: bool = False):
         self.set_target_steps(self._target_steps + steps, wait=wait)
 
-    def is_moving(self) -> bool:
-        return self.cur_steps != self._target_steps
-
-    def __enter__(self):
-        self.command_thread = threading.Thread(target=self._process_commands)
-        self.command_thread.start()
-        return self
-
-    def __exit__(self, exc_type: type, exc_val: Exception, exc_tb: TracebackType):
-        self.stop_event.set()
-        assert self.command_thread is not None
-        self.command_thread.join()
-
-    def _process_commands(self):
-        while not self.stop_event.is_set():
-            if self.cur_steps == self._target_steps:
-                time.sleep(0.001)
-                continue
-
-            target_steps = self._target_steps
+    def _process_command(self):
+        target_steps = self._target_steps
+        if isinstance(self.motor, RemoteMotor):
+            # A bit of a hack, absolute turns can only be used for remote motors
+            steps_reached = self.motor.step_multiple(target_steps, relative=False)
+            self.cur_steps = steps_reached
+        else:
             steps_taken = self.motor.step_multiple(target_steps - self.cur_steps)
             self.cur_steps += steps_taken
 
-    def wait_until_stopped(self):
-        while self.is_moving():
-            time.sleep(0.01)
-
     def steps_per_turn(self) -> int:
         return self.motor.steps_per_turn()
+
+
+class RemoteMotorController(AbstractMotorController):
+    def __init__(self, motor_number: int):
+        super().__init__()
+        self.server_url = "http://localhost:8050"
+
+        self.motor_number = motor_number
+
+        response = requests.get(f"{self.server_url}/health")
+        if response.status_code != 200:
+            raise RuntimeError(f"Motor server is not running: {response}")
+
+    def set_target_steps(self, steps: int, wait: bool = False):
+        self._target_steps = steps
+        if wait:
+            self.wait_until_stopped()
+
+    def _process_command(self):
+        target_steps = self._target_steps
+
+        response = requests.post(
+            f"{self.server_url}/motor_turn",
+            json={
+                "motor_number": self.motor_number,
+                "steps": target_steps,
+                "relative": False,
+            },
+        )
+        if (
+            response.status_code == 400
+            and response.json()["detail"] == "Motor is currently moving"
+        ):
+            return
+
+        response.raise_for_status()
+        self.cur_steps = response.json()["steps"]
+
+    def _make_request(self, target_steps: int) -> int:
+        response = requests.post(
+            f"{self.server_url}/motor_turn",
+            json={
+                "motor_number": self.motor_number,
+                "steps": target_steps,
+                "relative": False,
+            },
+        )
+        response.raise_for_status()
+        return response.json()
 
 
 def is_raspberry_pi():

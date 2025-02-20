@@ -7,7 +7,7 @@ import readchar
 
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.dsp.pitch_detector import PitchDetector
-from autoguitar.motor import MotorController, get_motor
+from autoguitar.motor import MotorController, RemoteMotorController, get_motor
 
 
 def manual_control(pitch_detector: PitchDetector | None):
@@ -18,8 +18,10 @@ def manual_control(pitch_detector: PitchDetector | None):
         get_motor(motor_number=1),
     ]
     with (
-        MotorController(motor=motors[0], max_steps=n_steps[0] * 100) as mc0,
-        MotorController(motor=motors[1], max_steps=n_steps[1] * 100) as mc1,
+        # MotorController(motor=motors[0], max_steps=n_steps[0] * 100) as mc0,
+        # MotorController(motor=motors[1], max_steps=n_steps[1] * 100) as mc1,
+        RemoteMotorController(motor_number=0) as mc0,
+        RemoteMotorController(motor_number=1) as mc1,
     ):
         while True:
             if pitch_detector is not None:
