@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     motors = [
-        get_motor(motor_number=0, remote=False),
-        get_motor(motor_number=1, remote=False),
+        get_motor(motor_number=0),
+        get_motor(motor_number=1),
     ]
 
     with (
-        MotorController(motor=motors[0], max_steps=3000) as mc0,
-        MotorController(motor=motors[1], max_steps=3000) as mc1,
+        MotorController(motor=motors[0], max_steps=100000) as mc0,
+        MotorController(motor=motors[1], max_steps=100000) as mc1,
     ):
         yield {"mc0": mc0, "mc1": mc1}
 
@@ -102,3 +102,14 @@ def get_all_motors_status(request: Request):
 def health():
     """Check if the server is running."""
     return {"status": "ok"}
+
+
+@app.get("/reset")
+def reset(request: Request):
+    # If we use the server over multiple runs, we want to reset the motor positions
+    # to 0. Otherwise the first command might make a really big move if the motor
+    # is already at a very high/low position.
+    mc0, mc1 = get_motor_controllers_from_request(request)
+    for mc in [mc0, mc1]:
+        mc.cur_steps = 0
+        mc.set_target_steps(0)

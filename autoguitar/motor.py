@@ -14,7 +14,10 @@ from autoguitar.virtual_string import VirtualString
 
 logger = logging.getLogger(__name__)
 
-STEP_TIME_SEC_PER_MOTOR = [0.0002, 0.0006]
+# Note that if this is set too low, the motor can lose track of where it is!
+# This is especially problematic for the strummer because it can't adjust for it.
+STEP_TIME_SEC_PER_MOTOR = [0.0002, 0.0012]
+
 # Microstepping is a feature of stepper motors that allows them to move in
 # smaller increments than a full step. This can be used to increase the
 # resolution of the motor, but it also reduces the torque. The values below
@@ -136,48 +139,6 @@ class VirtualMotor(Motor):
         return STEPS_PER_TURN_WITHOUT_MICROSTEPPING
 
 
-class RemoteMotor(Motor):
-    def __init__(
-        self,
-        motor_number: int,
-        step_time_sec: float,
-        microstepping: int,
-    ):
-        self.motor_number = motor_number
-        self.step_time_sec = step_time_sec
-        self.microstepping = microstepping
-        self.server_url = "http://localhost:8050"
-
-        response = requests.get(f"{self.server_url}/health")
-        if response.status_code != 200:
-            raise RuntimeError(f"Motor server is not running: {response}")
-
-    def step(self, forward: bool):
-        raise NotImplementedError
-
-    def step_multiple(self, n: int, relative: bool = True) -> int:
-        response = requests.post(
-            f"{self.server_url}/motor_turn",
-            json={
-                "motor_number": self.motor_number,
-                "steps": n,
-                "relative": relative,
-            },
-        )
-        response.raise_for_status()
-
-        # If the motor is still moving, no steps will be executed
-        return response.json()["steps"]
-
-    def steps_per_turn(self) -> int:
-        return STEPS_PER_TURN_WITHOUT_MICROSTEPPING * self.microstepping
-
-    def get_all_motors_status(self) -> "AllMotorsStatus":
-        response = requests.get(f"{self.server_url}/all_motors_status")
-        response.raise_for_status()
-        return AllMotorsStatus(**response.json())
-
-
 class AbstractMotorController(ABC):
     def __init__(self):
         self.command_thread = None
@@ -249,13 +210,10 @@ class MotorController(AbstractMotorController):
 
     def _process_command(self):
         target_steps = self._target_steps
-        if isinstance(self.motor, RemoteMotor):
-            # A bit of a hack, absolute turns can only be used for remote motors
-            steps_reached = self.motor.step_multiple(target_steps, relative=False)
-            self.cur_steps = steps_reached
-        else:
-            steps_taken = self.motor.step_multiple(target_steps - self.cur_steps)
-            self.cur_steps += steps_taken
+        # TODO: remove step_multiple(). Used to have a RemoteMotor class that used this
+        # but now there's a RemoteMotorController instead.
+        steps_taken = self.motor.step_multiple(target_steps - self.cur_steps)
+        self.cur_steps += steps_taken
 
     def steps_per_turn(self) -> int:
         return self.motor.steps_per_turn()
@@ -268,7 +226,7 @@ class RemoteMotorController(AbstractMotorController):
 
         self.motor_number = motor_number
 
-        response = requests.get(f"{self.server_url}/health")
+        response = requests.get(f"{self.server_url}/reset")
         if response.status_code != 200:
             raise RuntimeError(f"Motor server is not running: {response}")
 
@@ -318,20 +276,13 @@ def is_raspberry_pi():
         return False
 
 
-def get_motor(motor_number: int = 0, remote: bool = True) -> Motor:
+def get_motor(motor_number: int = 0) -> Motor:
     step_time_sec = STEP_TIME_SEC_PER_MOTOR[motor_number]
     if is_raspberry_pi():
         logger.debug(f"Using physical motor {motor_number=}.")
         return PhysicalMotor(
             motor_number=motor_number,
             flip_direction=False,
-            step_time_sec=step_time_sec,
-            microstepping=MICROSTEPPING_PER_MOTOR[motor_number],
-        )
-    elif remote:
-        logger.debug("Using remote motor.")
-        return RemoteMotor(
-            motor_number=motor_number,
             step_time_sec=step_time_sec,
             microstepping=MICROSTEPPING_PER_MOTOR[motor_number],
         )
