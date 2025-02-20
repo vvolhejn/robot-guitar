@@ -5,7 +5,8 @@ import mido
 from mido import Message
 
 # Open a virtual MIDI port to send messages.
-outport = mido.open_output("my_virtual_output", virtual=True)
+outport = mido.open_output("my_virtual_port", virtual=True)
+inport = mido.open_input("my_virtual_port", virtual=True)
 
 # minor blues scale
 scale = [60, 62, 63, 65, 66, 67, 72]
