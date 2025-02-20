@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 MIN_FREQUENCY = librosa.note_to_hz("E1")
-MAX_FREQUENCY = librosa.note_to_hz("G2")
+MAX_FREQUENCY = librosa.note_to_hz("G#2")
 INITIAL_TARGET_FREQUENCY = librosa.note_to_hz("E2")
 
 
