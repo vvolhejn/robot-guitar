@@ -111,7 +111,30 @@ def main(use_strummer: bool, use_midi_keyboard: bool):
                 # if strummer is not None:
                 #     strummer.mute()
             elif msg.type == "control_change":
-                if msg.control == 28:  # knob 8 on the Launchkey Mini
+                if (
+                    msg.control in [21, 22]  # knobs 1 and 2 on the Launchkey Mini
+                    and strummer
+                ):
+                    offset = round(remap(msg.value, 0, 127, -15, 15))
+                    if msg.control == 21:
+                        strummer.downstroke_offset = offset
+                    else:
+                        strummer.upstroke_offset = offset
+                    pass
+                elif (
+                    msg.control == 23
+                    and msg.value in [0, 127]
+                    and strummer
+                    and strummer.calibration
+                ):
+                    sign = +1 if msg.value > 64 else -1
+                    strummer.calibration.downstroke_steps += 10 * sign
+                    strummer.calibration.upstroke_steps += 10 * sign
+
+                elif msg.control == 24 and msg.value in [0, 127]:
+                    mc0.move(1000 if msg.value > 64 else -1000, wait=True)
+
+                elif msg.control == 28:  # knob 8 on the Launchkey Mini
                     # Tremolo
                     if msg.value < 64:
                         tremolo_frequency = None

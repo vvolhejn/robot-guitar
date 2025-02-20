@@ -37,6 +37,8 @@ class Strummer:
         self.input_stream = input_stream
         self.loudness_detector = LoudnessDetector(input_stream=input_stream)
         self.motor_controller = motor_controller
+        self.downstroke_offset = 0
+        self.upstroke_offset = 0
 
         # self.input_stream.on_reading.subscribe(self._input_stream_callback)
 
@@ -162,8 +164,11 @@ class Strummer:
         # held longer by the pick, meaning you need to turn more for the pluck
         # to happen.
         return {
-            "upstroke": self.calibration.upstroke_steps + 4,
+            "upstroke": self.calibration.upstroke_steps + 4 + self.upstroke_offset,
+            "downstroke": self.calibration.downstroke_steps
+            - 3
+            + self.downstroke_offset,
+            # unused atm:
             "upstroke_mute": self.calibration.downstroke_steps + 5,
-            "downstroke": self.calibration.downstroke_steps - 3,
             "downstroke_mute": self.calibration.downstroke_steps + 6,
         }[state]
