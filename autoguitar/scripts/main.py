@@ -10,7 +10,7 @@ import numpy as np
 from autoguitar.control.strummer import Strummer
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.midi_utils import find_midi_input
-from autoguitar.motor import MotorController, get_motor
+from autoguitar.motor import RemoteMotorController
 from autoguitar.tuning.tuner import Tuner
 
 logging.basicConfig(level=logging.INFO)
@@ -29,18 +29,24 @@ def remap(
 
 @click.command()
 @click.option("--strummer/--no-strummer", "use_strummer", default=True)
-def main(use_strummer: bool):
-    # Open the virtual input port connected to the sender.
-    midi_input_name = find_midi_input()
-    inport = mido.open_input(midi_input_name)
-    print("Using MIDI input:", midi_input_name)
+@click.option("--midi-keyboard/--no-midi-keyboard", "use_midi_keyboard", default=True)
+def main(use_strummer: bool, use_midi_keyboard: bool):
+    if use_midi_keyboard:
+        # Open the virtual input port connected to the sender.
+        midi_input_name = find_midi_input()
+        inport = mido.open_input(midi_input_name)
+        print("Using MIDI input:", midi_input_name)
+    else:
+        port_name = "Autoguitar"
+        inport = mido.open_input(port_name, virtual=True)
+        print("Opened virtual MIDI port:", port_name)
 
-    motors = [get_motor(motor_number=0), get_motor(motor_number=1)]
+    # motors = [get_motor(motor_number=0), get_motor(motor_number=1)]
 
     with (
         InputStream(block_size=512) as input_stream,
-        MotorController(motor=motors[0], max_steps=10000) as mc0,
-        MotorController(motor=motors[1], max_steps=10000) as mc1,
+        RemoteMotorController(motor_number=0) as mc0,
+        RemoteMotorController(motor_number=1) as mc1,
     ):
         # Randomize the motor position for testing purposes
         mc1.move(

@@ -184,6 +184,9 @@ class AbstractMotorController(ABC):
     @abstractmethod
     def _process_command(self): ...
 
+    @abstractmethod
+    def steps_per_turn(self) -> int: ...
+
 
 class MotorController(AbstractMotorController):
     def __init__(self, motor: Motor, max_steps: int):
@@ -266,6 +269,12 @@ class RemoteMotorController(AbstractMotorController):
         )
         response.raise_for_status()
         return response.json()
+
+    def steps_per_turn(self) -> int:
+        return (
+            STEPS_PER_TURN_WITHOUT_MICROSTEPPING
+            * MICROSTEPPING_PER_MOTOR[self.motor_number]
+        )
 
 
 def is_raspberry_pi():

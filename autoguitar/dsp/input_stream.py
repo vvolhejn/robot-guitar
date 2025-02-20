@@ -105,7 +105,7 @@ class InputStream:
         time.sleep(0.1)
         self.readings.clear()
         print(
-            "Waiting for audio stream to initialize",
+            "Waiting for audio stream to initialize: ",
             end="",
             flush=True,
             file=sys.stderr,
@@ -113,7 +113,7 @@ class InputStream:
         while not self.readings:
             time.sleep(0.5)
             print(".", end="", flush=True, file=sys.stderr)
-        print()
+        print("done.")
 
     def get_latest_audio(self, max_n_samples: int) -> np.ndarray:
         """Get the latest audio samples.

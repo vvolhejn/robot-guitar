@@ -6,21 +6,21 @@ import requests
 
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.dsp.pitch_detector import PitchDetector, Timestamp
-from autoguitar.motor import MotorController
+from autoguitar.motor import AbstractMotorController
 from autoguitar.tuning.tuner_strategy import (
     ModelBasedTunerStrategy,
     TunerStrategy,
 )
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 class Tuner:
     def __init__(
         self,
         input_stream: InputStream,
-        motor_controller: MotorController,
+        motor_controller: AbstractMotorController,
         initial_target_frequency: float = 100,
         tuner_strategy: TunerStrategy | None = None,
     ):

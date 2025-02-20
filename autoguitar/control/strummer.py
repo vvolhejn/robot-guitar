@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from autoguitar.dsp.input_stream import InputStream
 from autoguitar.dsp.loudness_detector import LoudnessDetector
-from autoguitar.motor import MotorController
+from autoguitar.motor import AbstractMotorController
 
 
 class Calibration(BaseModel):
@@ -31,7 +31,9 @@ StrumState = Literal[
 
 
 class Strummer:
-    def __init__(self, input_stream: InputStream, motor_controller: MotorController):
+    def __init__(
+        self, input_stream: InputStream, motor_controller: AbstractMotorController
+    ):
         self.input_stream = input_stream
         self.loudness_detector = LoudnessDetector(input_stream=input_stream)
         self.motor_controller = motor_controller
@@ -52,6 +54,7 @@ class Strummer:
         self.input_stream.wait_for_initialization()
 
         low_loudness = self.loudness_detector.measure_loudness()
+        print("Low loudness: ", low_loudness)
 
         # Moving by small steps is slow, so first take big steps to roughly
         # find where the string is
