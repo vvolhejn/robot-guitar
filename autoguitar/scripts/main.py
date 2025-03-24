@@ -115,7 +115,8 @@ def main(use_strummer: bool, use_midi_keyboard: bool):
                     msg.control in [21, 22]  # knobs 1 and 2 on the Launchkey Mini
                     and strummer
                 ):
-                    offset = round(remap(msg.value, 0, 127, -15, 15))
+                    max_offset = 25
+                    offset = round(remap(msg.value, 0, 127, -max_offset, max_offset))
                     if msg.control == 21:
                         strummer.downstroke_offset = offset
                     else:

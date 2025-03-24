@@ -29,6 +29,9 @@ StrumState = Literal[
     "downstroke_mute",
 ]
 
+STROKE_DISTANCE = 50
+UPSTROKE_BASE_OFFSET = 15
+
 
 class Strummer:
     def __init__(
@@ -69,6 +72,7 @@ class Strummer:
 
         # Now move in small steps until the string is plucked
         position_up = self.find_strum_position(steps_at_a_time=3)
+        position_up += UPSTROKE_BASE_OFFSET
         print("Upstroke position:", position_up)
 
         if estimate_downstroke_separately:
@@ -78,7 +82,7 @@ class Strummer:
             self.strum_state = "downstroke"
         else:
             # The angle difference should always be more or less the same
-            position_down = position_up - 70
+            position_down = position_up - STROKE_DISTANCE
             self.strum_state = "upstroke"
 
         print("Downstroke position:", position_down)
@@ -89,6 +93,7 @@ class Strummer:
             downstroke_steps=position_down,
             upstroke_steps=position_up,
         )
+        self.set_strum_state("upstroke")
 
     def _calibrate_loudness(self, min_readings: int = 2) -> tuple[float, float]:
         """Measure the loudness of the string when it is not plucked vs when it is."""
@@ -164,10 +169,8 @@ class Strummer:
         # held longer by the pick, meaning you need to turn more for the pluck
         # to happen.
         return {
-            "upstroke": self.calibration.upstroke_steps + 4 + self.upstroke_offset,
-            "downstroke": self.calibration.downstroke_steps
-            - 3
-            + self.downstroke_offset,
+            "upstroke": self.calibration.upstroke_steps + self.upstroke_offset,
+            "downstroke": self.calibration.downstroke_steps + self.downstroke_offset,
             # unused atm:
             "upstroke_mute": self.calibration.downstroke_steps + 5,
             "downstroke_mute": self.calibration.downstroke_steps + 6,

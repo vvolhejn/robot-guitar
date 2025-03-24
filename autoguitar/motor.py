@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # Note that if this is set too low, the motor can lose track of where it is!
 # This is especially problematic for the strummer because it can't adjust for it.
-STEP_TIME_SEC_PER_MOTOR = [0.0002, 0.0012]
+STEP_TIME_SEC_PER_MOTOR = [0.0002, 0.0016]
 
 # Microstepping is a feature of stepper motors that allows them to move in
 # smaller increments than a full step. This can be used to increase the
